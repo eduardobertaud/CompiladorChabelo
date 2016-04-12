@@ -7,4 +7,4 @@ CORRER LOS SIGUIENTES COMANDOS
 2. python parse_chablo.py
 3. python 
 4. import parse_chabelo
-5. parse_chabelo.check(‘filename.ext’)
+5. parse_chabelo.load(‘filename.ext’)

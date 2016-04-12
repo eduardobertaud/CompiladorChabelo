@@ -4,24 +4,20 @@ import ply.yacc as yacc
 import lex_Chabelo
 tokens = lex_Chabelo.tokens
 
-###########
+
 def p_program(p):
     '''program : PROGRAM ID PUNTO_COMA vars body END'''
     print('valid expresion')
 
 def p_vars(p):
-    '''vars : VAR var_body
+    '''vars : var_body
 	| '''
 
 def p_var_body(p):
-    '''var_body : ID var_id_loop DOS_PUNTOS list type PUNTO_COMA var_loop'''
+    '''var_body : VAR type ID  array PUNTO_COMA var_loop'''
 
-def p_list(p):
-    '''list : LIST
-    | '''
-
-def p_var_id_loop(p):
-    '''var_id_loop : COMA ID var_id_loop
+def p_array(p):
+    '''array : ABRIR_CORCH CTE_I CERRAR_CORCH
     | '''
 
 def p_var_loop(p):
@@ -63,7 +59,7 @@ def p_block(p):
 def p_return(p):
     '''return : RETURN expression PUNTO_COMA
     | '''
-############
+
 def p_fmain(p):
     '''fmain : MAIN ABRIR_PRNT CERRAR_PRNT block'''
 
@@ -78,9 +74,7 @@ def p_estatuto(p):
     | call
     | fprint
     | special_function '''
-###########
 
-###########
 def p_fprint(p):
     '''fprint : PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA'''
 
@@ -107,7 +101,7 @@ def p_while(p):
     '''while : WHILE ABRIR_PRNT expression CERRAR_PRNT block'''
 
 def p_do_while(p):
-    '''do_while : DO block WHILE ABRIR_PRNT expression CERRAR_PRNT'''
+    '''do_while : DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA'''
 
 def p_call(p):
     '''call : ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA'''
@@ -176,7 +170,6 @@ def p_list_elements_loop(p):
     '''list_elements_loop : COMA expression list_elements_loop
     | '''
 
-###########
 def p_special_function(p):
     '''special_function : fpaint
     | fcreate
@@ -188,10 +181,9 @@ def p_special_function(p):
     | fsize
     | fmove'''
 
-###########
 def p_fpaint(p):
     '''fpaint : PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA'''
-###########
+
 def p_fcreate(p):
     '''fcreate : CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA'''
 
@@ -199,25 +191,25 @@ def p_figure(p):
     '''figure : CIRCLE
     | TRIANGLE
     | SQUARE '''
-###########
+
 def p_ferase(p):
     '''ferase : ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA'''
-###########
+
 def p_fp_up(p):
     '''fp_up : P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA'''
-###########
+
 def p_fp_down(p):
     '''fp_down : P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA'''
-###########
+
 def p_fappend(p):
     '''fappend : APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA'''
-###########
+
 def p_fremove(p):
     '''fremove : REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA'''
-###########
+
 def p_fsize(p):
     '''fsize : SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA'''
-###########
+
 def p_fmove(p):
     '''fmove : MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA'''
 
@@ -227,13 +219,12 @@ def p_direction(p):
     | LEFT
     | RIGHT '''
 
-
 # Funcion de error
 def p_error(p):
     if type(p).__name__ == 'NoneType':
         print('Syntax error')
     else:
-        print('Syntax error at token', p.type, p.value)
+         print("Syntax error: '%s' " % p.value  +  ", in line: %s" %p.lineno)
 
 # Build the parser
 parser = yacc.yacc()

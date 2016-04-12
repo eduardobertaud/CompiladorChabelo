@@ -35,6 +35,17 @@ reserved = {
     'erase' : 'ERASE',
     'move' : 'MOVE',
     'list' : 'LIST',
+    'square' : 'SQUARE',
+    'circle' : 'CIRCLE',
+    'triangle' : 'TRIANGLE',
+    'up' : 'UP',
+    'down' : 'DOWN',
+    'left' : 'LEFT',
+    'right' : 'RIGHT',
+    'pen_up' : 'P_UP',
+    'p_down' : 'P_DOWN',
+    'line' : 'LINE',
+    'point' : 'POINT',
     }
 
 tokens = list(reserved.values()) + [
@@ -42,17 +53,6 @@ tokens = list(reserved.values()) + [
     'FUNCTION',
     'TRUE',
     'FALSE',
-    'UP',
-    'LEFT',
-    'RIGHT',
-    'DOWN',
-    'P_UP',
-    'P_DOWN',
-    'CIRCLE',
-    'SQUARE',
-    'TRIANGLE',
-    'LINE',
-    'POINT',
     'COMA',
     'PUNTO_COMA',
     'DOS_PUNTOS',
@@ -78,7 +78,7 @@ tokens = list(reserved.values()) + [
     ]
 
 #Valores de los tokens
-t_ignore = ' \t\n'
+
 t_COMA = r'\,'
 t_PUNTO_COMA = r';'
 t_DOS_PUNTOS = r':'
@@ -101,8 +101,16 @@ t_CTE_S = r'\".*\"'
 t_CTE_I = r'[0-9]+ '
 t_CTE_F = r'[0-9]+\.+[0-9]+'
 
-#Expresiones regulares
 
+# track line numbers
+def t_ENDL(t):
+    r'\n'
+    t.lexer.lineno += len(t.value)
+
+# ignora espacios y tabs
+t_ignore  = ' \t'
+
+#Expresiones regulares
 def t_ID(t):
   r'[a-zA-Z][a-zA-Z0-9]*'
   t.type = reserved.get(t.value, 'ID')    # Check for reserved words
