@@ -239,7 +239,7 @@ def p_error(p):
 parser = yacc.yacc()
 
 #Funcion para checar el archivo
-def check(filename):
+def load(filename):
     f = open(filename, 'r')
     data = f.read()
     f.close()
