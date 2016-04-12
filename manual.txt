@@ -1,0 +1,10 @@
+Guía para correr Chabelo
+
+1) Moverse al directorio donde están los archivos
+
+CORRER LOS SIGUIENTES COMANDOS
+2) python lex_chabelo.py
+2. python parse_chablo.py
+3. python 
+4. import parse_chabelo
+5. parse_chabelo.check(‘filename.ext’)

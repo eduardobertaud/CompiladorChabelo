@@ -1,0 +1,7 @@
+program UNO;
+var a, b, c : int ; d, f : float ;
+{
+  variable = 1.23 ;
+  print ( "Hola", 9 , 8.45 ) ;
+  if ( 1 > 2 ) { m = 10 ; } else { f = 23 ; } ;
+}
