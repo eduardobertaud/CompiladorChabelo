@@ -30,9 +30,9 @@ Rule 11    type -> STRING
 Rule 12    type -> BOOL
 Rule 13    type -> VOID
 Rule 14    body -> functions fmain
-Rule 15    functions -> FUNC functions_body
+Rule 15    functions -> functions_body
 Rule 16    functions -> <empty>
-Rule 17    functions_body -> type ID ABRIR_PRNT params CERRAR_PRNT block functions_loop
+Rule 17    functions_body -> FUNC type ID ABRIR_PRNT params CERRAR_PRNT block functions_loop
 Rule 18    functions_loop -> functions_body
 Rule 19    functions_loop -> <empty>
 Rule 20    params -> type ID params_loop
@@ -152,7 +152,7 @@ ERASE                : 97
 FALSE                : 
 FIRST                : 
 FLOAT                : 10
-FUNC                 : 15
+FUNC                 : 17
 FUNCTION             : 
 ID                   : 1 4 17 20 22 48 53 76 100 101
 IF                   : 41
@@ -296,14 +296,16 @@ state 5
 
     (1) program -> PROGRAM ID PUNTO_COMA vars . body END
     (14) body -> . functions fmain
-    (15) functions -> . FUNC functions_body
+    (15) functions -> . functions_body
     (16) functions -> .
+    (17) functions_body -> . FUNC type ID ABRIR_PRNT params CERRAR_PRNT block functions_loop
 
-    FUNC            shift and go to state 10
     MAIN            reduce using rule 16 (functions -> .)
+    FUNC            shift and go to state 10
 
     body                           shift and go to state 8
     functions                      shift and go to state 9
+    functions_body                 shift and go to state 11
 
 state 6
 
@@ -322,19 +324,19 @@ state 7
     (12) type -> . BOOL
     (13) type -> . VOID
 
-    INT             shift and go to state 13
-    FLOAT           shift and go to state 11
-    STRING          shift and go to state 12
-    BOOL            shift and go to state 15
-    VOID            shift and go to state 14
+    INT             shift and go to state 14
+    FLOAT           shift and go to state 12
+    STRING          shift and go to state 13
+    BOOL            shift and go to state 16
+    VOID            shift and go to state 15
 
-    type                           shift and go to state 16
+    type                           shift and go to state 17
 
 state 8
 
     (1) program -> PROGRAM ID PUNTO_COMA vars body . END
 
-    END             shift and go to state 17
+    END             shift and go to state 18
 
 
 state 9
@@ -342,102 +344,100 @@ state 9
     (14) body -> functions . fmain
     (27) fmain -> . MAIN ABRIR_PRNT CERRAR_PRNT block
 
-    MAIN            shift and go to state 18
+    MAIN            shift and go to state 19
 
-    fmain                          shift and go to state 19
+    fmain                          shift and go to state 20
 
 state 10
 
-    (15) functions -> FUNC . functions_body
-    (17) functions_body -> . type ID ABRIR_PRNT params CERRAR_PRNT block functions_loop
+    (17) functions_body -> FUNC . type ID ABRIR_PRNT params CERRAR_PRNT block functions_loop
     (9) type -> . INT
     (10) type -> . FLOAT
     (11) type -> . STRING
     (12) type -> . BOOL
     (13) type -> . VOID
 
-    INT             shift and go to state 13
-    FLOAT           shift and go to state 11
-    STRING          shift and go to state 12
-    BOOL            shift and go to state 15
-    VOID            shift and go to state 14
+    INT             shift and go to state 14
+    FLOAT           shift and go to state 12
+    STRING          shift and go to state 13
+    BOOL            shift and go to state 16
+    VOID            shift and go to state 15
 
     type                           shift and go to state 21
-    functions_body                 shift and go to state 20
 
 state 11
+
+    (15) functions -> functions_body .
+
+    MAIN            reduce using rule 15 (functions -> functions_body .)
+
+
+state 12
 
     (10) type -> FLOAT .
 
     ID              reduce using rule 10 (type -> FLOAT .)
 
 
-state 12
+state 13
 
     (11) type -> STRING .
 
     ID              reduce using rule 11 (type -> STRING .)
 
 
-state 13
+state 14
 
     (9) type -> INT .
 
     ID              reduce using rule 9 (type -> INT .)
 
 
-state 14
+state 15
 
     (13) type -> VOID .
 
     ID              reduce using rule 13 (type -> VOID .)
 
 
-state 15
+state 16
 
     (12) type -> BOOL .
 
     ID              reduce using rule 12 (type -> BOOL .)
 
 
-state 16
+state 17
 
     (4) var_body -> VAR type . ID array PUNTO_COMA var_loop
 
     ID              shift and go to state 22
 
 
-state 17
+state 18
 
     (1) program -> PROGRAM ID PUNTO_COMA vars body END .
 
     $end            reduce using rule 1 (program -> PROGRAM ID PUNTO_COMA vars body END .)
 
 
-state 18
+state 19
 
     (27) fmain -> MAIN . ABRIR_PRNT CERRAR_PRNT block
 
     ABRIR_PRNT      shift and go to state 23
 
 
-state 19
+state 20
 
     (14) body -> functions fmain .
 
     END             reduce using rule 14 (body -> functions fmain .)
 
 
-state 20
-
-    (15) functions -> FUNC functions_body .
-
-    MAIN            reduce using rule 15 (functions -> FUNC functions_body .)
-
-
 state 21
 
-    (17) functions_body -> type . ID ABRIR_PRNT params CERRAR_PRNT block functions_loop
+    (17) functions_body -> FUNC type . ID ABRIR_PRNT params CERRAR_PRNT block functions_loop
 
     ID              shift and go to state 24
 
@@ -462,7 +462,7 @@ state 23
 
 state 24
 
-    (17) functions_body -> type ID . ABRIR_PRNT params CERRAR_PRNT block functions_loop
+    (17) functions_body -> FUNC type ID . ABRIR_PRNT params CERRAR_PRNT block functions_loop
 
     ABRIR_PRNT      shift and go to state 28
 
@@ -492,7 +492,7 @@ state 27
 
 state 28
 
-    (17) functions_body -> type ID ABRIR_PRNT . params CERRAR_PRNT block functions_loop
+    (17) functions_body -> FUNC type ID ABRIR_PRNT . params CERRAR_PRNT block functions_loop
     (20) params -> . type ID params_loop
     (21) params -> .
     (9) type -> . INT
@@ -502,11 +502,11 @@ state 28
     (13) type -> . VOID
 
     CERRAR_PRNT     reduce using rule 21 (params -> .)
-    INT             shift and go to state 13
-    FLOAT           shift and go to state 11
-    STRING          shift and go to state 12
-    BOOL            shift and go to state 15
-    VOID            shift and go to state 14
+    INT             shift and go to state 14
+    FLOAT           shift and go to state 12
+    STRING          shift and go to state 13
+    BOOL            shift and go to state 16
+    VOID            shift and go to state 15
 
     params                         shift and go to state 33
     type                           shift and go to state 34
@@ -616,7 +616,7 @@ state 32
 
 state 33
 
-    (17) functions_body -> type ID ABRIR_PRNT params . CERRAR_PRNT block functions_loop
+    (17) functions_body -> FUNC type ID ABRIR_PRNT params . CERRAR_PRNT block functions_loop
 
     CERRAR_PRNT     shift and go to state 71
 
@@ -1215,7 +1215,7 @@ state 70
 
 state 71
 
-    (17) functions_body -> type ID ABRIR_PRNT params CERRAR_PRNT . block functions_loop
+    (17) functions_body -> FUNC type ID ABRIR_PRNT params CERRAR_PRNT . block functions_loop
     (24) block -> . ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE
 
     ABRIR_LLAVE     shift and go to state 31
@@ -1555,24 +1555,14 @@ state 90
 
 state 91
 
-    (17) functions_body -> type ID ABRIR_PRNT params CERRAR_PRNT block . functions_loop
+    (17) functions_body -> FUNC type ID ABRIR_PRNT params CERRAR_PRNT block . functions_loop
     (18) functions_loop -> . functions_body
     (19) functions_loop -> .
-    (17) functions_body -> . type ID ABRIR_PRNT params CERRAR_PRNT block functions_loop
-    (9) type -> . INT
-    (10) type -> . FLOAT
-    (11) type -> . STRING
-    (12) type -> . BOOL
-    (13) type -> . VOID
+    (17) functions_body -> . FUNC type ID ABRIR_PRNT params CERRAR_PRNT block functions_loop
 
     MAIN            reduce using rule 19 (functions_loop -> .)
-    INT             shift and go to state 13
-    FLOAT           shift and go to state 11
-    STRING          shift and go to state 12
-    BOOL            shift and go to state 15
-    VOID            shift and go to state 14
+    FUNC            shift and go to state 10
 
-    type                           shift and go to state 21
     functions_loop                 shift and go to state 129
     functions_body                 shift and go to state 128
 
@@ -1592,11 +1582,11 @@ state 93
     (12) type -> . BOOL
     (13) type -> . VOID
 
-    INT             shift and go to state 13
-    FLOAT           shift and go to state 11
-    STRING          shift and go to state 12
-    BOOL            shift and go to state 15
-    VOID            shift and go to state 14
+    INT             shift and go to state 14
+    FLOAT           shift and go to state 12
+    STRING          shift and go to state 13
+    BOOL            shift and go to state 16
+    VOID            shift and go to state 15
 
     type                           shift and go to state 130
 
@@ -1830,11 +1820,7 @@ state 112
     MOVE            reduce using rule 24 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
     RETURN          reduce using rule 24 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
     CERRAR_LLAVE    reduce using rule 24 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
-    INT             reduce using rule 24 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
-    FLOAT           reduce using rule 24 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
-    STRING          reduce using rule 24 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
-    BOOL            reduce using rule 24 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
-    VOID            reduce using rule 24 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    FUNC            reduce using rule 24 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
     MAIN            reduce using rule 24 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
 
 
@@ -1956,9 +1942,9 @@ state 128
 
 state 129
 
-    (17) functions_body -> type ID ABRIR_PRNT params CERRAR_PRNT block functions_loop .
+    (17) functions_body -> FUNC type ID ABRIR_PRNT params CERRAR_PRNT block functions_loop .
 
-    MAIN            reduce using rule 17 (functions_body -> type ID ABRIR_PRNT params CERRAR_PRNT block functions_loop .)
+    MAIN            reduce using rule 17 (functions_body -> FUNC type ID ABRIR_PRNT params CERRAR_PRNT block functions_loop .)
 
 
 state 130

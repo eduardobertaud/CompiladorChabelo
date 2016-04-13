@@ -2,12 +2,22 @@
 
 import ply.yacc as yacc
 import lex_Chabelo
+import sys
 tokens = lex_Chabelo.tokens
+
+dir_proc = {}
+var_table = {}
+scope = 'global'
+params = {}
 
 
 def p_program(p):
     '''program : PROGRAM ID PUNTO_COMA vars body END'''
-    print('valid expresion')
+    print('Accepted')
+    print("\nTabla de Variables:")
+    print (var_table)
+    print("\nDirectorio de Procedimientos:")
+    print (dir_proc)
 
 def p_vars(p):
     '''vars : var_body
@@ -15,6 +25,8 @@ def p_vars(p):
 
 def p_var_body(p):
     '''var_body : VAR type ID  array PUNTO_COMA var_loop'''
+    if p[1] != None:
+        var_table[p[3]] = {'type' : p[2], 'scope' : scope}
 
 def p_array(p):
     '''array : ABRIR_CORCH CTE_I CERRAR_CORCH
@@ -30,16 +42,22 @@ def p_type(p):
     | STRING
     | BOOL
     | VOID'''
+    p[0] = p[1]
 
 def p_body(p):
     '''body : functions fmain'''
 
 def p_functions(p):
-    '''functions : FUNC functions_body
+    '''functions : functions_body
     | '''
 
 def p_functions_body(p):
-    '''functions_body : type ID ABRIR_PRNT params CERRAR_PRNT block functions_loop'''
+    '''functions_body :  FUNC type ID ABRIR_PRNT params CERRAR_PRNT block functions_loop'''
+    if p[1] != None:
+        aux = params.copy()
+        dir_proc[p[3]] = {'param' : aux , 'return' : p[2]}
+        params.clear()
+        scope = p[3]
 
 def p_functions_loop(p):
     '''functions_loop : functions_body
@@ -48,6 +66,8 @@ def p_functions_loop(p):
 def p_params(p):
     '''params : type ID params_loop
     | '''
+    if p[1] != None:
+        params[p[2]] = {'type' : p[1]}
 
 def p_params_loop(p):
     '''params_loop : COMA type ID params_loop
@@ -224,7 +244,7 @@ def p_error(p):
     if type(p).__name__ == 'NoneType':
         print('Syntax error')
     else:
-         print("Syntax error: '%s' " % p.value  +  ", in line: %s" %p.lineno)
+         print("Syntax error: '%s' " % p.value + p.type  +  ", in line: %s" %p.lineno)
 
 # Build the parser
 parser = yacc.yacc()

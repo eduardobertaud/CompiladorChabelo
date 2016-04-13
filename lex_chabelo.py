@@ -50,7 +50,6 @@ reserved = {
 
 tokens = list(reserved.values()) + [
     'CONST',
-    'FUNCTION',
     'TRUE',
     'FALSE',
     'COMA',
@@ -78,7 +77,6 @@ tokens = list(reserved.values()) + [
     ]
 
 #Valores de los tokens
-
 t_COMA = r'\,'
 t_PUNTO_COMA = r';'
 t_DOS_PUNTOS = r':'
@@ -100,7 +98,6 @@ t_DESIGUALDAD = r'\<\>'
 t_CTE_S = r'\".*\"'
 t_CTE_I = r'[0-9]+ '
 t_CTE_F = r'[0-9]+\.+[0-9]+'
-
 
 # track line numbers
 def t_ENDL(t):
