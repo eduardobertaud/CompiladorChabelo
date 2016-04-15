@@ -2,10 +2,12 @@ program UNO;
 var int a[2];
 var float ee;
 
-func void a(int a, float f,int x){
+func void a(int a,float f){
 }
 
 func void b(int d){
+}
+func void bb(int j){
 }
 
 main(){

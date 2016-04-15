@@ -9,6 +9,8 @@ dir_proc = {}
 var_table = {}
 scope = 'global'
 params = {}
+aux = {}
+i = 0;
 
 
 def p_program(p):
@@ -52,25 +54,36 @@ def p_functions(p):
     | '''
 
 def p_functions_body(p):
-    '''functions_body :  FUNC type ID ABRIR_PRNT params CERRAR_PRNT block functions_loop'''
+    '''functions_body :  FUNC type ID ABRIR_PRNT params_aux CERRAR_PRNT block functions_loop'''
+    global scope
+    global i
     if p[1] != None:
-        aux = params.copy()
-        dir_proc[p[3]] = {'param' : aux , 'return' : p[2]}
-        params.clear()
-        scope = p[3]
+        dir_proc[p[3]] = {'param' : params[i] , 'return' : p[2]}
+        print(scope)
+        i = i - 1
+        print(i)
 
 def p_functions_loop(p):
     '''functions_loop : functions_body
     | '''
 
+def p_params_aux(p):
+    '''params_aux : params
+    | '''
+    global i;
+    i = i + 1
+    print(i)
+    params[i] = aux.copy()
+    aux.clear();
+
 def p_params(p):
     '''params : type ID params_loop
     | '''
     if p[1] != None:
-        params[p[2]] = {'type' : p[1]}
+        aux[p[2]] = {'type' : p[1]}
 
 def p_params_loop(p):
-    '''params_loop : COMA type ID params_loop
+    '''params_loop : COMA params
     | '''
 
 def p_block(p):
