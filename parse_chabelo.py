@@ -20,14 +20,23 @@ def p_program(p):
     print (var_table)
     print("\nDirectorio de Procedimientos:")
     print (dir_proc)
+    dir_proc.clear()
+    var_table.clear()
+    params.clear()
 
 def p_vars(p):
     '''vars : var_body
 	| '''
+    global scope
+    scope = "local"
 
 def p_var_body(p):
     '''var_body : VAR type ID  array PUNTO_COMA var_loop'''
+    global scope
     if p[1] != None:
+        if  var_table.has_key(p[3]):
+            print("Variable: '%s' " % p[3]   +  "already declared")
+            sys.exit()
         var_table[p[3]] = {'type' : p[2], 'scope' : scope}
 
 def p_array(p):
@@ -55,32 +64,33 @@ def p_functions(p):
 
 def p_functions_body(p):
     '''functions_body :  FUNC type ID ABRIR_PRNT params_aux CERRAR_PRNT block functions_loop'''
-    global scope
     global i
     if p[1] != None:
+        if  dir_proc.has_key(p[3]):
+            print("Function: '%s' " % p[3]   +  "already declared")
+            sys.exit()
         dir_proc[p[3]] = {'param' : params[i] , 'return' : p[2]}
-        print(scope)
         i = i - 1
-        print(i)
 
 def p_functions_loop(p):
     '''functions_loop : functions_body
     | '''
 
 def p_params_aux(p):
-    '''params_aux : params
-    | '''
+    '''params_aux : params'''
     global i;
     i = i + 1
-    print(i)
     params[i] = aux.copy()
-    aux.clear();
+    aux.clear()
 
 def p_params(p):
     '''params : type ID params_loop
     | '''
     if p[1] != None:
-        aux[p[2]] = {'type' : p[1]}
+        if  aux.has_key(p[2]):
+             print("Semantic error: Parameters with same name: '%s' " % p[2]   +  ", in line: %s" %p.lineno)
+             sys.exit()
+    aux[p[2]] = {'type' : p[1]}
 
 def p_params_loop(p):
     '''params_loop : COMA params
@@ -106,7 +116,8 @@ def p_estatuto(p):
     | assignment
     | call
     | fprint
-    | special_function '''
+    | special_function
+    | var_body '''
 
 def p_fprint(p):
     '''fprint : PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA'''
