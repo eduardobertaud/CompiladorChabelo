@@ -1,13 +1,13 @@
 program UNO;
-var int ah[2];
-var float ee;
 
-func void ah(int ah,float f){
+var int ah[20];
+var float hola;
+var int an;
+
+func void aha(int ah,float f){
+var int c;
+var float a;
 }
-
-func void b(int d,float a){
-}
-
 
 main(){
 print(2+2);

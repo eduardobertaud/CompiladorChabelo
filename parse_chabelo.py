@@ -4,40 +4,41 @@ import ply.yacc as yacc
 import lex_Chabelo
 import sys
 tokens = lex_Chabelo.tokens
+from tables import *
 
-dir_proc = {}
-var_table = {}
 scope = 'global'
-params = {}
-aux = {}
-i = 0;
-
 
 def p_program(p):
     '''program : PROGRAM ID PUNTO_COMA vars body END'''
-    print('Accepted')
-    print("\nTabla de Variables:")
-    print (var_table)
-    print("\nDirectorio de Procedimientos:")
-    print (dir_proc)
-    dir_proc.clear()
-    var_table.clear()
-    params.clear()
+    print('Accepted \n')
+    print_var_table()
+    print_dir_proc()
+    sys.exit()
 
 def p_vars(p):
     '''vars : var_body
 	| '''
     global scope
-    scope = "local"
+    scope = "functions"
 
 def p_var_body(p):
     '''var_body : VAR type ID  array PUNTO_COMA var_loop'''
     global scope
     if p[1] != None:
-        if  var_table.has_key(p[3]):
-            print("Variable: '%s' " % p[3]   +  "already declared")
-            sys.exit()
-        var_table[p[3]] = {'type' : p[2], 'scope' : scope}
+        if scope == 'global':
+            v = find_global_var_table(p[3])
+            if v:
+                print("Variable: '%s' " % p[3]   +  "already declared")
+                sys.exit()
+            add_var_table(p[3],p[2],0)
+        else:
+            pr = find_dir_proc(scope)
+            if pr:
+                pa = find_var_table(get_vars_dir_proc(pr),p[3])
+                if pa:
+                    print("Variable: '%s' " % p[3]   +  "already declared in function '%s' " % scope)
+                    sys.exit()
+                add_var_dir_proc(scope,p[3],p[2],0)
 
 def p_array(p):
     '''array : ABRIR_CORCH CTE_I CERRAR_CORCH
@@ -59,41 +60,51 @@ def p_body(p):
     '''body : functions fmain'''
 
 def p_functions(p):
-    '''functions : functions_body
+    '''functions : functions_body functions_params block functions_loop
     | '''
 
 def p_functions_body(p):
-    '''functions_body :  FUNC type ID ABRIR_PRNT params_aux CERRAR_PRNT block functions_loop'''
-    global i
+    '''functions_body :  FUNC type ID'''
+    global scope
     if p[1] != None:
-        if  dir_proc.has_key(p[3]):
+        p[0] = p[3]
+        scope = p[3]
+        fn = find_dir_proc(p[3])
+        if fn:
             print("Function: '%s' " % p[3]   +  "already declared")
             sys.exit()
-        dir_proc[p[3]] = {'param' : params[i] , 'return' : p[2]}
-        i = i - 1
+        add_dir_proc(p[3],p[2],0)
+
+def p_functions_params(p):
+    '''functions_params :  ABRIR_PRNT params_aux CERRAR_PRNT'''
 
 def p_functions_loop(p):
-    '''functions_loop : functions_body
+    '''functions_loop : functions_aux
     | '''
+
+def p_functions_aux(p):
+    '''functions_aux : functions_body functions_params block functions_loop'''
 
 def p_params_aux(p):
-    '''params_aux : params'''
-    global i;
-    i = i + 1
-    params[i] = aux.copy()
-    aux.clear()
+    '''params_aux : params params_loop
+    | '''
 
 def p_params(p):
-    '''params : type ID params_loop
-    | '''
+    '''params : type ID '''
     if p[1] != None:
-        if  aux.has_key(p[2]):
-             print("Semantic error: Parameters with same name: '%s' " % p[2]   +  ", in line: %s" %p.lineno)
-             sys.exit()
-    aux[p[2]] = {'type' : p[1]}
+        pr = find_dir_proc(scope)
+        if pr:
+            pa = find_var_table(get_params_dir_proc(pr),p[2])
+            if pa:
+                print("Parameter: '%s' " % p[2]   +  "already declared in function '%s' " % scope)
+                sys.exit()
+            add_param_dir_proc(scope,p[2],p[1],0)
+
+def p_params_loop_aux(p):
+    '''params_loop_aux : params params_loop'''
 
 def p_params_loop(p):
-    '''params_loop : COMA params
+    '''params_loop : COMA params_loop_aux
     | '''
 
 def p_block(p):
@@ -104,7 +115,18 @@ def p_return(p):
     | '''
 
 def p_fmain(p):
-    '''fmain : MAIN ABRIR_PRNT CERRAR_PRNT block'''
+    '''fmain : fmain_aux block'''
+
+
+def p_fmain_aux(p):
+    '''fmain_aux : MAIN ABRIR_PRNT CERRAR_PRNT'''
+    global scope
+    if p[1] != None:
+        p[0] = p[1]
+        scope = 'main'
+        add_dir_proc('main','void',0)
+
+
 
 def p_estatuto_loop(p):
     '''estatuto_loop : estatuto estatuto_loop
