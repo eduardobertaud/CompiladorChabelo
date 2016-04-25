@@ -20,6 +20,7 @@ def p_program(p):
     '''program : PROGRAM ID PUNTO_COMA vars body END'''
     print('Accepted \n')
     print_var_table()
+    print_const_table()
     print_dir_proc()
     sys.exit()
 
@@ -41,7 +42,7 @@ def p_var_body(p):
                 sys.exit()
             #aqui
             memory = global_memory_assignment(p[2])
-            add_var_table(p[3],p[2],memory)
+            add_var_table(p[3], p[2],memory)
         else:
             pr = find_dir_proc(scope)
             if pr:
@@ -158,7 +159,14 @@ def p_fprint(p):
 
 def p_write_choice(p):
     '''write_choice : expression write_loop
-    | CTE_S write_loop '''
+    | const_string write_loop '''
+
+def p_const_string(p):
+    '''const_string : CTE_S'''
+    global memory
+    memory = const_memory_assignment('string')
+    add_const_table(p[1],'string',memory)
+    p[0] = p[1]
 
 def p_write_loop(p):
     '''write_loop : COMA write_choice
@@ -233,10 +241,33 @@ def p_factor_choice(p):
     | '''
 
 def p_var_cte(p):
-    '''var_cte : CTE_I
-    | CTE_F
+    '''var_cte : const_int
+    | const_float
+    | const_bool
     | ABRIR_CORCH list_elements CERRAR_CORCH
     | ID var_func '''
+
+def p_const_int(p):
+    '''const_int : CTE_I'''
+    global memory
+    memory = const_memory_assignment('int')
+    add_const_table(p[1],'int',memory)
+    p[0] = p[1]
+
+def p_const_float(p):
+    '''const_float : CTE_F'''
+    global memory
+    memory = const_memory_assignment('float')
+    add_const_table(p[1],'float',memory)
+    p[0] = p[1]
+
+def p_const_bool(p):
+    '''const_bool : TRUE
+    | FALSE'''
+    global memory
+    memory = const_memory_assignment('bool')
+    add_const_table(p[1],'bool',memory)
+    p[0] = p[1]
 
 def p_var_func(p):
     '''var_func : ABRIR_PRNT params_call CERRAR_PRNT

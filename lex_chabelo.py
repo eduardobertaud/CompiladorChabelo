@@ -46,12 +46,12 @@ reserved = {
     'p_down' : 'P_DOWN',
     'line' : 'LINE',
     'point' : 'POINT',
+    'true' : 'TRUE',
+    'false' : 'FALSE',
     }
 
 tokens = list(reserved.values()) + [
     'CONST',
-    'TRUE',
-    'FALSE',
     'COMA',
     'PUNTO_COMA',
     'DOS_PUNTOS',

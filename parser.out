@@ -1,0 +1,3954 @@
+Created by PLY version 3.8 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    LINE
+    LAST
+    POINT
+    CONST
+    FIRST
+    DOS_PUNTOS
+    LIST
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> PROGRAM ID PUNTO_COMA vars body END
+Rule 2     vars -> var_body
+Rule 3     vars -> <empty>
+Rule 4     var_body -> VAR type ID array PUNTO_COMA var_loop
+Rule 5     array -> ABRIR_CORCH CTE_I CERRAR_CORCH
+Rule 6     array -> <empty>
+Rule 7     var_loop -> var_body
+Rule 8     var_loop -> <empty>
+Rule 9     type -> INT
+Rule 10    type -> FLOAT
+Rule 11    type -> STRING
+Rule 12    type -> BOOL
+Rule 13    type -> VOID
+Rule 14    body -> functions fmain
+Rule 15    functions -> functions_body functions_params block functions_loop
+Rule 16    functions -> <empty>
+Rule 17    functions_body -> FUNC type ID
+Rule 18    functions_params -> ABRIR_PRNT params_aux CERRAR_PRNT
+Rule 19    functions_loop -> functions_aux
+Rule 20    functions_loop -> <empty>
+Rule 21    functions_aux -> functions_body functions_params block functions_loop
+Rule 22    params_aux -> params params_loop
+Rule 23    params_aux -> <empty>
+Rule 24    params -> type ID
+Rule 25    params_loop_aux -> params params_loop
+Rule 26    params_loop -> COMA params_loop_aux
+Rule 27    params_loop -> <empty>
+Rule 28    block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE
+Rule 29    return -> RETURN expression PUNTO_COMA
+Rule 30    return -> <empty>
+Rule 31    fmain -> fmain_aux block
+Rule 32    fmain_aux -> MAIN ABRIR_PRNT CERRAR_PRNT
+Rule 33    estatuto_loop -> estatuto estatuto_loop
+Rule 34    estatuto_loop -> <empty>
+Rule 35    estatuto -> condition
+Rule 36    estatuto -> loop
+Rule 37    estatuto -> assignment
+Rule 38    estatuto -> call
+Rule 39    estatuto -> fprint
+Rule 40    estatuto -> special_function
+Rule 41    estatuto -> var_body
+Rule 42    fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA
+Rule 43    write_choice -> expression write_loop
+Rule 44    write_choice -> const_string write_loop
+Rule 45    const_string -> CTE_S
+Rule 46    write_loop -> COMA write_choice
+Rule 47    write_loop -> <empty>
+Rule 48    condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else
+Rule 49    else -> ELSE block
+Rule 50    else -> <empty>
+Rule 51    loop -> while
+Rule 52    loop -> do_while
+Rule 53    while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block
+Rule 54    do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA
+Rule 55    call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA
+Rule 56    params_call -> expression params_call_loop
+Rule 57    params_call -> <empty>
+Rule 58    params_call_loop -> COMA expression params_call_loop
+Rule 59    params_call_loop -> <empty>
+Rule 60    assignment -> ID IGUAL expression PUNTO_COMA
+Rule 61    expression -> exp expression_choice
+Rule 62    expression_choice -> IGUALDAD exp
+Rule 63    expression_choice -> DESIGUALDAD exp
+Rule 64    expression_choice -> MAYOR_QUE exp
+Rule 65    expression_choice -> MENOR_QUE exp
+Rule 66    expression_choice -> MAYOR_IGUAL exp
+Rule 67    expression_choice -> MENOR_IGUAL exp
+Rule 68    expression_choice -> <empty>
+Rule 69    exp -> term exp_choice
+Rule 70    exp_choice -> SUMA exp
+Rule 71    exp_choice -> RESTA exp
+Rule 72    exp_choice -> <empty>
+Rule 73    term -> factor term_choice
+Rule 74    term_choice -> MULTIPLICACION term
+Rule 75    term_choice -> DIVISION term
+Rule 76    term_choice -> <empty>
+Rule 77    factor -> ABRIR_PRNT expression CERRAR_PRNT
+Rule 78    factor -> factor_choice var_cte
+Rule 79    factor_choice -> SUMA
+Rule 80    factor_choice -> RESTA
+Rule 81    factor_choice -> <empty>
+Rule 82    var_cte -> const_int
+Rule 83    var_cte -> const_float
+Rule 84    var_cte -> const_bool
+Rule 85    var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH
+Rule 86    var_cte -> ID var_func
+Rule 87    const_int -> CTE_I
+Rule 88    const_float -> CTE_F
+Rule 89    const_bool -> TRUE
+Rule 90    const_bool -> FALSE
+Rule 91    var_func -> ABRIR_PRNT params_call CERRAR_PRNT
+Rule 92    var_func -> <empty>
+Rule 93    list_elements -> expression list_elements_loop
+Rule 94    list_elements -> <empty>
+Rule 95    list_elements_loop -> COMA expression list_elements_loop
+Rule 96    list_elements_loop -> <empty>
+Rule 97    special_function -> fpaint
+Rule 98    special_function -> fcreate
+Rule 99    special_function -> ferase
+Rule 100   special_function -> fp_up
+Rule 101   special_function -> fp_down
+Rule 102   special_function -> fappend
+Rule 103   special_function -> fremove
+Rule 104   special_function -> fsize
+Rule 105   special_function -> fmove
+Rule 106   fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA
+Rule 107   fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA
+Rule 108   figure -> CIRCLE
+Rule 109   figure -> TRIANGLE
+Rule 110   figure -> SQUARE
+Rule 111   ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA
+Rule 112   fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA
+Rule 113   fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA
+Rule 114   fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA
+Rule 115   fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA
+Rule 116   fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA
+Rule 117   fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA
+Rule 118   direction -> UP
+Rule 119   direction -> DOWN
+Rule 120   direction -> LEFT
+Rule 121   direction -> RIGHT
+
+Terminals, with rules where they appear
+
+ABRIR_CORCH          : 5 85
+ABRIR_LLAVE          : 28
+ABRIR_PRNT           : 18 32 42 48 53 54 55 77 91 106 107 111 112 113 114 115 116 117
+APPEND               : 114
+BOOL                 : 12
+CERRAR_CORCH         : 5 85
+CERRAR_LLAVE         : 28
+CERRAR_PRNT          : 18 32 42 48 53 54 55 77 91 106 107 111 112 113 114 115 116 117
+CIRCLE               : 108
+COMA                 : 26 46 58 95 106 107 107 111 114 115 117
+CONST                : 
+CREATE               : 107
+CTE_F                : 88
+CTE_I                : 5 87
+CTE_S                : 45
+DESIGUALDAD          : 63
+DIVISION             : 75
+DO                   : 54
+DOS_PUNTOS           : 
+DOWN                 : 119
+ELSE                 : 49
+END                  : 1
+ERASE                : 111
+FALSE                : 90
+FIRST                : 
+FLOAT                : 10
+FUNC                 : 17
+ID                   : 1 4 17 24 55 60 86 114 115
+IF                   : 48
+IGUAL                : 60
+IGUALDAD             : 62
+INT                  : 9
+LAST                 : 
+LEFT                 : 120
+LINE                 : 
+LIST                 : 
+MAIN                 : 32
+MAYOR_IGUAL          : 66
+MAYOR_QUE            : 64
+MENOR_IGUAL          : 67
+MENOR_QUE            : 65
+MOVE                 : 117
+MULTIPLICACION       : 74
+PAINT                : 106
+POINT                : 
+PRINT                : 42
+PROGRAM              : 1
+PUNTO_COMA           : 1 4 29 42 54 55 60 106 107 111 112 113 114 115 116 117
+P_DOWN               : 113
+P_UP                 : 112
+REMOVE               : 115
+RESTA                : 71 80
+RETURN               : 29
+RIGHT                : 121
+SIZE                 : 116
+SQUARE               : 110
+STRING               : 11
+SUMA                 : 70 79
+TRIANGLE             : 109
+TRUE                 : 89
+UP                   : 118
+VAR                  : 4
+VOID                 : 13
+WHILE                : 53 54
+error                : 
+
+Nonterminals, with rules where they appear
+
+array                : 4
+assignment           : 37
+block                : 15 21 31 48 49 53 54
+body                 : 1
+call                 : 38
+condition            : 35
+const_bool           : 84
+const_float          : 83
+const_int            : 82
+const_string         : 44
+direction            : 117
+do_while             : 52
+else                 : 48
+estatuto             : 33
+estatuto_loop        : 28 33
+exp                  : 61 62 63 64 65 66 67 70 71
+exp_choice           : 69
+expression           : 29 43 48 53 54 56 58 60 77 93 95 106 106 107 107 111 111 114 115 116 117
+expression_choice    : 61
+factor               : 73
+factor_choice        : 78
+fappend              : 102
+fcreate              : 98
+ferase               : 99
+figure               : 107
+fmain                : 14
+fmain_aux            : 31
+fmove                : 105
+fp_down              : 101
+fp_up                : 100
+fpaint               : 97
+fprint               : 39
+fremove              : 103
+fsize                : 104
+functions            : 14
+functions_aux        : 19
+functions_body       : 15 21
+functions_loop       : 15 21
+functions_params     : 15 21
+list_elements        : 85
+list_elements_loop   : 93 95
+loop                 : 36
+params               : 22 25
+params_aux           : 18
+params_call          : 55 91
+params_call_loop     : 56 58
+params_loop          : 22 25
+params_loop_aux      : 26
+program              : 0
+return               : 28
+special_function     : 40
+term                 : 69 74 75
+term_choice          : 73
+type                 : 4 17 24
+var_body             : 2 7 41
+var_cte              : 78
+var_func             : 86
+var_loop             : 4
+vars                 : 1
+while                : 51
+write_choice         : 42 46
+write_loop           : 43 44
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . PROGRAM ID PUNTO_COMA vars body END
+
+    PROGRAM         shift and go to state 2
+
+    program                        shift and go to state 1
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> PROGRAM . ID PUNTO_COMA vars body END
+
+    ID              shift and go to state 3
+
+
+state 3
+
+    (1) program -> PROGRAM ID . PUNTO_COMA vars body END
+
+    PUNTO_COMA      shift and go to state 4
+
+
+state 4
+
+    (1) program -> PROGRAM ID PUNTO_COMA . vars body END
+    (2) vars -> . var_body
+    (3) vars -> .
+    (4) var_body -> . VAR type ID array PUNTO_COMA var_loop
+
+    FUNC            reduce using rule 3 (vars -> .)
+    MAIN            reduce using rule 3 (vars -> .)
+    VAR             shift and go to state 7
+
+    vars                           shift and go to state 5
+    var_body                       shift and go to state 6
+
+state 5
+
+    (1) program -> PROGRAM ID PUNTO_COMA vars . body END
+    (14) body -> . functions fmain
+    (15) functions -> . functions_body functions_params block functions_loop
+    (16) functions -> .
+    (17) functions_body -> . FUNC type ID
+
+    MAIN            reduce using rule 16 (functions -> .)
+    FUNC            shift and go to state 10
+
+    body                           shift and go to state 8
+    functions                      shift and go to state 9
+    functions_body                 shift and go to state 11
+
+state 6
+
+    (2) vars -> var_body .
+
+    FUNC            reduce using rule 2 (vars -> var_body .)
+    MAIN            reduce using rule 2 (vars -> var_body .)
+
+
+state 7
+
+    (4) var_body -> VAR . type ID array PUNTO_COMA var_loop
+    (9) type -> . INT
+    (10) type -> . FLOAT
+    (11) type -> . STRING
+    (12) type -> . BOOL
+    (13) type -> . VOID
+
+    INT             shift and go to state 14
+    FLOAT           shift and go to state 12
+    STRING          shift and go to state 13
+    BOOL            shift and go to state 16
+    VOID            shift and go to state 15
+
+    type                           shift and go to state 17
+
+state 8
+
+    (1) program -> PROGRAM ID PUNTO_COMA vars body . END
+
+    END             shift and go to state 18
+
+
+state 9
+
+    (14) body -> functions . fmain
+    (31) fmain -> . fmain_aux block
+    (32) fmain_aux -> . MAIN ABRIR_PRNT CERRAR_PRNT
+
+    MAIN            shift and go to state 20
+
+    fmain                          shift and go to state 21
+    fmain_aux                      shift and go to state 19
+
+state 10
+
+    (17) functions_body -> FUNC . type ID
+    (9) type -> . INT
+    (10) type -> . FLOAT
+    (11) type -> . STRING
+    (12) type -> . BOOL
+    (13) type -> . VOID
+
+    INT             shift and go to state 14
+    FLOAT           shift and go to state 12
+    STRING          shift and go to state 13
+    BOOL            shift and go to state 16
+    VOID            shift and go to state 15
+
+    type                           shift and go to state 22
+
+state 11
+
+    (15) functions -> functions_body . functions_params block functions_loop
+    (18) functions_params -> . ABRIR_PRNT params_aux CERRAR_PRNT
+
+    ABRIR_PRNT      shift and go to state 24
+
+    functions_params               shift and go to state 23
+
+state 12
+
+    (10) type -> FLOAT .
+
+    ID              reduce using rule 10 (type -> FLOAT .)
+
+
+state 13
+
+    (11) type -> STRING .
+
+    ID              reduce using rule 11 (type -> STRING .)
+
+
+state 14
+
+    (9) type -> INT .
+
+    ID              reduce using rule 9 (type -> INT .)
+
+
+state 15
+
+    (13) type -> VOID .
+
+    ID              reduce using rule 13 (type -> VOID .)
+
+
+state 16
+
+    (12) type -> BOOL .
+
+    ID              reduce using rule 12 (type -> BOOL .)
+
+
+state 17
+
+    (4) var_body -> VAR type . ID array PUNTO_COMA var_loop
+
+    ID              shift and go to state 25
+
+
+state 18
+
+    (1) program -> PROGRAM ID PUNTO_COMA vars body END .
+
+    $end            reduce using rule 1 (program -> PROGRAM ID PUNTO_COMA vars body END .)
+
+
+state 19
+
+    (31) fmain -> fmain_aux . block
+    (28) block -> . ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE
+
+    ABRIR_LLAVE     shift and go to state 26
+
+    block                          shift and go to state 27
+
+state 20
+
+    (32) fmain_aux -> MAIN . ABRIR_PRNT CERRAR_PRNT
+
+    ABRIR_PRNT      shift and go to state 28
+
+
+state 21
+
+    (14) body -> functions fmain .
+
+    END             reduce using rule 14 (body -> functions fmain .)
+
+
+state 22
+
+    (17) functions_body -> FUNC type . ID
+
+    ID              shift and go to state 29
+
+
+state 23
+
+    (15) functions -> functions_body functions_params . block functions_loop
+    (28) block -> . ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE
+
+    ABRIR_LLAVE     shift and go to state 26
+
+    block                          shift and go to state 30
+
+state 24
+
+    (18) functions_params -> ABRIR_PRNT . params_aux CERRAR_PRNT
+    (22) params_aux -> . params params_loop
+    (23) params_aux -> .
+    (24) params -> . type ID
+    (9) type -> . INT
+    (10) type -> . FLOAT
+    (11) type -> . STRING
+    (12) type -> . BOOL
+    (13) type -> . VOID
+
+    CERRAR_PRNT     reduce using rule 23 (params_aux -> .)
+    INT             shift and go to state 14
+    FLOAT           shift and go to state 12
+    STRING          shift and go to state 13
+    BOOL            shift and go to state 16
+    VOID            shift and go to state 15
+
+    type                           shift and go to state 33
+    params_aux                     shift and go to state 31
+    params                         shift and go to state 32
+
+state 25
+
+    (4) var_body -> VAR type ID . array PUNTO_COMA var_loop
+    (5) array -> . ABRIR_CORCH CTE_I CERRAR_CORCH
+    (6) array -> .
+
+    ABRIR_CORCH     shift and go to state 34
+    PUNTO_COMA      reduce using rule 6 (array -> .)
+
+    array                          shift and go to state 35
+
+state 26
+
+    (28) block -> ABRIR_LLAVE . estatuto_loop return CERRAR_LLAVE
+    (33) estatuto_loop -> . estatuto estatuto_loop
+    (34) estatuto_loop -> .
+    (35) estatuto -> . condition
+    (36) estatuto -> . loop
+    (37) estatuto -> . assignment
+    (38) estatuto -> . call
+    (39) estatuto -> . fprint
+    (40) estatuto -> . special_function
+    (41) estatuto -> . var_body
+    (48) condition -> . IF ABRIR_PRNT expression CERRAR_PRNT block else
+    (51) loop -> . while
+    (52) loop -> . do_while
+    (60) assignment -> . ID IGUAL expression PUNTO_COMA
+    (55) call -> . ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA
+    (42) fprint -> . PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA
+    (97) special_function -> . fpaint
+    (98) special_function -> . fcreate
+    (99) special_function -> . ferase
+    (100) special_function -> . fp_up
+    (101) special_function -> . fp_down
+    (102) special_function -> . fappend
+    (103) special_function -> . fremove
+    (104) special_function -> . fsize
+    (105) special_function -> . fmove
+    (4) var_body -> . VAR type ID array PUNTO_COMA var_loop
+    (53) while -> . WHILE ABRIR_PRNT expression CERRAR_PRNT block
+    (54) do_while -> . DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA
+    (106) fpaint -> . PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA
+    (107) fcreate -> . CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA
+    (111) ferase -> . ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA
+    (112) fp_up -> . P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA
+    (113) fp_down -> . P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA
+    (114) fappend -> . APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA
+    (115) fremove -> . REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA
+    (116) fsize -> . SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA
+    (117) fmove -> . MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA
+
+    RETURN          reduce using rule 34 (estatuto_loop -> .)
+    CERRAR_LLAVE    reduce using rule 34 (estatuto_loop -> .)
+    IF              shift and go to state 65
+    ID              shift and go to state 63
+    PRINT           shift and go to state 39
+    VAR             shift and go to state 7
+    WHILE           shift and go to state 37
+    DO              shift and go to state 36
+    PAINT           shift and go to state 59
+    CREATE          shift and go to state 45
+    ERASE           shift and go to state 49
+    P_UP            shift and go to state 44
+    P_DOWN          shift and go to state 52
+    APPEND          shift and go to state 41
+    REMOVE          shift and go to state 67
+    SIZE            shift and go to state 53
+    MOVE            shift and go to state 56
+
+    fp_up                          shift and go to state 62
+    fpaint                         shift and go to state 40
+    fcreate                        shift and go to state 42
+    fappend                        shift and go to state 43
+    estatuto                       shift and go to state 46
+    fsize                          shift and go to state 47
+    call                           shift and go to state 50
+    condition                      shift and go to state 64
+    fremove                        shift and go to state 54
+    do_while                       shift and go to state 69
+    fmove                          shift and go to state 55
+    assignment                     shift and go to state 57
+    special_function               shift and go to state 58
+    var_body                       shift and go to state 60
+    fp_down                        shift and go to state 61
+    estatuto_loop                  shift and go to state 48
+    ferase                         shift and go to state 51
+    fprint                         shift and go to state 66
+    while                          shift and go to state 68
+    loop                           shift and go to state 38
+
+state 27
+
+    (31) fmain -> fmain_aux block .
+
+    END             reduce using rule 31 (fmain -> fmain_aux block .)
+
+
+state 28
+
+    (32) fmain_aux -> MAIN ABRIR_PRNT . CERRAR_PRNT
+
+    CERRAR_PRNT     shift and go to state 70
+
+
+state 29
+
+    (17) functions_body -> FUNC type ID .
+
+    ABRIR_PRNT      reduce using rule 17 (functions_body -> FUNC type ID .)
+
+
+state 30
+
+    (15) functions -> functions_body functions_params block . functions_loop
+    (19) functions_loop -> . functions_aux
+    (20) functions_loop -> .
+    (21) functions_aux -> . functions_body functions_params block functions_loop
+    (17) functions_body -> . FUNC type ID
+
+    MAIN            reduce using rule 20 (functions_loop -> .)
+    FUNC            shift and go to state 10
+
+    functions_body                 shift and go to state 71
+    functions_loop                 shift and go to state 72
+    functions_aux                  shift and go to state 73
+
+state 31
+
+    (18) functions_params -> ABRIR_PRNT params_aux . CERRAR_PRNT
+
+    CERRAR_PRNT     shift and go to state 74
+
+
+state 32
+
+    (22) params_aux -> params . params_loop
+    (26) params_loop -> . COMA params_loop_aux
+    (27) params_loop -> .
+
+    COMA            shift and go to state 76
+    CERRAR_PRNT     reduce using rule 27 (params_loop -> .)
+
+    params_loop                    shift and go to state 75
+
+state 33
+
+    (24) params -> type . ID
+
+    ID              shift and go to state 77
+
+
+state 34
+
+    (5) array -> ABRIR_CORCH . CTE_I CERRAR_CORCH
+
+    CTE_I           shift and go to state 78
+
+
+state 35
+
+    (4) var_body -> VAR type ID array . PUNTO_COMA var_loop
+
+    PUNTO_COMA      shift and go to state 79
+
+
+state 36
+
+    (54) do_while -> DO . block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA
+    (28) block -> . ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE
+
+    ABRIR_LLAVE     shift and go to state 26
+
+    block                          shift and go to state 80
+
+state 37
+
+    (53) while -> WHILE . ABRIR_PRNT expression CERRAR_PRNT block
+
+    ABRIR_PRNT      shift and go to state 81
+
+
+state 38
+
+    (36) estatuto -> loop .
+
+    IF              reduce using rule 36 (estatuto -> loop .)
+    ID              reduce using rule 36 (estatuto -> loop .)
+    PRINT           reduce using rule 36 (estatuto -> loop .)
+    VAR             reduce using rule 36 (estatuto -> loop .)
+    WHILE           reduce using rule 36 (estatuto -> loop .)
+    DO              reduce using rule 36 (estatuto -> loop .)
+    PAINT           reduce using rule 36 (estatuto -> loop .)
+    CREATE          reduce using rule 36 (estatuto -> loop .)
+    ERASE           reduce using rule 36 (estatuto -> loop .)
+    P_UP            reduce using rule 36 (estatuto -> loop .)
+    P_DOWN          reduce using rule 36 (estatuto -> loop .)
+    APPEND          reduce using rule 36 (estatuto -> loop .)
+    REMOVE          reduce using rule 36 (estatuto -> loop .)
+    SIZE            reduce using rule 36 (estatuto -> loop .)
+    MOVE            reduce using rule 36 (estatuto -> loop .)
+    RETURN          reduce using rule 36 (estatuto -> loop .)
+    CERRAR_LLAVE    reduce using rule 36 (estatuto -> loop .)
+
+
+state 39
+
+    (42) fprint -> PRINT . ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA
+
+    ABRIR_PRNT      shift and go to state 82
+
+
+state 40
+
+    (97) special_function -> fpaint .
+
+    IF              reduce using rule 97 (special_function -> fpaint .)
+    ID              reduce using rule 97 (special_function -> fpaint .)
+    PRINT           reduce using rule 97 (special_function -> fpaint .)
+    VAR             reduce using rule 97 (special_function -> fpaint .)
+    WHILE           reduce using rule 97 (special_function -> fpaint .)
+    DO              reduce using rule 97 (special_function -> fpaint .)
+    PAINT           reduce using rule 97 (special_function -> fpaint .)
+    CREATE          reduce using rule 97 (special_function -> fpaint .)
+    ERASE           reduce using rule 97 (special_function -> fpaint .)
+    P_UP            reduce using rule 97 (special_function -> fpaint .)
+    P_DOWN          reduce using rule 97 (special_function -> fpaint .)
+    APPEND          reduce using rule 97 (special_function -> fpaint .)
+    REMOVE          reduce using rule 97 (special_function -> fpaint .)
+    SIZE            reduce using rule 97 (special_function -> fpaint .)
+    MOVE            reduce using rule 97 (special_function -> fpaint .)
+    RETURN          reduce using rule 97 (special_function -> fpaint .)
+    CERRAR_LLAVE    reduce using rule 97 (special_function -> fpaint .)
+
+
+state 41
+
+    (114) fappend -> APPEND . ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA
+
+    ABRIR_PRNT      shift and go to state 83
+
+
+state 42
+
+    (98) special_function -> fcreate .
+
+    IF              reduce using rule 98 (special_function -> fcreate .)
+    ID              reduce using rule 98 (special_function -> fcreate .)
+    PRINT           reduce using rule 98 (special_function -> fcreate .)
+    VAR             reduce using rule 98 (special_function -> fcreate .)
+    WHILE           reduce using rule 98 (special_function -> fcreate .)
+    DO              reduce using rule 98 (special_function -> fcreate .)
+    PAINT           reduce using rule 98 (special_function -> fcreate .)
+    CREATE          reduce using rule 98 (special_function -> fcreate .)
+    ERASE           reduce using rule 98 (special_function -> fcreate .)
+    P_UP            reduce using rule 98 (special_function -> fcreate .)
+    P_DOWN          reduce using rule 98 (special_function -> fcreate .)
+    APPEND          reduce using rule 98 (special_function -> fcreate .)
+    REMOVE          reduce using rule 98 (special_function -> fcreate .)
+    SIZE            reduce using rule 98 (special_function -> fcreate .)
+    MOVE            reduce using rule 98 (special_function -> fcreate .)
+    RETURN          reduce using rule 98 (special_function -> fcreate .)
+    CERRAR_LLAVE    reduce using rule 98 (special_function -> fcreate .)
+
+
+state 43
+
+    (102) special_function -> fappend .
+
+    IF              reduce using rule 102 (special_function -> fappend .)
+    ID              reduce using rule 102 (special_function -> fappend .)
+    PRINT           reduce using rule 102 (special_function -> fappend .)
+    VAR             reduce using rule 102 (special_function -> fappend .)
+    WHILE           reduce using rule 102 (special_function -> fappend .)
+    DO              reduce using rule 102 (special_function -> fappend .)
+    PAINT           reduce using rule 102 (special_function -> fappend .)
+    CREATE          reduce using rule 102 (special_function -> fappend .)
+    ERASE           reduce using rule 102 (special_function -> fappend .)
+    P_UP            reduce using rule 102 (special_function -> fappend .)
+    P_DOWN          reduce using rule 102 (special_function -> fappend .)
+    APPEND          reduce using rule 102 (special_function -> fappend .)
+    REMOVE          reduce using rule 102 (special_function -> fappend .)
+    SIZE            reduce using rule 102 (special_function -> fappend .)
+    MOVE            reduce using rule 102 (special_function -> fappend .)
+    RETURN          reduce using rule 102 (special_function -> fappend .)
+    CERRAR_LLAVE    reduce using rule 102 (special_function -> fappend .)
+
+
+state 44
+
+    (112) fp_up -> P_UP . ABRIR_PRNT CERRAR_PRNT PUNTO_COMA
+
+    ABRIR_PRNT      shift and go to state 84
+
+
+state 45
+
+    (107) fcreate -> CREATE . ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA
+
+    ABRIR_PRNT      shift and go to state 85
+
+
+state 46
+
+    (33) estatuto_loop -> estatuto . estatuto_loop
+    (33) estatuto_loop -> . estatuto estatuto_loop
+    (34) estatuto_loop -> .
+    (35) estatuto -> . condition
+    (36) estatuto -> . loop
+    (37) estatuto -> . assignment
+    (38) estatuto -> . call
+    (39) estatuto -> . fprint
+    (40) estatuto -> . special_function
+    (41) estatuto -> . var_body
+    (48) condition -> . IF ABRIR_PRNT expression CERRAR_PRNT block else
+    (51) loop -> . while
+    (52) loop -> . do_while
+    (60) assignment -> . ID IGUAL expression PUNTO_COMA
+    (55) call -> . ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA
+    (42) fprint -> . PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA
+    (97) special_function -> . fpaint
+    (98) special_function -> . fcreate
+    (99) special_function -> . ferase
+    (100) special_function -> . fp_up
+    (101) special_function -> . fp_down
+    (102) special_function -> . fappend
+    (103) special_function -> . fremove
+    (104) special_function -> . fsize
+    (105) special_function -> . fmove
+    (4) var_body -> . VAR type ID array PUNTO_COMA var_loop
+    (53) while -> . WHILE ABRIR_PRNT expression CERRAR_PRNT block
+    (54) do_while -> . DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA
+    (106) fpaint -> . PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA
+    (107) fcreate -> . CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA
+    (111) ferase -> . ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA
+    (112) fp_up -> . P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA
+    (113) fp_down -> . P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA
+    (114) fappend -> . APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA
+    (115) fremove -> . REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA
+    (116) fsize -> . SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA
+    (117) fmove -> . MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA
+
+    RETURN          reduce using rule 34 (estatuto_loop -> .)
+    CERRAR_LLAVE    reduce using rule 34 (estatuto_loop -> .)
+    IF              shift and go to state 65
+    ID              shift and go to state 63
+    PRINT           shift and go to state 39
+    VAR             shift and go to state 7
+    WHILE           shift and go to state 37
+    DO              shift and go to state 36
+    PAINT           shift and go to state 59
+    CREATE          shift and go to state 45
+    ERASE           shift and go to state 49
+    P_UP            shift and go to state 44
+    P_DOWN          shift and go to state 52
+    APPEND          shift and go to state 41
+    REMOVE          shift and go to state 67
+    SIZE            shift and go to state 53
+    MOVE            shift and go to state 56
+
+    fp_up                          shift and go to state 62
+    fpaint                         shift and go to state 40
+    fcreate                        shift and go to state 42
+    fappend                        shift and go to state 43
+    estatuto                       shift and go to state 46
+    fsize                          shift and go to state 47
+    call                           shift and go to state 50
+    condition                      shift and go to state 64
+    fremove                        shift and go to state 54
+    do_while                       shift and go to state 69
+    fmove                          shift and go to state 55
+    assignment                     shift and go to state 57
+    special_function               shift and go to state 58
+    var_body                       shift and go to state 60
+    fp_down                        shift and go to state 61
+    estatuto_loop                  shift and go to state 86
+    ferase                         shift and go to state 51
+    fprint                         shift and go to state 66
+    while                          shift and go to state 68
+    loop                           shift and go to state 38
+
+state 47
+
+    (104) special_function -> fsize .
+
+    IF              reduce using rule 104 (special_function -> fsize .)
+    ID              reduce using rule 104 (special_function -> fsize .)
+    PRINT           reduce using rule 104 (special_function -> fsize .)
+    VAR             reduce using rule 104 (special_function -> fsize .)
+    WHILE           reduce using rule 104 (special_function -> fsize .)
+    DO              reduce using rule 104 (special_function -> fsize .)
+    PAINT           reduce using rule 104 (special_function -> fsize .)
+    CREATE          reduce using rule 104 (special_function -> fsize .)
+    ERASE           reduce using rule 104 (special_function -> fsize .)
+    P_UP            reduce using rule 104 (special_function -> fsize .)
+    P_DOWN          reduce using rule 104 (special_function -> fsize .)
+    APPEND          reduce using rule 104 (special_function -> fsize .)
+    REMOVE          reduce using rule 104 (special_function -> fsize .)
+    SIZE            reduce using rule 104 (special_function -> fsize .)
+    MOVE            reduce using rule 104 (special_function -> fsize .)
+    RETURN          reduce using rule 104 (special_function -> fsize .)
+    CERRAR_LLAVE    reduce using rule 104 (special_function -> fsize .)
+
+
+state 48
+
+    (28) block -> ABRIR_LLAVE estatuto_loop . return CERRAR_LLAVE
+    (29) return -> . RETURN expression PUNTO_COMA
+    (30) return -> .
+
+    RETURN          shift and go to state 88
+    CERRAR_LLAVE    reduce using rule 30 (return -> .)
+
+    return                         shift and go to state 87
+
+state 49
+
+    (111) ferase -> ERASE . ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA
+
+    ABRIR_PRNT      shift and go to state 89
+
+
+state 50
+
+    (38) estatuto -> call .
+
+    IF              reduce using rule 38 (estatuto -> call .)
+    ID              reduce using rule 38 (estatuto -> call .)
+    PRINT           reduce using rule 38 (estatuto -> call .)
+    VAR             reduce using rule 38 (estatuto -> call .)
+    WHILE           reduce using rule 38 (estatuto -> call .)
+    DO              reduce using rule 38 (estatuto -> call .)
+    PAINT           reduce using rule 38 (estatuto -> call .)
+    CREATE          reduce using rule 38 (estatuto -> call .)
+    ERASE           reduce using rule 38 (estatuto -> call .)
+    P_UP            reduce using rule 38 (estatuto -> call .)
+    P_DOWN          reduce using rule 38 (estatuto -> call .)
+    APPEND          reduce using rule 38 (estatuto -> call .)
+    REMOVE          reduce using rule 38 (estatuto -> call .)
+    SIZE            reduce using rule 38 (estatuto -> call .)
+    MOVE            reduce using rule 38 (estatuto -> call .)
+    RETURN          reduce using rule 38 (estatuto -> call .)
+    CERRAR_LLAVE    reduce using rule 38 (estatuto -> call .)
+
+
+state 51
+
+    (99) special_function -> ferase .
+
+    IF              reduce using rule 99 (special_function -> ferase .)
+    ID              reduce using rule 99 (special_function -> ferase .)
+    PRINT           reduce using rule 99 (special_function -> ferase .)
+    VAR             reduce using rule 99 (special_function -> ferase .)
+    WHILE           reduce using rule 99 (special_function -> ferase .)
+    DO              reduce using rule 99 (special_function -> ferase .)
+    PAINT           reduce using rule 99 (special_function -> ferase .)
+    CREATE          reduce using rule 99 (special_function -> ferase .)
+    ERASE           reduce using rule 99 (special_function -> ferase .)
+    P_UP            reduce using rule 99 (special_function -> ferase .)
+    P_DOWN          reduce using rule 99 (special_function -> ferase .)
+    APPEND          reduce using rule 99 (special_function -> ferase .)
+    REMOVE          reduce using rule 99 (special_function -> ferase .)
+    SIZE            reduce using rule 99 (special_function -> ferase .)
+    MOVE            reduce using rule 99 (special_function -> ferase .)
+    RETURN          reduce using rule 99 (special_function -> ferase .)
+    CERRAR_LLAVE    reduce using rule 99 (special_function -> ferase .)
+
+
+state 52
+
+    (113) fp_down -> P_DOWN . ABRIR_PRNT CERRAR_PRNT PUNTO_COMA
+
+    ABRIR_PRNT      shift and go to state 90
+
+
+state 53
+
+    (116) fsize -> SIZE . ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA
+
+    ABRIR_PRNT      shift and go to state 91
+
+
+state 54
+
+    (103) special_function -> fremove .
+
+    IF              reduce using rule 103 (special_function -> fremove .)
+    ID              reduce using rule 103 (special_function -> fremove .)
+    PRINT           reduce using rule 103 (special_function -> fremove .)
+    VAR             reduce using rule 103 (special_function -> fremove .)
+    WHILE           reduce using rule 103 (special_function -> fremove .)
+    DO              reduce using rule 103 (special_function -> fremove .)
+    PAINT           reduce using rule 103 (special_function -> fremove .)
+    CREATE          reduce using rule 103 (special_function -> fremove .)
+    ERASE           reduce using rule 103 (special_function -> fremove .)
+    P_UP            reduce using rule 103 (special_function -> fremove .)
+    P_DOWN          reduce using rule 103 (special_function -> fremove .)
+    APPEND          reduce using rule 103 (special_function -> fremove .)
+    REMOVE          reduce using rule 103 (special_function -> fremove .)
+    SIZE            reduce using rule 103 (special_function -> fremove .)
+    MOVE            reduce using rule 103 (special_function -> fremove .)
+    RETURN          reduce using rule 103 (special_function -> fremove .)
+    CERRAR_LLAVE    reduce using rule 103 (special_function -> fremove .)
+
+
+state 55
+
+    (105) special_function -> fmove .
+
+    IF              reduce using rule 105 (special_function -> fmove .)
+    ID              reduce using rule 105 (special_function -> fmove .)
+    PRINT           reduce using rule 105 (special_function -> fmove .)
+    VAR             reduce using rule 105 (special_function -> fmove .)
+    WHILE           reduce using rule 105 (special_function -> fmove .)
+    DO              reduce using rule 105 (special_function -> fmove .)
+    PAINT           reduce using rule 105 (special_function -> fmove .)
+    CREATE          reduce using rule 105 (special_function -> fmove .)
+    ERASE           reduce using rule 105 (special_function -> fmove .)
+    P_UP            reduce using rule 105 (special_function -> fmove .)
+    P_DOWN          reduce using rule 105 (special_function -> fmove .)
+    APPEND          reduce using rule 105 (special_function -> fmove .)
+    REMOVE          reduce using rule 105 (special_function -> fmove .)
+    SIZE            reduce using rule 105 (special_function -> fmove .)
+    MOVE            reduce using rule 105 (special_function -> fmove .)
+    RETURN          reduce using rule 105 (special_function -> fmove .)
+    CERRAR_LLAVE    reduce using rule 105 (special_function -> fmove .)
+
+
+state 56
+
+    (117) fmove -> MOVE . ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA
+
+    ABRIR_PRNT      shift and go to state 92
+
+
+state 57
+
+    (37) estatuto -> assignment .
+
+    IF              reduce using rule 37 (estatuto -> assignment .)
+    ID              reduce using rule 37 (estatuto -> assignment .)
+    PRINT           reduce using rule 37 (estatuto -> assignment .)
+    VAR             reduce using rule 37 (estatuto -> assignment .)
+    WHILE           reduce using rule 37 (estatuto -> assignment .)
+    DO              reduce using rule 37 (estatuto -> assignment .)
+    PAINT           reduce using rule 37 (estatuto -> assignment .)
+    CREATE          reduce using rule 37 (estatuto -> assignment .)
+    ERASE           reduce using rule 37 (estatuto -> assignment .)
+    P_UP            reduce using rule 37 (estatuto -> assignment .)
+    P_DOWN          reduce using rule 37 (estatuto -> assignment .)
+    APPEND          reduce using rule 37 (estatuto -> assignment .)
+    REMOVE          reduce using rule 37 (estatuto -> assignment .)
+    SIZE            reduce using rule 37 (estatuto -> assignment .)
+    MOVE            reduce using rule 37 (estatuto -> assignment .)
+    RETURN          reduce using rule 37 (estatuto -> assignment .)
+    CERRAR_LLAVE    reduce using rule 37 (estatuto -> assignment .)
+
+
+state 58
+
+    (40) estatuto -> special_function .
+
+    IF              reduce using rule 40 (estatuto -> special_function .)
+    ID              reduce using rule 40 (estatuto -> special_function .)
+    PRINT           reduce using rule 40 (estatuto -> special_function .)
+    VAR             reduce using rule 40 (estatuto -> special_function .)
+    WHILE           reduce using rule 40 (estatuto -> special_function .)
+    DO              reduce using rule 40 (estatuto -> special_function .)
+    PAINT           reduce using rule 40 (estatuto -> special_function .)
+    CREATE          reduce using rule 40 (estatuto -> special_function .)
+    ERASE           reduce using rule 40 (estatuto -> special_function .)
+    P_UP            reduce using rule 40 (estatuto -> special_function .)
+    P_DOWN          reduce using rule 40 (estatuto -> special_function .)
+    APPEND          reduce using rule 40 (estatuto -> special_function .)
+    REMOVE          reduce using rule 40 (estatuto -> special_function .)
+    SIZE            reduce using rule 40 (estatuto -> special_function .)
+    MOVE            reduce using rule 40 (estatuto -> special_function .)
+    RETURN          reduce using rule 40 (estatuto -> special_function .)
+    CERRAR_LLAVE    reduce using rule 40 (estatuto -> special_function .)
+
+
+state 59
+
+    (106) fpaint -> PAINT . ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA
+
+    ABRIR_PRNT      shift and go to state 93
+
+
+state 60
+
+    (41) estatuto -> var_body .
+
+    IF              reduce using rule 41 (estatuto -> var_body .)
+    ID              reduce using rule 41 (estatuto -> var_body .)
+    PRINT           reduce using rule 41 (estatuto -> var_body .)
+    VAR             reduce using rule 41 (estatuto -> var_body .)
+    WHILE           reduce using rule 41 (estatuto -> var_body .)
+    DO              reduce using rule 41 (estatuto -> var_body .)
+    PAINT           reduce using rule 41 (estatuto -> var_body .)
+    CREATE          reduce using rule 41 (estatuto -> var_body .)
+    ERASE           reduce using rule 41 (estatuto -> var_body .)
+    P_UP            reduce using rule 41 (estatuto -> var_body .)
+    P_DOWN          reduce using rule 41 (estatuto -> var_body .)
+    APPEND          reduce using rule 41 (estatuto -> var_body .)
+    REMOVE          reduce using rule 41 (estatuto -> var_body .)
+    SIZE            reduce using rule 41 (estatuto -> var_body .)
+    MOVE            reduce using rule 41 (estatuto -> var_body .)
+    RETURN          reduce using rule 41 (estatuto -> var_body .)
+    CERRAR_LLAVE    reduce using rule 41 (estatuto -> var_body .)
+
+
+state 61
+
+    (101) special_function -> fp_down .
+
+    IF              reduce using rule 101 (special_function -> fp_down .)
+    ID              reduce using rule 101 (special_function -> fp_down .)
+    PRINT           reduce using rule 101 (special_function -> fp_down .)
+    VAR             reduce using rule 101 (special_function -> fp_down .)
+    WHILE           reduce using rule 101 (special_function -> fp_down .)
+    DO              reduce using rule 101 (special_function -> fp_down .)
+    PAINT           reduce using rule 101 (special_function -> fp_down .)
+    CREATE          reduce using rule 101 (special_function -> fp_down .)
+    ERASE           reduce using rule 101 (special_function -> fp_down .)
+    P_UP            reduce using rule 101 (special_function -> fp_down .)
+    P_DOWN          reduce using rule 101 (special_function -> fp_down .)
+    APPEND          reduce using rule 101 (special_function -> fp_down .)
+    REMOVE          reduce using rule 101 (special_function -> fp_down .)
+    SIZE            reduce using rule 101 (special_function -> fp_down .)
+    MOVE            reduce using rule 101 (special_function -> fp_down .)
+    RETURN          reduce using rule 101 (special_function -> fp_down .)
+    CERRAR_LLAVE    reduce using rule 101 (special_function -> fp_down .)
+
+
+state 62
+
+    (100) special_function -> fp_up .
+
+    IF              reduce using rule 100 (special_function -> fp_up .)
+    ID              reduce using rule 100 (special_function -> fp_up .)
+    PRINT           reduce using rule 100 (special_function -> fp_up .)
+    VAR             reduce using rule 100 (special_function -> fp_up .)
+    WHILE           reduce using rule 100 (special_function -> fp_up .)
+    DO              reduce using rule 100 (special_function -> fp_up .)
+    PAINT           reduce using rule 100 (special_function -> fp_up .)
+    CREATE          reduce using rule 100 (special_function -> fp_up .)
+    ERASE           reduce using rule 100 (special_function -> fp_up .)
+    P_UP            reduce using rule 100 (special_function -> fp_up .)
+    P_DOWN          reduce using rule 100 (special_function -> fp_up .)
+    APPEND          reduce using rule 100 (special_function -> fp_up .)
+    REMOVE          reduce using rule 100 (special_function -> fp_up .)
+    SIZE            reduce using rule 100 (special_function -> fp_up .)
+    MOVE            reduce using rule 100 (special_function -> fp_up .)
+    RETURN          reduce using rule 100 (special_function -> fp_up .)
+    CERRAR_LLAVE    reduce using rule 100 (special_function -> fp_up .)
+
+
+state 63
+
+    (60) assignment -> ID . IGUAL expression PUNTO_COMA
+    (55) call -> ID . ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA
+
+    IGUAL           shift and go to state 94
+    ABRIR_PRNT      shift and go to state 95
+
+
+state 64
+
+    (35) estatuto -> condition .
+
+    IF              reduce using rule 35 (estatuto -> condition .)
+    ID              reduce using rule 35 (estatuto -> condition .)
+    PRINT           reduce using rule 35 (estatuto -> condition .)
+    VAR             reduce using rule 35 (estatuto -> condition .)
+    WHILE           reduce using rule 35 (estatuto -> condition .)
+    DO              reduce using rule 35 (estatuto -> condition .)
+    PAINT           reduce using rule 35 (estatuto -> condition .)
+    CREATE          reduce using rule 35 (estatuto -> condition .)
+    ERASE           reduce using rule 35 (estatuto -> condition .)
+    P_UP            reduce using rule 35 (estatuto -> condition .)
+    P_DOWN          reduce using rule 35 (estatuto -> condition .)
+    APPEND          reduce using rule 35 (estatuto -> condition .)
+    REMOVE          reduce using rule 35 (estatuto -> condition .)
+    SIZE            reduce using rule 35 (estatuto -> condition .)
+    MOVE            reduce using rule 35 (estatuto -> condition .)
+    RETURN          reduce using rule 35 (estatuto -> condition .)
+    CERRAR_LLAVE    reduce using rule 35 (estatuto -> condition .)
+
+
+state 65
+
+    (48) condition -> IF . ABRIR_PRNT expression CERRAR_PRNT block else
+
+    ABRIR_PRNT      shift and go to state 96
+
+
+state 66
+
+    (39) estatuto -> fprint .
+
+    IF              reduce using rule 39 (estatuto -> fprint .)
+    ID              reduce using rule 39 (estatuto -> fprint .)
+    PRINT           reduce using rule 39 (estatuto -> fprint .)
+    VAR             reduce using rule 39 (estatuto -> fprint .)
+    WHILE           reduce using rule 39 (estatuto -> fprint .)
+    DO              reduce using rule 39 (estatuto -> fprint .)
+    PAINT           reduce using rule 39 (estatuto -> fprint .)
+    CREATE          reduce using rule 39 (estatuto -> fprint .)
+    ERASE           reduce using rule 39 (estatuto -> fprint .)
+    P_UP            reduce using rule 39 (estatuto -> fprint .)
+    P_DOWN          reduce using rule 39 (estatuto -> fprint .)
+    APPEND          reduce using rule 39 (estatuto -> fprint .)
+    REMOVE          reduce using rule 39 (estatuto -> fprint .)
+    SIZE            reduce using rule 39 (estatuto -> fprint .)
+    MOVE            reduce using rule 39 (estatuto -> fprint .)
+    RETURN          reduce using rule 39 (estatuto -> fprint .)
+    CERRAR_LLAVE    reduce using rule 39 (estatuto -> fprint .)
+
+
+state 67
+
+    (115) fremove -> REMOVE . ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA
+
+    ABRIR_PRNT      shift and go to state 97
+
+
+state 68
+
+    (51) loop -> while .
+
+    IF              reduce using rule 51 (loop -> while .)
+    ID              reduce using rule 51 (loop -> while .)
+    PRINT           reduce using rule 51 (loop -> while .)
+    VAR             reduce using rule 51 (loop -> while .)
+    WHILE           reduce using rule 51 (loop -> while .)
+    DO              reduce using rule 51 (loop -> while .)
+    PAINT           reduce using rule 51 (loop -> while .)
+    CREATE          reduce using rule 51 (loop -> while .)
+    ERASE           reduce using rule 51 (loop -> while .)
+    P_UP            reduce using rule 51 (loop -> while .)
+    P_DOWN          reduce using rule 51 (loop -> while .)
+    APPEND          reduce using rule 51 (loop -> while .)
+    REMOVE          reduce using rule 51 (loop -> while .)
+    SIZE            reduce using rule 51 (loop -> while .)
+    MOVE            reduce using rule 51 (loop -> while .)
+    RETURN          reduce using rule 51 (loop -> while .)
+    CERRAR_LLAVE    reduce using rule 51 (loop -> while .)
+
+
+state 69
+
+    (52) loop -> do_while .
+
+    IF              reduce using rule 52 (loop -> do_while .)
+    ID              reduce using rule 52 (loop -> do_while .)
+    PRINT           reduce using rule 52 (loop -> do_while .)
+    VAR             reduce using rule 52 (loop -> do_while .)
+    WHILE           reduce using rule 52 (loop -> do_while .)
+    DO              reduce using rule 52 (loop -> do_while .)
+    PAINT           reduce using rule 52 (loop -> do_while .)
+    CREATE          reduce using rule 52 (loop -> do_while .)
+    ERASE           reduce using rule 52 (loop -> do_while .)
+    P_UP            reduce using rule 52 (loop -> do_while .)
+    P_DOWN          reduce using rule 52 (loop -> do_while .)
+    APPEND          reduce using rule 52 (loop -> do_while .)
+    REMOVE          reduce using rule 52 (loop -> do_while .)
+    SIZE            reduce using rule 52 (loop -> do_while .)
+    MOVE            reduce using rule 52 (loop -> do_while .)
+    RETURN          reduce using rule 52 (loop -> do_while .)
+    CERRAR_LLAVE    reduce using rule 52 (loop -> do_while .)
+
+
+state 70
+
+    (32) fmain_aux -> MAIN ABRIR_PRNT CERRAR_PRNT .
+
+    ABRIR_LLAVE     reduce using rule 32 (fmain_aux -> MAIN ABRIR_PRNT CERRAR_PRNT .)
+
+
+state 71
+
+    (21) functions_aux -> functions_body . functions_params block functions_loop
+    (18) functions_params -> . ABRIR_PRNT params_aux CERRAR_PRNT
+
+    ABRIR_PRNT      shift and go to state 24
+
+    functions_params               shift and go to state 98
+
+state 72
+
+    (15) functions -> functions_body functions_params block functions_loop .
+
+    MAIN            reduce using rule 15 (functions -> functions_body functions_params block functions_loop .)
+
+
+state 73
+
+    (19) functions_loop -> functions_aux .
+
+    MAIN            reduce using rule 19 (functions_loop -> functions_aux .)
+
+
+state 74
+
+    (18) functions_params -> ABRIR_PRNT params_aux CERRAR_PRNT .
+
+    ABRIR_LLAVE     reduce using rule 18 (functions_params -> ABRIR_PRNT params_aux CERRAR_PRNT .)
+
+
+state 75
+
+    (22) params_aux -> params params_loop .
+
+    CERRAR_PRNT     reduce using rule 22 (params_aux -> params params_loop .)
+
+
+state 76
+
+    (26) params_loop -> COMA . params_loop_aux
+    (25) params_loop_aux -> . params params_loop
+    (24) params -> . type ID
+    (9) type -> . INT
+    (10) type -> . FLOAT
+    (11) type -> . STRING
+    (12) type -> . BOOL
+    (13) type -> . VOID
+
+    INT             shift and go to state 14
+    FLOAT           shift and go to state 12
+    STRING          shift and go to state 13
+    BOOL            shift and go to state 16
+    VOID            shift and go to state 15
+
+    type                           shift and go to state 33
+    params_loop_aux                shift and go to state 99
+    params                         shift and go to state 100
+
+state 77
+
+    (24) params -> type ID .
+
+    COMA            reduce using rule 24 (params -> type ID .)
+    CERRAR_PRNT     reduce using rule 24 (params -> type ID .)
+
+
+state 78
+
+    (5) array -> ABRIR_CORCH CTE_I . CERRAR_CORCH
+
+    CERRAR_CORCH    shift and go to state 101
+
+
+state 79
+
+    (4) var_body -> VAR type ID array PUNTO_COMA . var_loop
+    (7) var_loop -> . var_body
+    (8) var_loop -> .
+    (4) var_body -> . VAR type ID array PUNTO_COMA var_loop
+
+  ! shift/reduce conflict for VAR resolved as shift
+    FUNC            reduce using rule 8 (var_loop -> .)
+    MAIN            reduce using rule 8 (var_loop -> .)
+    IF              reduce using rule 8 (var_loop -> .)
+    ID              reduce using rule 8 (var_loop -> .)
+    PRINT           reduce using rule 8 (var_loop -> .)
+    WHILE           reduce using rule 8 (var_loop -> .)
+    DO              reduce using rule 8 (var_loop -> .)
+    PAINT           reduce using rule 8 (var_loop -> .)
+    CREATE          reduce using rule 8 (var_loop -> .)
+    ERASE           reduce using rule 8 (var_loop -> .)
+    P_UP            reduce using rule 8 (var_loop -> .)
+    P_DOWN          reduce using rule 8 (var_loop -> .)
+    APPEND          reduce using rule 8 (var_loop -> .)
+    REMOVE          reduce using rule 8 (var_loop -> .)
+    SIZE            reduce using rule 8 (var_loop -> .)
+    MOVE            reduce using rule 8 (var_loop -> .)
+    RETURN          reduce using rule 8 (var_loop -> .)
+    CERRAR_LLAVE    reduce using rule 8 (var_loop -> .)
+    VAR             shift and go to state 7
+
+  ! VAR             [ reduce using rule 8 (var_loop -> .) ]
+
+    var_loop                       shift and go to state 102
+    var_body                       shift and go to state 103
+
+state 80
+
+    (54) do_while -> DO block . WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA
+
+    WHILE           shift and go to state 104
+
+
+state 81
+
+    (53) while -> WHILE ABRIR_PRNT . expression CERRAR_PRNT block
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 112
+
+state 82
+
+    (42) fprint -> PRINT ABRIR_PRNT . write_choice CERRAR_PRNT PUNTO_COMA
+    (43) write_choice -> . expression write_loop
+    (44) write_choice -> . const_string write_loop
+    (61) expression -> . exp expression_choice
+    (45) const_string -> . CTE_S
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    CTE_S           shift and go to state 114
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    write_choice                   shift and go to state 113
+    factor_choice                  shift and go to state 106
+    const_string                   shift and go to state 115
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 116
+
+state 83
+
+    (114) fappend -> APPEND ABRIR_PRNT . ID COMA expression CERRAR_PRNT PUNTO_COMA
+
+    ID              shift and go to state 117
+
+
+state 84
+
+    (112) fp_up -> P_UP ABRIR_PRNT . CERRAR_PRNT PUNTO_COMA
+
+    CERRAR_PRNT     shift and go to state 118
+
+
+state 85
+
+    (107) fcreate -> CREATE ABRIR_PRNT . figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA
+    (108) figure -> . CIRCLE
+    (109) figure -> . TRIANGLE
+    (110) figure -> . SQUARE
+
+    CIRCLE          shift and go to state 122
+    TRIANGLE        shift and go to state 119
+    SQUARE          shift and go to state 121
+
+    figure                         shift and go to state 120
+
+state 86
+
+    (33) estatuto_loop -> estatuto estatuto_loop .
+
+    RETURN          reduce using rule 33 (estatuto_loop -> estatuto estatuto_loop .)
+    CERRAR_LLAVE    reduce using rule 33 (estatuto_loop -> estatuto estatuto_loop .)
+
+
+state 87
+
+    (28) block -> ABRIR_LLAVE estatuto_loop return . CERRAR_LLAVE
+
+    CERRAR_LLAVE    shift and go to state 123
+
+
+state 88
+
+    (29) return -> RETURN . expression PUNTO_COMA
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 124
+
+state 89
+
+    (111) ferase -> ERASE ABRIR_PRNT . expression COMA expression CERRAR_PRNT PUNTO_COMA
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 125
+
+state 90
+
+    (113) fp_down -> P_DOWN ABRIR_PRNT . CERRAR_PRNT PUNTO_COMA
+
+    CERRAR_PRNT     shift and go to state 126
+
+
+state 91
+
+    (116) fsize -> SIZE ABRIR_PRNT . expression CERRAR_PRNT PUNTO_COMA
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 127
+
+state 92
+
+    (117) fmove -> MOVE ABRIR_PRNT . direction COMA expression CERRAR_PRNT PUNTO_COMA
+    (118) direction -> . UP
+    (119) direction -> . DOWN
+    (120) direction -> . LEFT
+    (121) direction -> . RIGHT
+
+    UP              shift and go to state 129
+    DOWN            shift and go to state 130
+    LEFT            shift and go to state 132
+    RIGHT           shift and go to state 131
+
+    direction                      shift and go to state 128
+
+state 93
+
+    (106) fpaint -> PAINT ABRIR_PRNT . expression COMA expression CERRAR_PRNT PUNTO_COMA
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 133
+
+state 94
+
+    (60) assignment -> ID IGUAL . expression PUNTO_COMA
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 134
+
+state 95
+
+    (55) call -> ID ABRIR_PRNT . params_call CERRAR_PRNT PUNTO_COMA
+    (56) params_call -> . expression params_call_loop
+    (57) params_call -> .
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    CERRAR_PRNT     reduce using rule 57 (params_call -> .)
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    params_call                    shift and go to state 135
+    factor_choice                  shift and go to state 106
+    term                           shift and go to state 105
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 136
+
+state 96
+
+    (48) condition -> IF ABRIR_PRNT . expression CERRAR_PRNT block else
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 137
+
+state 97
+
+    (115) fremove -> REMOVE ABRIR_PRNT . ID COMA expression CERRAR_PRNT PUNTO_COMA
+
+    ID              shift and go to state 138
+
+
+state 98
+
+    (21) functions_aux -> functions_body functions_params . block functions_loop
+    (28) block -> . ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE
+
+    ABRIR_LLAVE     shift and go to state 26
+
+    block                          shift and go to state 139
+
+state 99
+
+    (26) params_loop -> COMA params_loop_aux .
+
+    CERRAR_PRNT     reduce using rule 26 (params_loop -> COMA params_loop_aux .)
+
+
+state 100
+
+    (25) params_loop_aux -> params . params_loop
+    (26) params_loop -> . COMA params_loop_aux
+    (27) params_loop -> .
+
+    COMA            shift and go to state 76
+    CERRAR_PRNT     reduce using rule 27 (params_loop -> .)
+
+    params_loop                    shift and go to state 140
+
+state 101
+
+    (5) array -> ABRIR_CORCH CTE_I CERRAR_CORCH .
+
+    PUNTO_COMA      reduce using rule 5 (array -> ABRIR_CORCH CTE_I CERRAR_CORCH .)
+
+
+state 102
+
+    (4) var_body -> VAR type ID array PUNTO_COMA var_loop .
+
+    IF              reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    ID              reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    PRINT           reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    VAR             reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    WHILE           reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    DO              reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    PAINT           reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    CREATE          reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    ERASE           reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    P_UP            reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    P_DOWN          reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    APPEND          reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    REMOVE          reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    SIZE            reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    MOVE            reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    RETURN          reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    CERRAR_LLAVE    reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    FUNC            reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+    MAIN            reduce using rule 4 (var_body -> VAR type ID array PUNTO_COMA var_loop .)
+
+
+state 103
+
+    (7) var_loop -> var_body .
+
+    FUNC            reduce using rule 7 (var_loop -> var_body .)
+    MAIN            reduce using rule 7 (var_loop -> var_body .)
+    IF              reduce using rule 7 (var_loop -> var_body .)
+    ID              reduce using rule 7 (var_loop -> var_body .)
+    PRINT           reduce using rule 7 (var_loop -> var_body .)
+    VAR             reduce using rule 7 (var_loop -> var_body .)
+    WHILE           reduce using rule 7 (var_loop -> var_body .)
+    DO              reduce using rule 7 (var_loop -> var_body .)
+    PAINT           reduce using rule 7 (var_loop -> var_body .)
+    CREATE          reduce using rule 7 (var_loop -> var_body .)
+    ERASE           reduce using rule 7 (var_loop -> var_body .)
+    P_UP            reduce using rule 7 (var_loop -> var_body .)
+    P_DOWN          reduce using rule 7 (var_loop -> var_body .)
+    APPEND          reduce using rule 7 (var_loop -> var_body .)
+    REMOVE          reduce using rule 7 (var_loop -> var_body .)
+    SIZE            reduce using rule 7 (var_loop -> var_body .)
+    MOVE            reduce using rule 7 (var_loop -> var_body .)
+    RETURN          reduce using rule 7 (var_loop -> var_body .)
+    CERRAR_LLAVE    reduce using rule 7 (var_loop -> var_body .)
+
+
+state 104
+
+    (54) do_while -> DO block WHILE . ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA
+
+    ABRIR_PRNT      shift and go to state 141
+
+
+state 105
+
+    (69) exp -> term . exp_choice
+    (70) exp_choice -> . SUMA exp
+    (71) exp_choice -> . RESTA exp
+    (72) exp_choice -> .
+
+    SUMA            shift and go to state 143
+    RESTA           shift and go to state 144
+    IGUALDAD        reduce using rule 72 (exp_choice -> .)
+    DESIGUALDAD     reduce using rule 72 (exp_choice -> .)
+    MAYOR_QUE       reduce using rule 72 (exp_choice -> .)
+    MENOR_QUE       reduce using rule 72 (exp_choice -> .)
+    MAYOR_IGUAL     reduce using rule 72 (exp_choice -> .)
+    MENOR_IGUAL     reduce using rule 72 (exp_choice -> .)
+    CERRAR_PRNT     reduce using rule 72 (exp_choice -> .)
+    COMA            reduce using rule 72 (exp_choice -> .)
+    PUNTO_COMA      reduce using rule 72 (exp_choice -> .)
+    CERRAR_CORCH    reduce using rule 72 (exp_choice -> .)
+
+    exp_choice                     shift and go to state 142
+
+state 106
+
+    (78) factor -> factor_choice . var_cte
+    (82) var_cte -> . const_int
+    (83) var_cte -> . const_float
+    (84) var_cte -> . const_bool
+    (85) var_cte -> . ABRIR_CORCH list_elements CERRAR_CORCH
+    (86) var_cte -> . ID var_func
+    (87) const_int -> . CTE_I
+    (88) const_float -> . CTE_F
+    (89) const_bool -> . TRUE
+    (90) const_bool -> . FALSE
+
+    ABRIR_CORCH     shift and go to state 147
+    ID              shift and go to state 153
+    CTE_I           shift and go to state 149
+    CTE_F           shift and go to state 151
+    TRUE            shift and go to state 146
+    FALSE           shift and go to state 145
+
+    var_cte                        shift and go to state 148
+    const_int                      shift and go to state 150
+    const_float                    shift and go to state 152
+    const_bool                     shift and go to state 154
+
+state 107
+
+    (79) factor_choice -> SUMA .
+
+    ABRIR_CORCH     reduce using rule 79 (factor_choice -> SUMA .)
+    ID              reduce using rule 79 (factor_choice -> SUMA .)
+    CTE_I           reduce using rule 79 (factor_choice -> SUMA .)
+    CTE_F           reduce using rule 79 (factor_choice -> SUMA .)
+    TRUE            reduce using rule 79 (factor_choice -> SUMA .)
+    FALSE           reduce using rule 79 (factor_choice -> SUMA .)
+
+
+state 108
+
+    (61) expression -> exp . expression_choice
+    (62) expression_choice -> . IGUALDAD exp
+    (63) expression_choice -> . DESIGUALDAD exp
+    (64) expression_choice -> . MAYOR_QUE exp
+    (65) expression_choice -> . MENOR_QUE exp
+    (66) expression_choice -> . MAYOR_IGUAL exp
+    (67) expression_choice -> . MENOR_IGUAL exp
+    (68) expression_choice -> .
+
+    IGUALDAD        shift and go to state 155
+    DESIGUALDAD     shift and go to state 160
+    MAYOR_QUE       shift and go to state 158
+    MENOR_QUE       shift and go to state 157
+    MAYOR_IGUAL     shift and go to state 159
+    MENOR_IGUAL     shift and go to state 161
+    CERRAR_PRNT     reduce using rule 68 (expression_choice -> .)
+    COMA            reduce using rule 68 (expression_choice -> .)
+    PUNTO_COMA      reduce using rule 68 (expression_choice -> .)
+    CERRAR_CORCH    reduce using rule 68 (expression_choice -> .)
+
+    expression_choice              shift and go to state 156
+
+state 109
+
+    (73) term -> factor . term_choice
+    (74) term_choice -> . MULTIPLICACION term
+    (75) term_choice -> . DIVISION term
+    (76) term_choice -> .
+
+    MULTIPLICACION  shift and go to state 164
+    DIVISION        shift and go to state 162
+    SUMA            reduce using rule 76 (term_choice -> .)
+    RESTA           reduce using rule 76 (term_choice -> .)
+    IGUALDAD        reduce using rule 76 (term_choice -> .)
+    DESIGUALDAD     reduce using rule 76 (term_choice -> .)
+    MAYOR_QUE       reduce using rule 76 (term_choice -> .)
+    MENOR_QUE       reduce using rule 76 (term_choice -> .)
+    MAYOR_IGUAL     reduce using rule 76 (term_choice -> .)
+    MENOR_IGUAL     reduce using rule 76 (term_choice -> .)
+    CERRAR_PRNT     reduce using rule 76 (term_choice -> .)
+    COMA            reduce using rule 76 (term_choice -> .)
+    PUNTO_COMA      reduce using rule 76 (term_choice -> .)
+    CERRAR_CORCH    reduce using rule 76 (term_choice -> .)
+
+    term_choice                    shift and go to state 163
+
+state 110
+
+    (77) factor -> ABRIR_PRNT . expression CERRAR_PRNT
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 165
+
+state 111
+
+    (80) factor_choice -> RESTA .
+
+    ABRIR_CORCH     reduce using rule 80 (factor_choice -> RESTA .)
+    ID              reduce using rule 80 (factor_choice -> RESTA .)
+    CTE_I           reduce using rule 80 (factor_choice -> RESTA .)
+    CTE_F           reduce using rule 80 (factor_choice -> RESTA .)
+    TRUE            reduce using rule 80 (factor_choice -> RESTA .)
+    FALSE           reduce using rule 80 (factor_choice -> RESTA .)
+
+
+state 112
+
+    (53) while -> WHILE ABRIR_PRNT expression . CERRAR_PRNT block
+
+    CERRAR_PRNT     shift and go to state 166
+
+
+state 113
+
+    (42) fprint -> PRINT ABRIR_PRNT write_choice . CERRAR_PRNT PUNTO_COMA
+
+    CERRAR_PRNT     shift and go to state 167
+
+
+state 114
+
+    (45) const_string -> CTE_S .
+
+    COMA            reduce using rule 45 (const_string -> CTE_S .)
+    CERRAR_PRNT     reduce using rule 45 (const_string -> CTE_S .)
+
+
+state 115
+
+    (44) write_choice -> const_string . write_loop
+    (46) write_loop -> . COMA write_choice
+    (47) write_loop -> .
+
+    COMA            shift and go to state 169
+    CERRAR_PRNT     reduce using rule 47 (write_loop -> .)
+
+    write_loop                     shift and go to state 168
+
+state 116
+
+    (43) write_choice -> expression . write_loop
+    (46) write_loop -> . COMA write_choice
+    (47) write_loop -> .
+
+    COMA            shift and go to state 169
+    CERRAR_PRNT     reduce using rule 47 (write_loop -> .)
+
+    write_loop                     shift and go to state 170
+
+state 117
+
+    (114) fappend -> APPEND ABRIR_PRNT ID . COMA expression CERRAR_PRNT PUNTO_COMA
+
+    COMA            shift and go to state 171
+
+
+state 118
+
+    (112) fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 172
+
+
+state 119
+
+    (109) figure -> TRIANGLE .
+
+    COMA            reduce using rule 109 (figure -> TRIANGLE .)
+
+
+state 120
+
+    (107) fcreate -> CREATE ABRIR_PRNT figure . COMA expression COMA expression CERRAR_PRNT PUNTO_COMA
+
+    COMA            shift and go to state 173
+
+
+state 121
+
+    (110) figure -> SQUARE .
+
+    COMA            reduce using rule 110 (figure -> SQUARE .)
+
+
+state 122
+
+    (108) figure -> CIRCLE .
+
+    COMA            reduce using rule 108 (figure -> CIRCLE .)
+
+
+state 123
+
+    (28) block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .
+
+    IF              reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    ID              reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    PRINT           reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    VAR             reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    WHILE           reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    DO              reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    PAINT           reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    CREATE          reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    ERASE           reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    P_UP            reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    P_DOWN          reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    APPEND          reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    REMOVE          reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    SIZE            reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    MOVE            reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    RETURN          reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    CERRAR_LLAVE    reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    FUNC            reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    MAIN            reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    END             reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+    ELSE            reduce using rule 28 (block -> ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE .)
+
+
+state 124
+
+    (29) return -> RETURN expression . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 174
+
+
+state 125
+
+    (111) ferase -> ERASE ABRIR_PRNT expression . COMA expression CERRAR_PRNT PUNTO_COMA
+
+    COMA            shift and go to state 175
+
+
+state 126
+
+    (113) fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 176
+
+
+state 127
+
+    (116) fsize -> SIZE ABRIR_PRNT expression . CERRAR_PRNT PUNTO_COMA
+
+    CERRAR_PRNT     shift and go to state 177
+
+
+state 128
+
+    (117) fmove -> MOVE ABRIR_PRNT direction . COMA expression CERRAR_PRNT PUNTO_COMA
+
+    COMA            shift and go to state 178
+
+
+state 129
+
+    (118) direction -> UP .
+
+    COMA            reduce using rule 118 (direction -> UP .)
+
+
+state 130
+
+    (119) direction -> DOWN .
+
+    COMA            reduce using rule 119 (direction -> DOWN .)
+
+
+state 131
+
+    (121) direction -> RIGHT .
+
+    COMA            reduce using rule 121 (direction -> RIGHT .)
+
+
+state 132
+
+    (120) direction -> LEFT .
+
+    COMA            reduce using rule 120 (direction -> LEFT .)
+
+
+state 133
+
+    (106) fpaint -> PAINT ABRIR_PRNT expression . COMA expression CERRAR_PRNT PUNTO_COMA
+
+    COMA            shift and go to state 179
+
+
+state 134
+
+    (60) assignment -> ID IGUAL expression . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 180
+
+
+state 135
+
+    (55) call -> ID ABRIR_PRNT params_call . CERRAR_PRNT PUNTO_COMA
+
+    CERRAR_PRNT     shift and go to state 181
+
+
+state 136
+
+    (56) params_call -> expression . params_call_loop
+    (58) params_call_loop -> . COMA expression params_call_loop
+    (59) params_call_loop -> .
+
+    COMA            shift and go to state 182
+    CERRAR_PRNT     reduce using rule 59 (params_call_loop -> .)
+
+    params_call_loop               shift and go to state 183
+
+state 137
+
+    (48) condition -> IF ABRIR_PRNT expression . CERRAR_PRNT block else
+
+    CERRAR_PRNT     shift and go to state 184
+
+
+state 138
+
+    (115) fremove -> REMOVE ABRIR_PRNT ID . COMA expression CERRAR_PRNT PUNTO_COMA
+
+    COMA            shift and go to state 185
+
+
+state 139
+
+    (21) functions_aux -> functions_body functions_params block . functions_loop
+    (19) functions_loop -> . functions_aux
+    (20) functions_loop -> .
+    (21) functions_aux -> . functions_body functions_params block functions_loop
+    (17) functions_body -> . FUNC type ID
+
+    MAIN            reduce using rule 20 (functions_loop -> .)
+    FUNC            shift and go to state 10
+
+    functions_body                 shift and go to state 71
+    functions_loop                 shift and go to state 186
+    functions_aux                  shift and go to state 73
+
+state 140
+
+    (25) params_loop_aux -> params params_loop .
+
+    CERRAR_PRNT     reduce using rule 25 (params_loop_aux -> params params_loop .)
+
+
+state 141
+
+    (54) do_while -> DO block WHILE ABRIR_PRNT . expression CERRAR_PRNT PUNTO_COMA
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 187
+
+state 142
+
+    (69) exp -> term exp_choice .
+
+    IGUALDAD        reduce using rule 69 (exp -> term exp_choice .)
+    DESIGUALDAD     reduce using rule 69 (exp -> term exp_choice .)
+    MAYOR_QUE       reduce using rule 69 (exp -> term exp_choice .)
+    MENOR_QUE       reduce using rule 69 (exp -> term exp_choice .)
+    MAYOR_IGUAL     reduce using rule 69 (exp -> term exp_choice .)
+    MENOR_IGUAL     reduce using rule 69 (exp -> term exp_choice .)
+    CERRAR_PRNT     reduce using rule 69 (exp -> term exp_choice .)
+    COMA            reduce using rule 69 (exp -> term exp_choice .)
+    PUNTO_COMA      reduce using rule 69 (exp -> term exp_choice .)
+    CERRAR_CORCH    reduce using rule 69 (exp -> term exp_choice .)
+
+
+state 143
+
+    (70) exp_choice -> SUMA . exp
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 188
+    factor                         shift and go to state 109
+
+state 144
+
+    (71) exp_choice -> RESTA . exp
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 189
+    factor                         shift and go to state 109
+
+state 145
+
+    (90) const_bool -> FALSE .
+
+    MULTIPLICACION  reduce using rule 90 (const_bool -> FALSE .)
+    DIVISION        reduce using rule 90 (const_bool -> FALSE .)
+    SUMA            reduce using rule 90 (const_bool -> FALSE .)
+    RESTA           reduce using rule 90 (const_bool -> FALSE .)
+    IGUALDAD        reduce using rule 90 (const_bool -> FALSE .)
+    DESIGUALDAD     reduce using rule 90 (const_bool -> FALSE .)
+    MAYOR_QUE       reduce using rule 90 (const_bool -> FALSE .)
+    MENOR_QUE       reduce using rule 90 (const_bool -> FALSE .)
+    MAYOR_IGUAL     reduce using rule 90 (const_bool -> FALSE .)
+    MENOR_IGUAL     reduce using rule 90 (const_bool -> FALSE .)
+    CERRAR_PRNT     reduce using rule 90 (const_bool -> FALSE .)
+    COMA            reduce using rule 90 (const_bool -> FALSE .)
+    PUNTO_COMA      reduce using rule 90 (const_bool -> FALSE .)
+    CERRAR_CORCH    reduce using rule 90 (const_bool -> FALSE .)
+
+
+state 146
+
+    (89) const_bool -> TRUE .
+
+    MULTIPLICACION  reduce using rule 89 (const_bool -> TRUE .)
+    DIVISION        reduce using rule 89 (const_bool -> TRUE .)
+    SUMA            reduce using rule 89 (const_bool -> TRUE .)
+    RESTA           reduce using rule 89 (const_bool -> TRUE .)
+    IGUALDAD        reduce using rule 89 (const_bool -> TRUE .)
+    DESIGUALDAD     reduce using rule 89 (const_bool -> TRUE .)
+    MAYOR_QUE       reduce using rule 89 (const_bool -> TRUE .)
+    MENOR_QUE       reduce using rule 89 (const_bool -> TRUE .)
+    MAYOR_IGUAL     reduce using rule 89 (const_bool -> TRUE .)
+    MENOR_IGUAL     reduce using rule 89 (const_bool -> TRUE .)
+    CERRAR_PRNT     reduce using rule 89 (const_bool -> TRUE .)
+    COMA            reduce using rule 89 (const_bool -> TRUE .)
+    PUNTO_COMA      reduce using rule 89 (const_bool -> TRUE .)
+    CERRAR_CORCH    reduce using rule 89 (const_bool -> TRUE .)
+
+
+state 147
+
+    (85) var_cte -> ABRIR_CORCH . list_elements CERRAR_CORCH
+    (93) list_elements -> . expression list_elements_loop
+    (94) list_elements -> .
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    CERRAR_CORCH    reduce using rule 94 (list_elements -> .)
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    list_elements                  shift and go to state 190
+    expression                     shift and go to state 191
+
+state 148
+
+    (78) factor -> factor_choice var_cte .
+
+    MULTIPLICACION  reduce using rule 78 (factor -> factor_choice var_cte .)
+    DIVISION        reduce using rule 78 (factor -> factor_choice var_cte .)
+    SUMA            reduce using rule 78 (factor -> factor_choice var_cte .)
+    RESTA           reduce using rule 78 (factor -> factor_choice var_cte .)
+    CERRAR_PRNT     reduce using rule 78 (factor -> factor_choice var_cte .)
+    COMA            reduce using rule 78 (factor -> factor_choice var_cte .)
+    PUNTO_COMA      reduce using rule 78 (factor -> factor_choice var_cte .)
+    CERRAR_CORCH    reduce using rule 78 (factor -> factor_choice var_cte .)
+    IGUALDAD        reduce using rule 78 (factor -> factor_choice var_cte .)
+    DESIGUALDAD     reduce using rule 78 (factor -> factor_choice var_cte .)
+    MAYOR_QUE       reduce using rule 78 (factor -> factor_choice var_cte .)
+    MENOR_QUE       reduce using rule 78 (factor -> factor_choice var_cte .)
+    MAYOR_IGUAL     reduce using rule 78 (factor -> factor_choice var_cte .)
+    MENOR_IGUAL     reduce using rule 78 (factor -> factor_choice var_cte .)
+
+
+state 149
+
+    (87) const_int -> CTE_I .
+
+    MULTIPLICACION  reduce using rule 87 (const_int -> CTE_I .)
+    DIVISION        reduce using rule 87 (const_int -> CTE_I .)
+    SUMA            reduce using rule 87 (const_int -> CTE_I .)
+    RESTA           reduce using rule 87 (const_int -> CTE_I .)
+    IGUALDAD        reduce using rule 87 (const_int -> CTE_I .)
+    DESIGUALDAD     reduce using rule 87 (const_int -> CTE_I .)
+    MAYOR_QUE       reduce using rule 87 (const_int -> CTE_I .)
+    MENOR_QUE       reduce using rule 87 (const_int -> CTE_I .)
+    MAYOR_IGUAL     reduce using rule 87 (const_int -> CTE_I .)
+    MENOR_IGUAL     reduce using rule 87 (const_int -> CTE_I .)
+    CERRAR_PRNT     reduce using rule 87 (const_int -> CTE_I .)
+    COMA            reduce using rule 87 (const_int -> CTE_I .)
+    PUNTO_COMA      reduce using rule 87 (const_int -> CTE_I .)
+    CERRAR_CORCH    reduce using rule 87 (const_int -> CTE_I .)
+
+
+state 150
+
+    (82) var_cte -> const_int .
+
+    MULTIPLICACION  reduce using rule 82 (var_cte -> const_int .)
+    DIVISION        reduce using rule 82 (var_cte -> const_int .)
+    SUMA            reduce using rule 82 (var_cte -> const_int .)
+    RESTA           reduce using rule 82 (var_cte -> const_int .)
+    IGUALDAD        reduce using rule 82 (var_cte -> const_int .)
+    DESIGUALDAD     reduce using rule 82 (var_cte -> const_int .)
+    MAYOR_QUE       reduce using rule 82 (var_cte -> const_int .)
+    MENOR_QUE       reduce using rule 82 (var_cte -> const_int .)
+    MAYOR_IGUAL     reduce using rule 82 (var_cte -> const_int .)
+    MENOR_IGUAL     reduce using rule 82 (var_cte -> const_int .)
+    CERRAR_PRNT     reduce using rule 82 (var_cte -> const_int .)
+    COMA            reduce using rule 82 (var_cte -> const_int .)
+    PUNTO_COMA      reduce using rule 82 (var_cte -> const_int .)
+    CERRAR_CORCH    reduce using rule 82 (var_cte -> const_int .)
+
+
+state 151
+
+    (88) const_float -> CTE_F .
+
+    MULTIPLICACION  reduce using rule 88 (const_float -> CTE_F .)
+    DIVISION        reduce using rule 88 (const_float -> CTE_F .)
+    SUMA            reduce using rule 88 (const_float -> CTE_F .)
+    RESTA           reduce using rule 88 (const_float -> CTE_F .)
+    IGUALDAD        reduce using rule 88 (const_float -> CTE_F .)
+    DESIGUALDAD     reduce using rule 88 (const_float -> CTE_F .)
+    MAYOR_QUE       reduce using rule 88 (const_float -> CTE_F .)
+    MENOR_QUE       reduce using rule 88 (const_float -> CTE_F .)
+    MAYOR_IGUAL     reduce using rule 88 (const_float -> CTE_F .)
+    MENOR_IGUAL     reduce using rule 88 (const_float -> CTE_F .)
+    CERRAR_PRNT     reduce using rule 88 (const_float -> CTE_F .)
+    COMA            reduce using rule 88 (const_float -> CTE_F .)
+    PUNTO_COMA      reduce using rule 88 (const_float -> CTE_F .)
+    CERRAR_CORCH    reduce using rule 88 (const_float -> CTE_F .)
+
+
+state 152
+
+    (83) var_cte -> const_float .
+
+    MULTIPLICACION  reduce using rule 83 (var_cte -> const_float .)
+    DIVISION        reduce using rule 83 (var_cte -> const_float .)
+    SUMA            reduce using rule 83 (var_cte -> const_float .)
+    RESTA           reduce using rule 83 (var_cte -> const_float .)
+    IGUALDAD        reduce using rule 83 (var_cte -> const_float .)
+    DESIGUALDAD     reduce using rule 83 (var_cte -> const_float .)
+    MAYOR_QUE       reduce using rule 83 (var_cte -> const_float .)
+    MENOR_QUE       reduce using rule 83 (var_cte -> const_float .)
+    MAYOR_IGUAL     reduce using rule 83 (var_cte -> const_float .)
+    MENOR_IGUAL     reduce using rule 83 (var_cte -> const_float .)
+    CERRAR_PRNT     reduce using rule 83 (var_cte -> const_float .)
+    COMA            reduce using rule 83 (var_cte -> const_float .)
+    PUNTO_COMA      reduce using rule 83 (var_cte -> const_float .)
+    CERRAR_CORCH    reduce using rule 83 (var_cte -> const_float .)
+
+
+state 153
+
+    (86) var_cte -> ID . var_func
+    (91) var_func -> . ABRIR_PRNT params_call CERRAR_PRNT
+    (92) var_func -> .
+
+    ABRIR_PRNT      shift and go to state 192
+    MULTIPLICACION  reduce using rule 92 (var_func -> .)
+    DIVISION        reduce using rule 92 (var_func -> .)
+    SUMA            reduce using rule 92 (var_func -> .)
+    RESTA           reduce using rule 92 (var_func -> .)
+    IGUALDAD        reduce using rule 92 (var_func -> .)
+    DESIGUALDAD     reduce using rule 92 (var_func -> .)
+    MAYOR_QUE       reduce using rule 92 (var_func -> .)
+    MENOR_QUE       reduce using rule 92 (var_func -> .)
+    MAYOR_IGUAL     reduce using rule 92 (var_func -> .)
+    MENOR_IGUAL     reduce using rule 92 (var_func -> .)
+    CERRAR_PRNT     reduce using rule 92 (var_func -> .)
+    COMA            reduce using rule 92 (var_func -> .)
+    PUNTO_COMA      reduce using rule 92 (var_func -> .)
+    CERRAR_CORCH    reduce using rule 92 (var_func -> .)
+
+    var_func                       shift and go to state 193
+
+state 154
+
+    (84) var_cte -> const_bool .
+
+    MULTIPLICACION  reduce using rule 84 (var_cte -> const_bool .)
+    DIVISION        reduce using rule 84 (var_cte -> const_bool .)
+    SUMA            reduce using rule 84 (var_cte -> const_bool .)
+    RESTA           reduce using rule 84 (var_cte -> const_bool .)
+    IGUALDAD        reduce using rule 84 (var_cte -> const_bool .)
+    DESIGUALDAD     reduce using rule 84 (var_cte -> const_bool .)
+    MAYOR_QUE       reduce using rule 84 (var_cte -> const_bool .)
+    MENOR_QUE       reduce using rule 84 (var_cte -> const_bool .)
+    MAYOR_IGUAL     reduce using rule 84 (var_cte -> const_bool .)
+    MENOR_IGUAL     reduce using rule 84 (var_cte -> const_bool .)
+    CERRAR_PRNT     reduce using rule 84 (var_cte -> const_bool .)
+    COMA            reduce using rule 84 (var_cte -> const_bool .)
+    PUNTO_COMA      reduce using rule 84 (var_cte -> const_bool .)
+    CERRAR_CORCH    reduce using rule 84 (var_cte -> const_bool .)
+
+
+state 155
+
+    (62) expression_choice -> IGUALDAD . exp
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 194
+    factor                         shift and go to state 109
+
+state 156
+
+    (61) expression -> exp expression_choice .
+
+    CERRAR_PRNT     reduce using rule 61 (expression -> exp expression_choice .)
+    COMA            reduce using rule 61 (expression -> exp expression_choice .)
+    CERRAR_CORCH    reduce using rule 61 (expression -> exp expression_choice .)
+    PUNTO_COMA      reduce using rule 61 (expression -> exp expression_choice .)
+
+
+state 157
+
+    (65) expression_choice -> MENOR_QUE . exp
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 195
+    factor                         shift and go to state 109
+
+state 158
+
+    (64) expression_choice -> MAYOR_QUE . exp
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 196
+    factor                         shift and go to state 109
+
+state 159
+
+    (66) expression_choice -> MAYOR_IGUAL . exp
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 197
+    factor                         shift and go to state 109
+
+state 160
+
+    (63) expression_choice -> DESIGUALDAD . exp
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 198
+    factor                         shift and go to state 109
+
+state 161
+
+    (67) expression_choice -> MENOR_IGUAL . exp
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 199
+    factor                         shift and go to state 109
+
+state 162
+
+    (75) term_choice -> DIVISION . term
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 200
+    factor_choice                  shift and go to state 106
+    factor                         shift and go to state 109
+
+state 163
+
+    (73) term -> factor term_choice .
+
+    SUMA            reduce using rule 73 (term -> factor term_choice .)
+    RESTA           reduce using rule 73 (term -> factor term_choice .)
+    IGUALDAD        reduce using rule 73 (term -> factor term_choice .)
+    DESIGUALDAD     reduce using rule 73 (term -> factor term_choice .)
+    MAYOR_QUE       reduce using rule 73 (term -> factor term_choice .)
+    MENOR_QUE       reduce using rule 73 (term -> factor term_choice .)
+    MAYOR_IGUAL     reduce using rule 73 (term -> factor term_choice .)
+    MENOR_IGUAL     reduce using rule 73 (term -> factor term_choice .)
+    COMA            reduce using rule 73 (term -> factor term_choice .)
+    CERRAR_PRNT     reduce using rule 73 (term -> factor term_choice .)
+    PUNTO_COMA      reduce using rule 73 (term -> factor term_choice .)
+    CERRAR_CORCH    reduce using rule 73 (term -> factor term_choice .)
+
+
+state 164
+
+    (74) term_choice -> MULTIPLICACION . term
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 201
+    factor_choice                  shift and go to state 106
+    factor                         shift and go to state 109
+
+state 165
+
+    (77) factor -> ABRIR_PRNT expression . CERRAR_PRNT
+
+    CERRAR_PRNT     shift and go to state 202
+
+
+state 166
+
+    (53) while -> WHILE ABRIR_PRNT expression CERRAR_PRNT . block
+    (28) block -> . ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE
+
+    ABRIR_LLAVE     shift and go to state 26
+
+    block                          shift and go to state 203
+
+state 167
+
+    (42) fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 204
+
+
+state 168
+
+    (44) write_choice -> const_string write_loop .
+
+    CERRAR_PRNT     reduce using rule 44 (write_choice -> const_string write_loop .)
+
+
+state 169
+
+    (46) write_loop -> COMA . write_choice
+    (43) write_choice -> . expression write_loop
+    (44) write_choice -> . const_string write_loop
+    (61) expression -> . exp expression_choice
+    (45) const_string -> . CTE_S
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    CTE_S           shift and go to state 114
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    write_choice                   shift and go to state 205
+    factor_choice                  shift and go to state 106
+    const_string                   shift and go to state 115
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 116
+
+state 170
+
+    (43) write_choice -> expression write_loop .
+
+    CERRAR_PRNT     reduce using rule 43 (write_choice -> expression write_loop .)
+
+
+state 171
+
+    (114) fappend -> APPEND ABRIR_PRNT ID COMA . expression CERRAR_PRNT PUNTO_COMA
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 206
+
+state 172
+
+    (112) fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .
+
+    IF              reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    ID              reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    PRINT           reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    VAR             reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    WHILE           reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    DO              reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    PAINT           reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    CREATE          reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    ERASE           reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    P_UP            reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    P_DOWN          reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    APPEND          reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    REMOVE          reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    SIZE            reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    MOVE            reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    RETURN          reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    CERRAR_LLAVE    reduce using rule 112 (fp_up -> P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+
+
+state 173
+
+    (107) fcreate -> CREATE ABRIR_PRNT figure COMA . expression COMA expression CERRAR_PRNT PUNTO_COMA
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 207
+
+state 174
+
+    (29) return -> RETURN expression PUNTO_COMA .
+
+    CERRAR_LLAVE    reduce using rule 29 (return -> RETURN expression PUNTO_COMA .)
+
+
+state 175
+
+    (111) ferase -> ERASE ABRIR_PRNT expression COMA . expression CERRAR_PRNT PUNTO_COMA
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 208
+
+state 176
+
+    (113) fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .
+
+    IF              reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    ID              reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    PRINT           reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    VAR             reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    WHILE           reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    DO              reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    PAINT           reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    CREATE          reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    ERASE           reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    P_UP            reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    P_DOWN          reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    APPEND          reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    REMOVE          reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    SIZE            reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    MOVE            reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    RETURN          reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+    CERRAR_LLAVE    reduce using rule 113 (fp_down -> P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA .)
+
+
+state 177
+
+    (116) fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 209
+
+
+state 178
+
+    (117) fmove -> MOVE ABRIR_PRNT direction COMA . expression CERRAR_PRNT PUNTO_COMA
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    factor_choice                  shift and go to state 106
+    term                           shift and go to state 105
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 210
+
+state 179
+
+    (106) fpaint -> PAINT ABRIR_PRNT expression COMA . expression CERRAR_PRNT PUNTO_COMA
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 211
+
+state 180
+
+    (60) assignment -> ID IGUAL expression PUNTO_COMA .
+
+    IF              reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    ID              reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    PRINT           reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    VAR             reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    WHILE           reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    DO              reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    PAINT           reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    CREATE          reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    ERASE           reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    P_UP            reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    P_DOWN          reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    APPEND          reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    REMOVE          reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    SIZE            reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    MOVE            reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    RETURN          reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+    CERRAR_LLAVE    reduce using rule 60 (assignment -> ID IGUAL expression PUNTO_COMA .)
+
+
+state 181
+
+    (55) call -> ID ABRIR_PRNT params_call CERRAR_PRNT . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 212
+
+
+state 182
+
+    (58) params_call_loop -> COMA . expression params_call_loop
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 213
+
+state 183
+
+    (56) params_call -> expression params_call_loop .
+
+    CERRAR_PRNT     reduce using rule 56 (params_call -> expression params_call_loop .)
+
+
+state 184
+
+    (48) condition -> IF ABRIR_PRNT expression CERRAR_PRNT . block else
+    (28) block -> . ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE
+
+    ABRIR_LLAVE     shift and go to state 26
+
+    block                          shift and go to state 214
+
+state 185
+
+    (115) fremove -> REMOVE ABRIR_PRNT ID COMA . expression CERRAR_PRNT PUNTO_COMA
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 215
+
+state 186
+
+    (21) functions_aux -> functions_body functions_params block functions_loop .
+
+    MAIN            reduce using rule 21 (functions_aux -> functions_body functions_params block functions_loop .)
+
+
+state 187
+
+    (54) do_while -> DO block WHILE ABRIR_PRNT expression . CERRAR_PRNT PUNTO_COMA
+
+    CERRAR_PRNT     shift and go to state 216
+
+
+state 188
+
+    (70) exp_choice -> SUMA exp .
+
+    IGUALDAD        reduce using rule 70 (exp_choice -> SUMA exp .)
+    DESIGUALDAD     reduce using rule 70 (exp_choice -> SUMA exp .)
+    MAYOR_QUE       reduce using rule 70 (exp_choice -> SUMA exp .)
+    MENOR_QUE       reduce using rule 70 (exp_choice -> SUMA exp .)
+    MAYOR_IGUAL     reduce using rule 70 (exp_choice -> SUMA exp .)
+    MENOR_IGUAL     reduce using rule 70 (exp_choice -> SUMA exp .)
+    CERRAR_PRNT     reduce using rule 70 (exp_choice -> SUMA exp .)
+    COMA            reduce using rule 70 (exp_choice -> SUMA exp .)
+    PUNTO_COMA      reduce using rule 70 (exp_choice -> SUMA exp .)
+    CERRAR_CORCH    reduce using rule 70 (exp_choice -> SUMA exp .)
+
+
+state 189
+
+    (71) exp_choice -> RESTA exp .
+
+    IGUALDAD        reduce using rule 71 (exp_choice -> RESTA exp .)
+    DESIGUALDAD     reduce using rule 71 (exp_choice -> RESTA exp .)
+    MAYOR_QUE       reduce using rule 71 (exp_choice -> RESTA exp .)
+    MENOR_QUE       reduce using rule 71 (exp_choice -> RESTA exp .)
+    MAYOR_IGUAL     reduce using rule 71 (exp_choice -> RESTA exp .)
+    MENOR_IGUAL     reduce using rule 71 (exp_choice -> RESTA exp .)
+    CERRAR_PRNT     reduce using rule 71 (exp_choice -> RESTA exp .)
+    COMA            reduce using rule 71 (exp_choice -> RESTA exp .)
+    PUNTO_COMA      reduce using rule 71 (exp_choice -> RESTA exp .)
+    CERRAR_CORCH    reduce using rule 71 (exp_choice -> RESTA exp .)
+
+
+state 190
+
+    (85) var_cte -> ABRIR_CORCH list_elements . CERRAR_CORCH
+
+    CERRAR_CORCH    shift and go to state 217
+
+
+state 191
+
+    (93) list_elements -> expression . list_elements_loop
+    (95) list_elements_loop -> . COMA expression list_elements_loop
+    (96) list_elements_loop -> .
+
+    COMA            shift and go to state 218
+    CERRAR_CORCH    reduce using rule 96 (list_elements_loop -> .)
+
+    list_elements_loop             shift and go to state 219
+
+state 192
+
+    (91) var_func -> ABRIR_PRNT . params_call CERRAR_PRNT
+    (56) params_call -> . expression params_call_loop
+    (57) params_call -> .
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    CERRAR_PRNT     reduce using rule 57 (params_call -> .)
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    params_call                    shift and go to state 220
+    factor_choice                  shift and go to state 106
+    term                           shift and go to state 105
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 136
+
+state 193
+
+    (86) var_cte -> ID var_func .
+
+    MULTIPLICACION  reduce using rule 86 (var_cte -> ID var_func .)
+    DIVISION        reduce using rule 86 (var_cte -> ID var_func .)
+    SUMA            reduce using rule 86 (var_cte -> ID var_func .)
+    RESTA           reduce using rule 86 (var_cte -> ID var_func .)
+    IGUALDAD        reduce using rule 86 (var_cte -> ID var_func .)
+    DESIGUALDAD     reduce using rule 86 (var_cte -> ID var_func .)
+    MAYOR_QUE       reduce using rule 86 (var_cte -> ID var_func .)
+    MENOR_QUE       reduce using rule 86 (var_cte -> ID var_func .)
+    MAYOR_IGUAL     reduce using rule 86 (var_cte -> ID var_func .)
+    MENOR_IGUAL     reduce using rule 86 (var_cte -> ID var_func .)
+    CERRAR_PRNT     reduce using rule 86 (var_cte -> ID var_func .)
+    COMA            reduce using rule 86 (var_cte -> ID var_func .)
+    PUNTO_COMA      reduce using rule 86 (var_cte -> ID var_func .)
+    CERRAR_CORCH    reduce using rule 86 (var_cte -> ID var_func .)
+
+
+state 194
+
+    (62) expression_choice -> IGUALDAD exp .
+
+    CERRAR_PRNT     reduce using rule 62 (expression_choice -> IGUALDAD exp .)
+    COMA            reduce using rule 62 (expression_choice -> IGUALDAD exp .)
+    PUNTO_COMA      reduce using rule 62 (expression_choice -> IGUALDAD exp .)
+    CERRAR_CORCH    reduce using rule 62 (expression_choice -> IGUALDAD exp .)
+
+
+state 195
+
+    (65) expression_choice -> MENOR_QUE exp .
+
+    CERRAR_PRNT     reduce using rule 65 (expression_choice -> MENOR_QUE exp .)
+    COMA            reduce using rule 65 (expression_choice -> MENOR_QUE exp .)
+    PUNTO_COMA      reduce using rule 65 (expression_choice -> MENOR_QUE exp .)
+    CERRAR_CORCH    reduce using rule 65 (expression_choice -> MENOR_QUE exp .)
+
+
+state 196
+
+    (64) expression_choice -> MAYOR_QUE exp .
+
+    CERRAR_PRNT     reduce using rule 64 (expression_choice -> MAYOR_QUE exp .)
+    COMA            reduce using rule 64 (expression_choice -> MAYOR_QUE exp .)
+    PUNTO_COMA      reduce using rule 64 (expression_choice -> MAYOR_QUE exp .)
+    CERRAR_CORCH    reduce using rule 64 (expression_choice -> MAYOR_QUE exp .)
+
+
+state 197
+
+    (66) expression_choice -> MAYOR_IGUAL exp .
+
+    CERRAR_PRNT     reduce using rule 66 (expression_choice -> MAYOR_IGUAL exp .)
+    COMA            reduce using rule 66 (expression_choice -> MAYOR_IGUAL exp .)
+    PUNTO_COMA      reduce using rule 66 (expression_choice -> MAYOR_IGUAL exp .)
+    CERRAR_CORCH    reduce using rule 66 (expression_choice -> MAYOR_IGUAL exp .)
+
+
+state 198
+
+    (63) expression_choice -> DESIGUALDAD exp .
+
+    CERRAR_PRNT     reduce using rule 63 (expression_choice -> DESIGUALDAD exp .)
+    COMA            reduce using rule 63 (expression_choice -> DESIGUALDAD exp .)
+    PUNTO_COMA      reduce using rule 63 (expression_choice -> DESIGUALDAD exp .)
+    CERRAR_CORCH    reduce using rule 63 (expression_choice -> DESIGUALDAD exp .)
+
+
+state 199
+
+    (67) expression_choice -> MENOR_IGUAL exp .
+
+    CERRAR_PRNT     reduce using rule 67 (expression_choice -> MENOR_IGUAL exp .)
+    COMA            reduce using rule 67 (expression_choice -> MENOR_IGUAL exp .)
+    PUNTO_COMA      reduce using rule 67 (expression_choice -> MENOR_IGUAL exp .)
+    CERRAR_CORCH    reduce using rule 67 (expression_choice -> MENOR_IGUAL exp .)
+
+
+state 200
+
+    (75) term_choice -> DIVISION term .
+
+    SUMA            reduce using rule 75 (term_choice -> DIVISION term .)
+    RESTA           reduce using rule 75 (term_choice -> DIVISION term .)
+    IGUALDAD        reduce using rule 75 (term_choice -> DIVISION term .)
+    DESIGUALDAD     reduce using rule 75 (term_choice -> DIVISION term .)
+    MAYOR_QUE       reduce using rule 75 (term_choice -> DIVISION term .)
+    MENOR_QUE       reduce using rule 75 (term_choice -> DIVISION term .)
+    MAYOR_IGUAL     reduce using rule 75 (term_choice -> DIVISION term .)
+    MENOR_IGUAL     reduce using rule 75 (term_choice -> DIVISION term .)
+    CERRAR_PRNT     reduce using rule 75 (term_choice -> DIVISION term .)
+    COMA            reduce using rule 75 (term_choice -> DIVISION term .)
+    PUNTO_COMA      reduce using rule 75 (term_choice -> DIVISION term .)
+    CERRAR_CORCH    reduce using rule 75 (term_choice -> DIVISION term .)
+
+
+state 201
+
+    (74) term_choice -> MULTIPLICACION term .
+
+    SUMA            reduce using rule 74 (term_choice -> MULTIPLICACION term .)
+    RESTA           reduce using rule 74 (term_choice -> MULTIPLICACION term .)
+    IGUALDAD        reduce using rule 74 (term_choice -> MULTIPLICACION term .)
+    DESIGUALDAD     reduce using rule 74 (term_choice -> MULTIPLICACION term .)
+    MAYOR_QUE       reduce using rule 74 (term_choice -> MULTIPLICACION term .)
+    MENOR_QUE       reduce using rule 74 (term_choice -> MULTIPLICACION term .)
+    MAYOR_IGUAL     reduce using rule 74 (term_choice -> MULTIPLICACION term .)
+    MENOR_IGUAL     reduce using rule 74 (term_choice -> MULTIPLICACION term .)
+    CERRAR_PRNT     reduce using rule 74 (term_choice -> MULTIPLICACION term .)
+    COMA            reduce using rule 74 (term_choice -> MULTIPLICACION term .)
+    PUNTO_COMA      reduce using rule 74 (term_choice -> MULTIPLICACION term .)
+    CERRAR_CORCH    reduce using rule 74 (term_choice -> MULTIPLICACION term .)
+
+
+state 202
+
+    (77) factor -> ABRIR_PRNT expression CERRAR_PRNT .
+
+    MULTIPLICACION  reduce using rule 77 (factor -> ABRIR_PRNT expression CERRAR_PRNT .)
+    DIVISION        reduce using rule 77 (factor -> ABRIR_PRNT expression CERRAR_PRNT .)
+    SUMA            reduce using rule 77 (factor -> ABRIR_PRNT expression CERRAR_PRNT .)
+    RESTA           reduce using rule 77 (factor -> ABRIR_PRNT expression CERRAR_PRNT .)
+    CERRAR_PRNT     reduce using rule 77 (factor -> ABRIR_PRNT expression CERRAR_PRNT .)
+    COMA            reduce using rule 77 (factor -> ABRIR_PRNT expression CERRAR_PRNT .)
+    PUNTO_COMA      reduce using rule 77 (factor -> ABRIR_PRNT expression CERRAR_PRNT .)
+    CERRAR_CORCH    reduce using rule 77 (factor -> ABRIR_PRNT expression CERRAR_PRNT .)
+    IGUALDAD        reduce using rule 77 (factor -> ABRIR_PRNT expression CERRAR_PRNT .)
+    DESIGUALDAD     reduce using rule 77 (factor -> ABRIR_PRNT expression CERRAR_PRNT .)
+    MAYOR_QUE       reduce using rule 77 (factor -> ABRIR_PRNT expression CERRAR_PRNT .)
+    MENOR_QUE       reduce using rule 77 (factor -> ABRIR_PRNT expression CERRAR_PRNT .)
+    MAYOR_IGUAL     reduce using rule 77 (factor -> ABRIR_PRNT expression CERRAR_PRNT .)
+    MENOR_IGUAL     reduce using rule 77 (factor -> ABRIR_PRNT expression CERRAR_PRNT .)
+
+
+state 203
+
+    (53) while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .
+
+    IF              reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    ID              reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    PRINT           reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    VAR             reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    WHILE           reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    DO              reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    PAINT           reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    CREATE          reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    ERASE           reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    P_UP            reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    P_DOWN          reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    APPEND          reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    REMOVE          reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    SIZE            reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    MOVE            reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    RETURN          reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+    CERRAR_LLAVE    reduce using rule 53 (while -> WHILE ABRIR_PRNT expression CERRAR_PRNT block .)
+
+
+state 204
+
+    (42) fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .
+
+    IF              reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    ID              reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    PRINT           reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    VAR             reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    WHILE           reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    DO              reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    PAINT           reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    CREATE          reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    ERASE           reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    P_UP            reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    P_DOWN          reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    APPEND          reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    REMOVE          reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    SIZE            reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    MOVE            reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    RETURN          reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+    CERRAR_LLAVE    reduce using rule 42 (fprint -> PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA .)
+
+
+state 205
+
+    (46) write_loop -> COMA write_choice .
+
+    CERRAR_PRNT     reduce using rule 46 (write_loop -> COMA write_choice .)
+
+
+state 206
+
+    (114) fappend -> APPEND ABRIR_PRNT ID COMA expression . CERRAR_PRNT PUNTO_COMA
+
+    CERRAR_PRNT     shift and go to state 221
+
+
+state 207
+
+    (107) fcreate -> CREATE ABRIR_PRNT figure COMA expression . COMA expression CERRAR_PRNT PUNTO_COMA
+
+    COMA            shift and go to state 222
+
+
+state 208
+
+    (111) ferase -> ERASE ABRIR_PRNT expression COMA expression . CERRAR_PRNT PUNTO_COMA
+
+    CERRAR_PRNT     shift and go to state 223
+
+
+state 209
+
+    (116) fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .
+
+    IF              reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    ID              reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    PRINT           reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    VAR             reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    WHILE           reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    DO              reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    PAINT           reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    CREATE          reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    ERASE           reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    P_UP            reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    P_DOWN          reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    APPEND          reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    REMOVE          reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    SIZE            reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    MOVE            reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    RETURN          reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    CERRAR_LLAVE    reduce using rule 116 (fsize -> SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+
+
+state 210
+
+    (117) fmove -> MOVE ABRIR_PRNT direction COMA expression . CERRAR_PRNT PUNTO_COMA
+
+    CERRAR_PRNT     shift and go to state 224
+
+
+state 211
+
+    (106) fpaint -> PAINT ABRIR_PRNT expression COMA expression . CERRAR_PRNT PUNTO_COMA
+
+    CERRAR_PRNT     shift and go to state 225
+
+
+state 212
+
+    (55) call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .
+
+    IF              reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    ID              reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    PRINT           reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    VAR             reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    WHILE           reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    DO              reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    PAINT           reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    CREATE          reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    ERASE           reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    P_UP            reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    P_DOWN          reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    APPEND          reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    REMOVE          reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    SIZE            reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    MOVE            reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    RETURN          reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+    CERRAR_LLAVE    reduce using rule 55 (call -> ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA .)
+
+
+state 213
+
+    (58) params_call_loop -> COMA expression . params_call_loop
+    (58) params_call_loop -> . COMA expression params_call_loop
+    (59) params_call_loop -> .
+
+    COMA            shift and go to state 182
+    CERRAR_PRNT     reduce using rule 59 (params_call_loop -> .)
+
+    params_call_loop               shift and go to state 226
+
+state 214
+
+    (48) condition -> IF ABRIR_PRNT expression CERRAR_PRNT block . else
+    (49) else -> . ELSE block
+    (50) else -> .
+
+    ELSE            shift and go to state 228
+    IF              reduce using rule 50 (else -> .)
+    ID              reduce using rule 50 (else -> .)
+    PRINT           reduce using rule 50 (else -> .)
+    VAR             reduce using rule 50 (else -> .)
+    WHILE           reduce using rule 50 (else -> .)
+    DO              reduce using rule 50 (else -> .)
+    PAINT           reduce using rule 50 (else -> .)
+    CREATE          reduce using rule 50 (else -> .)
+    ERASE           reduce using rule 50 (else -> .)
+    P_UP            reduce using rule 50 (else -> .)
+    P_DOWN          reduce using rule 50 (else -> .)
+    APPEND          reduce using rule 50 (else -> .)
+    REMOVE          reduce using rule 50 (else -> .)
+    SIZE            reduce using rule 50 (else -> .)
+    MOVE            reduce using rule 50 (else -> .)
+    RETURN          reduce using rule 50 (else -> .)
+    CERRAR_LLAVE    reduce using rule 50 (else -> .)
+
+    else                           shift and go to state 227
+
+state 215
+
+    (115) fremove -> REMOVE ABRIR_PRNT ID COMA expression . CERRAR_PRNT PUNTO_COMA
+
+    CERRAR_PRNT     shift and go to state 229
+
+
+state 216
+
+    (54) do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 230
+
+
+state 217
+
+    (85) var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH .
+
+    MULTIPLICACION  reduce using rule 85 (var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH .)
+    DIVISION        reduce using rule 85 (var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH .)
+    SUMA            reduce using rule 85 (var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH .)
+    RESTA           reduce using rule 85 (var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH .)
+    IGUALDAD        reduce using rule 85 (var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH .)
+    DESIGUALDAD     reduce using rule 85 (var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH .)
+    MAYOR_QUE       reduce using rule 85 (var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH .)
+    MENOR_QUE       reduce using rule 85 (var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH .)
+    MAYOR_IGUAL     reduce using rule 85 (var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH .)
+    MENOR_IGUAL     reduce using rule 85 (var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH .)
+    CERRAR_PRNT     reduce using rule 85 (var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH .)
+    COMA            reduce using rule 85 (var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH .)
+    PUNTO_COMA      reduce using rule 85 (var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH .)
+    CERRAR_CORCH    reduce using rule 85 (var_cte -> ABRIR_CORCH list_elements CERRAR_CORCH .)
+
+
+state 218
+
+    (95) list_elements_loop -> COMA . expression list_elements_loop
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 231
+
+state 219
+
+    (93) list_elements -> expression list_elements_loop .
+
+    CERRAR_CORCH    reduce using rule 93 (list_elements -> expression list_elements_loop .)
+
+
+state 220
+
+    (91) var_func -> ABRIR_PRNT params_call . CERRAR_PRNT
+
+    CERRAR_PRNT     shift and go to state 232
+
+
+state 221
+
+    (114) fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 233
+
+
+state 222
+
+    (107) fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA . expression CERRAR_PRNT PUNTO_COMA
+    (61) expression -> . exp expression_choice
+    (69) exp -> . term exp_choice
+    (73) term -> . factor term_choice
+    (77) factor -> . ABRIR_PRNT expression CERRAR_PRNT
+    (78) factor -> . factor_choice var_cte
+    (79) factor_choice -> . SUMA
+    (80) factor_choice -> . RESTA
+    (81) factor_choice -> .
+
+    ABRIR_PRNT      shift and go to state 110
+    SUMA            shift and go to state 107
+    RESTA           shift and go to state 111
+    ABRIR_CORCH     reduce using rule 81 (factor_choice -> .)
+    ID              reduce using rule 81 (factor_choice -> .)
+    CTE_I           reduce using rule 81 (factor_choice -> .)
+    CTE_F           reduce using rule 81 (factor_choice -> .)
+    TRUE            reduce using rule 81 (factor_choice -> .)
+    FALSE           reduce using rule 81 (factor_choice -> .)
+
+    term                           shift and go to state 105
+    factor_choice                  shift and go to state 106
+    exp                            shift and go to state 108
+    factor                         shift and go to state 109
+    expression                     shift and go to state 234
+
+state 223
+
+    (111) ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 235
+
+
+state 224
+
+    (117) fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 236
+
+
+state 225
+
+    (106) fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 237
+
+
+state 226
+
+    (58) params_call_loop -> COMA expression params_call_loop .
+
+    CERRAR_PRNT     reduce using rule 58 (params_call_loop -> COMA expression params_call_loop .)
+
+
+state 227
+
+    (48) condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .
+
+    IF              reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    ID              reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    PRINT           reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    VAR             reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    WHILE           reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    DO              reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    PAINT           reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    CREATE          reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    ERASE           reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    P_UP            reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    P_DOWN          reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    APPEND          reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    REMOVE          reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    SIZE            reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    MOVE            reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    RETURN          reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+    CERRAR_LLAVE    reduce using rule 48 (condition -> IF ABRIR_PRNT expression CERRAR_PRNT block else .)
+
+
+state 228
+
+    (49) else -> ELSE . block
+    (28) block -> . ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE
+
+    ABRIR_LLAVE     shift and go to state 26
+
+    block                          shift and go to state 238
+
+state 229
+
+    (115) fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 239
+
+
+state 230
+
+    (54) do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .
+
+    IF              reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    ID              reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    PRINT           reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    VAR             reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    WHILE           reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    DO              reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    PAINT           reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    CREATE          reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    ERASE           reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    P_UP            reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    P_DOWN          reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    APPEND          reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    REMOVE          reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    SIZE            reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    MOVE            reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    RETURN          reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+    CERRAR_LLAVE    reduce using rule 54 (do_while -> DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA .)
+
+
+state 231
+
+    (95) list_elements_loop -> COMA expression . list_elements_loop
+    (95) list_elements_loop -> . COMA expression list_elements_loop
+    (96) list_elements_loop -> .
+
+    COMA            shift and go to state 218
+    CERRAR_CORCH    reduce using rule 96 (list_elements_loop -> .)
+
+    list_elements_loop             shift and go to state 240
+
+state 232
+
+    (91) var_func -> ABRIR_PRNT params_call CERRAR_PRNT .
+
+    MULTIPLICACION  reduce using rule 91 (var_func -> ABRIR_PRNT params_call CERRAR_PRNT .)
+    DIVISION        reduce using rule 91 (var_func -> ABRIR_PRNT params_call CERRAR_PRNT .)
+    SUMA            reduce using rule 91 (var_func -> ABRIR_PRNT params_call CERRAR_PRNT .)
+    RESTA           reduce using rule 91 (var_func -> ABRIR_PRNT params_call CERRAR_PRNT .)
+    IGUALDAD        reduce using rule 91 (var_func -> ABRIR_PRNT params_call CERRAR_PRNT .)
+    DESIGUALDAD     reduce using rule 91 (var_func -> ABRIR_PRNT params_call CERRAR_PRNT .)
+    MAYOR_QUE       reduce using rule 91 (var_func -> ABRIR_PRNT params_call CERRAR_PRNT .)
+    MENOR_QUE       reduce using rule 91 (var_func -> ABRIR_PRNT params_call CERRAR_PRNT .)
+    MAYOR_IGUAL     reduce using rule 91 (var_func -> ABRIR_PRNT params_call CERRAR_PRNT .)
+    MENOR_IGUAL     reduce using rule 91 (var_func -> ABRIR_PRNT params_call CERRAR_PRNT .)
+    CERRAR_PRNT     reduce using rule 91 (var_func -> ABRIR_PRNT params_call CERRAR_PRNT .)
+    COMA            reduce using rule 91 (var_func -> ABRIR_PRNT params_call CERRAR_PRNT .)
+    PUNTO_COMA      reduce using rule 91 (var_func -> ABRIR_PRNT params_call CERRAR_PRNT .)
+    CERRAR_CORCH    reduce using rule 91 (var_func -> ABRIR_PRNT params_call CERRAR_PRNT .)
+
+
+state 233
+
+    (114) fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .
+
+    IF              reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    ID              reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    PRINT           reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    VAR             reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    WHILE           reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    DO              reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    PAINT           reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    CREATE          reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    ERASE           reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    P_UP            reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    P_DOWN          reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    APPEND          reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    REMOVE          reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    SIZE            reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    MOVE            reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    RETURN          reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    CERRAR_LLAVE    reduce using rule 114 (fappend -> APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+
+
+state 234
+
+    (107) fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression . CERRAR_PRNT PUNTO_COMA
+
+    CERRAR_PRNT     shift and go to state 241
+
+
+state 235
+
+    (111) ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .
+
+    IF              reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    ID              reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    PRINT           reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    VAR             reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    WHILE           reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    DO              reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    PAINT           reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    CREATE          reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    ERASE           reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    P_UP            reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    P_DOWN          reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    APPEND          reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    REMOVE          reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    SIZE            reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    MOVE            reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    RETURN          reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    CERRAR_LLAVE    reduce using rule 111 (ferase -> ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+
+
+state 236
+
+    (117) fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .
+
+    IF              reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    ID              reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    PRINT           reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    VAR             reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    WHILE           reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    DO              reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    PAINT           reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    CREATE          reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    ERASE           reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    P_UP            reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    P_DOWN          reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    APPEND          reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    REMOVE          reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    SIZE            reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    MOVE            reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    RETURN          reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+    CERRAR_LLAVE    reduce using rule 117 (fmove -> MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA .)
+
+
+state 237
+
+    (106) fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .
+
+    IF              reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    ID              reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    PRINT           reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    VAR             reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    WHILE           reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    DO              reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    PAINT           reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    CREATE          reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    ERASE           reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    P_UP            reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    P_DOWN          reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    APPEND          reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    REMOVE          reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    SIZE            reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    MOVE            reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    RETURN          reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    CERRAR_LLAVE    reduce using rule 106 (fpaint -> PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+
+
+state 238
+
+    (49) else -> ELSE block .
+
+    IF              reduce using rule 49 (else -> ELSE block .)
+    ID              reduce using rule 49 (else -> ELSE block .)
+    PRINT           reduce using rule 49 (else -> ELSE block .)
+    VAR             reduce using rule 49 (else -> ELSE block .)
+    WHILE           reduce using rule 49 (else -> ELSE block .)
+    DO              reduce using rule 49 (else -> ELSE block .)
+    PAINT           reduce using rule 49 (else -> ELSE block .)
+    CREATE          reduce using rule 49 (else -> ELSE block .)
+    ERASE           reduce using rule 49 (else -> ELSE block .)
+    P_UP            reduce using rule 49 (else -> ELSE block .)
+    P_DOWN          reduce using rule 49 (else -> ELSE block .)
+    APPEND          reduce using rule 49 (else -> ELSE block .)
+    REMOVE          reduce using rule 49 (else -> ELSE block .)
+    SIZE            reduce using rule 49 (else -> ELSE block .)
+    MOVE            reduce using rule 49 (else -> ELSE block .)
+    RETURN          reduce using rule 49 (else -> ELSE block .)
+    CERRAR_LLAVE    reduce using rule 49 (else -> ELSE block .)
+
+
+state 239
+
+    (115) fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .
+
+    IF              reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    ID              reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    PRINT           reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    VAR             reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    WHILE           reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    DO              reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    PAINT           reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    CREATE          reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    ERASE           reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    P_UP            reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    P_DOWN          reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    APPEND          reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    REMOVE          reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    SIZE            reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    MOVE            reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    RETURN          reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+    CERRAR_LLAVE    reduce using rule 115 (fremove -> REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA .)
+
+
+state 240
+
+    (95) list_elements_loop -> COMA expression list_elements_loop .
+
+    CERRAR_CORCH    reduce using rule 95 (list_elements_loop -> COMA expression list_elements_loop .)
+
+
+state 241
+
+    (107) fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 242
+
+
+state 242
+
+    (107) fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .
+
+    IF              reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    ID              reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    PRINT           reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    VAR             reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    WHILE           reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    DO              reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    PAINT           reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    CREATE          reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    ERASE           reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    P_UP            reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    P_DOWN          reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    APPEND          reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    REMOVE          reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    SIZE            reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    MOVE            reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    RETURN          reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+    CERRAR_LLAVE    reduce using rule 107 (fcreate -> CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for VAR in state 79 resolved as shift
