@@ -69,6 +69,8 @@ tokens = list(reserved.values()) + [
     'IGUALDAD',
     'MENOR_QUE',
     'MAYOR_QUE',
+    'MENOR_IGUAL',
+    'MAYOR_IGUAL',
     'DESIGUALDAD',
     'ID',
     'CTE_I',
@@ -94,6 +96,8 @@ t_IGUAL = r'\='
 t_IGUALDAD = r'\=\='
 t_MENOR_QUE = r'\<'
 t_MAYOR_QUE = r'\>'
+t_MENOR_IGUAL = r'\<\='
+t_MAYOR_IGUAL = r'\>\='
 t_DESIGUALDAD = r'\<\>'
 t_CTE_S = r'\".*\"'
 t_CTE_I = r'[0-9]+ '

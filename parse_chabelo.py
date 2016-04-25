@@ -1,12 +1,20 @@
 # -*- encoding: utf-8 -*-
 
 import ply.yacc as yacc
-import lex_Chabelo
+import lex_chabelo
 import sys
-tokens = lex_Chabelo.tokens
+tokens = lex_chabelo.tokens
 from tables import *
+from memory import *
 
 scope = 'global'
+memory = 0
+
+precedence = (
+    ('nonassoc', 'IGUALDAD', 'DESIGUALDAD', 'MENOR_QUE', 'MAYOR_QUE', 'MENOR_IGUAL', 'MAYOR_IGUAL'),
+    ('left','SUMA','RESTA'),
+    ('left','MULTIPLICACION','DIVISION'),
+    )
 
 def p_program(p):
     '''program : PROGRAM ID PUNTO_COMA vars body END'''
@@ -24,13 +32,16 @@ def p_vars(p):
 def p_var_body(p):
     '''var_body : VAR type ID  array PUNTO_COMA var_loop'''
     global scope
+    global memoria
     if p[1] != None:
         if scope == 'global':
             v = find_global_var_table(p[3])
             if v:
                 print("Variable: '%s' " % p[3]   +  "already declared")
                 sys.exit()
-            add_var_table(p[3],p[2],0)
+            #aqui
+            memory = global_memory_assignment(p[2])
+            add_var_table(p[3],p[2],memory)
         else:
             pr = find_dir_proc(scope)
             if pr:
@@ -38,7 +49,9 @@ def p_var_body(p):
                 if pa:
                     print("Variable: '%s' " % p[3]   +  "already declared in function '%s' " % scope)
                     sys.exit()
-                add_var_dir_proc(scope,p[3],p[2],0)
+                #aqui
+                memory = local_memory_assignment(p[2])
+                add_var_dir_proc(scope,p[3],p[2],memory)
 
 def p_array(p):
     '''array : ABRIR_CORCH CTE_I CERRAR_CORCH
@@ -98,7 +111,9 @@ def p_params(p):
             if pa:
                 print("Parameter: '%s' " % p[2]   +  "already declared in function '%s' " % scope)
                 sys.exit()
-            add_param_dir_proc(scope,p[2],p[1],0)
+            #aqui
+            memory = local_memory_assignment(p[1])
+            add_param_dir_proc(scope,p[2],p[1],memory)
 
 def p_params_loop_aux(p):
     '''params_loop_aux : params params_loop'''
@@ -117,7 +132,6 @@ def p_return(p):
 def p_fmain(p):
     '''fmain : fmain_aux block'''
 
-
 def p_fmain_aux(p):
     '''fmain_aux : MAIN ABRIR_PRNT CERRAR_PRNT'''
     global scope
@@ -125,8 +139,6 @@ def p_fmain_aux(p):
         p[0] = p[1]
         scope = 'main'
         add_dir_proc('main','void',0)
-
-
 
 def p_estatuto_loop(p):
     '''estatuto_loop : estatuto estatuto_loop
@@ -191,6 +203,8 @@ def p_expression_choice(p):
     | DESIGUALDAD exp
     | MAYOR_QUE exp
     | MENOR_QUE exp
+    | MAYOR_IGUAL exp
+    | MENOR_IGUAL exp
     | '''
 
 def p_exp(p):
