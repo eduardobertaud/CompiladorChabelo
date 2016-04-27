@@ -214,7 +214,76 @@ def p_params_call_loop(p):
     | '''
 
 def p_assignment(p):
-    '''assignment : ID IGUAL expression PUNTO_COMA'''
+    '''assignment : ID push_operando IGUAL push_operador expression PUNTO_COMA'''
+    global cuadruplos
+    global temporales
+    global scope
+    global pilaOperandos
+    global pilaOperadores
+    global memoria
+
+    if pilaOperadores:
+        operador = pilaOperadores.pop()
+        operando2 = pilaOperandos.pop()
+        operando1 = pilaOperandos.pop()
+
+        type_operando1 = ' '
+        type_operando2 = ' '
+        dir_operando1 = -9000
+        dir_operando2 = -9000
+
+        v7 = find_temp_table(operando2)
+        if v7:
+            dir_operando2 = get_dir_temp_table(operando2)
+            type_operando2 = get_type_temp_table(operando2)
+            operando2 = get_value_temp_table(operando2)
+        if dir_operando2 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v1 = find_var_table(vars_proc,operando2)
+                if v1:
+                    dir_operando2 = get_dir_var_table(vars_proc,operando2)
+                    type_operando2 = get_type_var_table(vars_proc,operando2)
+                    operando2 = get_value_var_table(vars_proc,operando2)
+        if dir_operando2 == -9000:
+            v2 = find_global_var_table(operando2)
+            if v2:
+                dir_operando2 = get_dir_global_var_table(operando2)
+                type_operando2 = get_type_global_var_table(operando2)
+                operando2 = get_value_global_var_table(operando2)
+        if dir_operando2 == -9000:
+            v3 = find_const_table(operando2)
+            if v3:
+                dir_operando2 = get_dir_const_table(operando2)
+                type_operando2 = get_type_const_table(operando2)
+
+        vars_proc = get_vars_dir_proc(scope);
+        if vars_proc:
+            v4 = find_var_table(vars_proc,operando1)
+            if v4:
+                dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                type_operando1 = get_type_var_table(vars_proc,operando1)
+        if dir_operando1 == -9000:
+            v5 = find_global_var_table(operando1)
+            if v5:
+                dir_operando1 = get_dir_global_var_table(operando1)
+                type_operando1 = get_type_global_var_table(operando1)
+
+        if type_operando1 != ' ' and type_operando2 != ' ' and type_operando1 == type_operando2:
+            if type_operando2 == 'int':
+                operando2 = int(operando2)
+            elif type_operando2 == 'float':
+                operando2 = float(operando2)
+            if scope == 'global':
+                set_value_global_var_table(operando2,operando1)
+            else:
+                vt = get_vars_dir_proc(scope)
+                if vt:
+                    set_value_var_table(vt,operando2,operando1)
+            add_cuadruplo(operador,dir_operando2,None,dir_operando1)
+        else:
+            print ("Error in arithmetic expression")
+            sys.exit()
 
 def p_expression(p):
     '''expression : exp expression_choice'''
