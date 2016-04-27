@@ -101,7 +101,7 @@ def clear_var_table():
 	global var_table
 	var_table[:] = []
 
-# Tempral Table Functions
+# Temporal Table Functions
 class temporal:
 	def __init__(self, temp_value, temp_type, temp_dir):
 		self.temp_value= temp_value
