@@ -1,41 +1,81 @@
-class Cuadruplo:
+class cuadruplo:
 
-    def __init__(self):
-        self.id     = 0
-        self.operador = ''
-        self.operando1 = ''
-        self.operando2 = ''
-        self.resultado   = ""
-
-    def set_id(self, id):
-        self.id = id
-
-    def set_operador(self, operador):
+    def __init__(self, c_id, operador, operando1, operando2, resultado):
+        self.c_id     = c_id
         self.operador = operador
-
-    def set_operando1(self, operando1):
         self.operando1 = operando1
-
-    def set_operando2(self, operando2):
         self.operando2 = operando2
+        self.resultado   = resultado
 
-    def set_resultado(self, resultado):
-        self.resultado = resultado
+cuadruplos = []
+cuadCont = 1
 
-    def get_id(self):
-        return self.id
+def add_cuadruplo(operador, operando1, operando2, resultado):
+    global cuadruplos
+    global cuadCont
+    cuadruplos.append(cuadruplo(cuadCont, operador, operando1, operando2, resultado))
+    cuadCont += 1
 
-    def get_operador(self):
-        return self.operador
+def find_cuadruplo(c_id):
+    global cuadruplos
+    for cuad in cuadruplos:
+        if cuad.c_id == c_id:
+            return cuad
 
-    def get_operando1(self):
-        return self.operando1
+def set_operador(c_id, operador):
+    global cuadruplos
+    cuad = find_cuadruplo(c_id)
+    if cuad:
+        cuad.operador = operador
 
-    def get_operando2(self):
-        return self.operando2
+def set_operando1(c_id, operando1):
+    global cuadruplos
+    cuad = find_cuadruplo(c_id)
+    if cuad:
+        cuad.operando1 = operando1
 
-    def get_resultado(self):
-        return self.resultado
+def set_operando2(c_id, operando2):
+    global cuadruplos
+    cuad = find_cuadruplo(c_id)
+    if cuad:
+        cuad.operando2 = operando2
 
-    def print_cuadruplo(self):
-        print(self.id, self.operador, self.operando1, self.operando2, self.resultado)
+def set_resultado(c_id, resultado):
+    global cuadruplos
+    cuad = find_cuadruplo(c_id)
+    if cuad:
+        cuad.resultado = resultado
+
+def get_operador(c_id):
+    global cuadruplos
+    cuad = find_cuadruplo(c_id)
+    if cuad:
+        return cuad.operador
+
+def get_operando1(c_id):
+    global cuadruplos
+    cuad = find_cuadruplo(c_id)
+    if cuad:
+        return cuad.operando1
+
+def get_operando2(c_id):
+    global cuadruplos
+    cuad = find_cuadruplo(c_id)
+    if cuad:
+        return cuad.operando2
+
+def get_resultado(c_id):
+    global cuadruplos
+    cuad = find_cuadruplo(c_id)
+    if cuad:
+        return cuad.resultado
+
+def print_cuadruplos():
+    global cuadruplos
+    print("Cuadruplos:")
+    if cuadruplos:
+        for cuad in cuadruplos:
+            print (" ID: " + str(cuad.c_id) , " Operador: " + str(cuad.operador) , " Operando1: " + str(cuad.operando1) , " Operando2: " + str(cuad.operando2) , " Resultado: " + str(cuad.resultado))
+    else:
+        print("No hay cuadruplos.")
+    print ("\n")

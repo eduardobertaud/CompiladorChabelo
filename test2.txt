@@ -5,13 +5,14 @@ var float hola;
 var string an;
 
 func void aha(int ah,float f){
-var int c;
+var float c;
 var float a;
+var int j;
+a = 3.0 + 4.0 * 2.0 / 1.3 + 1.0;
 }
 
 main(){
-print(2+2);
-if(2+1 == 3)
+if(4 == 3)
 {
 var bool e;
 e = false;

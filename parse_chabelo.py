@@ -6,9 +6,15 @@ import sys
 tokens = lex_chabelo.tokens
 from tables import *
 from memory import *
+from cubo import *
+from cuadruplo import *
 
 scope = 'global'
 memory = 0
+pilaOperadores = []
+pilaOperandos = []
+temporales = []
+cuadruplos = []
 
 precedence = (
     ('nonassoc', 'IGUALDAD', 'DESIGUALDAD', 'MENOR_QUE', 'MAYOR_QUE', 'MENOR_IGUAL', 'MAYOR_IGUAL'),
@@ -22,6 +28,11 @@ def p_program(p):
     print_var_table()
     print_const_table()
     print_dir_proc()
+    print_cuadruplos()
+    clear_var_table()
+    clear_temp_table()
+    clear_const_table()
+    clear_dir_proc
     sys.exit()
 
 def p_vars(p):
@@ -46,7 +57,7 @@ def p_var_body(p):
         else:
             pr = find_dir_proc(scope)
             if pr:
-                pa = find_var_table(get_vars_dir_proc(pr),p[3])
+                pa = find_var_table(get_vars_dir_proc(scope),p[3])
                 if pa:
                     print("Variable: '%s' " % p[3]   +  "already declared in function '%s' " % scope)
                     sys.exit()
@@ -108,13 +119,13 @@ def p_params(p):
     if p[1] != None:
         pr = find_dir_proc(scope)
         if pr:
-            pa = find_var_table(get_params_dir_proc(pr),p[2])
+            pa = find_var_table(get_vars_dir_proc(scope),p[2])
             if pa:
                 print("Parameter: '%s' " % p[2]   +  "already declared in function '%s' " % scope)
                 sys.exit()
             #aqui
             memory = local_memory_assignment(p[1])
-            add_param_dir_proc(scope,p[2],p[1],memory)
+            add_var_dir_proc(scope,p[2],p[1],memory)
 
 def p_params_loop_aux(p):
     '''params_loop_aux : params params_loop'''
@@ -164,8 +175,10 @@ def p_write_choice(p):
 def p_const_string(p):
     '''const_string : CTE_S'''
     global memory
-    memory = const_memory_assignment('string')
-    add_const_table(p[1],'string',memory)
+    cs = find_const_table(p[1])
+    if not cs:
+        memory = const_memory_assignment('string')
+        add_const_table(p[1],'string',memory)
     p[0] = p[1]
 
 def p_write_loop(p):
@@ -219,17 +232,209 @@ def p_exp(p):
     '''exp : term exp_choice'''
 
 def p_exp_choice(p):
-    '''exp_choice : SUMA exp
-    | RESTA exp
+    '''exp_choice : exp_aux
     | '''
+
+def p_exp_aux(p):
+    '''exp_aux : SUMA push_operador exp
+    | RESTA push_operador exp
+    '''
+    global cuadruplos
+    global temporales
+    global scope
+    global pilaOperandos
+    global pilaOperadores
+    global memoria
+
+    if pilaOperadores:
+        operador = pilaOperadores.pop()
+        operando2 = pilaOperandos.pop()
+        operando1 = pilaOperandos.pop()
+
+        type_operando1 = ' '
+        type_operando2 = ' '
+        dir_operando1 = -9000
+        dir_operando2 = -9000
+
+        v7 = find_temp_table(operando1)
+        if v7:
+            dir_operando1 = get_dir_temp_table(operando1)
+            type_operando1 = get_type_temp_table(operando1)
+            operando1 = get_value_temp_table(operando1)
+        if dir_operando1 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v1 = find_var_table(vars_proc,operando1)
+                if v1:
+                    dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                    type_operando1 = get_type_var_table(vars_proc,operando1)
+                    operando1 = get_value_var_table(vars_proc,operando1)
+        if dir_operando1 == -9000:
+            v2 = find_global_var_table(operando1)
+            if v2:
+                dir_operando1 = get_dir_global_var_table(operando1)
+                type_operando1 = get_type_global_var_table(operando1)
+                operando1 = get_value_global_var_table(operando1)
+        if dir_operando1 == -9000:
+            v3 = find_const_table(operando1)
+            if v3:
+                dir_operando1 = get_dir_const_table(operando1)
+                type_operando1 = get_type_const_table(operando1)
+
+        v8 = find_temp_table(operando2)
+        if v8:
+            dir_operando2 = get_dir_temp_table(operando2)
+            type_operando2 = get_type_temp_table(operando2)
+            operando2 = get_value_temp_table(operando2)
+        if dir_operando2 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v4 = find_var_table(vars_proc,operando2)
+                if v4:
+                    dir_operando2 = get_dir_var_table(vars_proc,operando2)
+                    type_operando2 = get_type_var_table(vars_proc,operando2)
+                    operando2 = get_value_var_table(vars_proc,operando2)
+        if dir_operando2 == -9000:
+            v5 = find_global_var_table(operando2)
+            if v5:
+                dir_operando2 = get_dir_global_var_table(operando2)
+                type_operando2 = get_type_global_var_table(operando2)
+                operando2 = get_value_global_var_table(operando2)
+        if dir_operando2 == -9000:
+            v6 = find_const_table(operando2)
+            if v6:
+                dir_operando2 = get_dir_const_table(operando2)
+                type_operando2 = get_type_const_table(operando2)
+
+        returntype = cubosemantico[type_operando1][type_operando2][operador]
+
+        if type_operando1 == 'int':
+            operando1 = int(operando1)
+        elif type_operando1 == 'float':
+            operando1 = float(operando1)
+        if type_operando2 == 'int':
+            operando2 = int(operando2)
+        elif type_operando2 == 'float':
+            operando2 = float(operando2)
+
+        if returntype != 'error':
+            if operador == '+':
+                resultado = operando1 + operando2
+            elif operador == '-':
+                resultado = operando1 - operando2
+            dirtemp = temp_memory_assignment(returntype)
+            add_temp_table(resultado, returntype, dirtemp)
+
+            add_cuadruplo(operador, dir_operando1, dir_operando2, dirtemp)
+            pilaOperandos.append(dirtemp)
+        else:
+            print ("Error in arithmetic expression")
+            sys.exit()
+    p[0]=p[1]
 
 def p_term(p):
     '''term : factor term_choice'''
 
 def p_term_choice(p):
-    '''term_choice : MULTIPLICACION term
-    | DIVISION term
+    '''term_choice : term_aux
     | '''
+
+def p_term_aux(p):
+    '''term_aux : MULTIPLICACION push_operador term
+    | DIVISION push_operador term'''
+    global cuadruplos
+    global temporales
+    global scope
+    global pilaOperandos
+    global pilaOperadores
+    global memoria
+
+    if pilaOperadores:
+        operador = pilaOperadores.pop()
+        operando2 = pilaOperandos.pop()
+        operando1 = pilaOperandos.pop()
+
+        type_operando1 = ' '
+        type_operando2 = ' '
+        dir_operando1 = -9000
+        dir_operando2 = -9000
+
+        v7 = find_temp_table(operando1)
+        if v7:
+            dir_operando1 = get_dir_temp_table(operando1)
+            type_operando1 = get_type_temp_table(operando1)
+            operando1 = get_value_temp_table(operando1)
+        if dir_operando1 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v1 = find_var_table(vars_proc,operando1)
+                if v1:
+                    dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                    type_operando1 = get_type_var_table(vars_proc,operando1)
+                    operando1 = get_value_var_table(vars_proc,operando1)
+        if dir_operando1 == -9000:
+            v2 = find_global_var_table(operando1)
+            if v2:
+                dir_operando1 = get_dir_global_var_table(operando1)
+                type_operando1 = get_type_global_var_table(operando1)
+                operando1 = get_value_global_var_table(operando1)
+        if dir_operando1 == -9000:
+            v3 = find_const_table(operando1)
+            if v3:
+                dir_operando1 = get_dir_const_table(operando1)
+                type_operando1 = get_type_const_table(operando1)
+
+        v8 = find_temp_table(operando2)
+        if v8:
+            dir_operando2 = get_dir_temp_table(operando2)
+            type_operando2 = get_type_temp_table(operando2)
+            operando2 = get_value_temp_table(operando2)
+        if dir_operando2 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v4 = find_var_table(vars_proc,operando2)
+                if v4:
+                    dir_operando2 = get_dir_var_table(vars_proc,operando2)
+                    type_operando2 = get_type_var_table(vars_proc,operando2)
+                    operando2 = get_value_var_table(vars_proc,operando2)
+        if dir_operando2 == -9000:
+            v5 = find_global_var_table(operando2)
+            if v5:
+                dir_operando2 = get_dir_global_var_table(operando2)
+                type_operando2 = get_type_global_var_table(operando2)
+                operando2 = get_value_global_var_table(operando2)
+        if dir_operando2 == -9000:
+            v6 = find_const_table(operando2)
+            if v6:
+                dir_operando2 = get_dir_const_table(operando2)
+                type_operando2 = get_type_const_table(operando2)
+
+        returntype = cubosemantico[type_operando1][type_operando2][operador]
+
+        if type_operando1 == 'int':
+            operando1 = int(operando1)
+        elif type_operando1 == 'float':
+            operando1 = float(operando1)
+        if type_operando2 == 'int':
+            operando2 = int(operando2)
+        elif type_operando2 == 'float':
+            operando2 = float(operando2)
+
+        if returntype != 'error':
+            if operador == '*':
+                resultado = operando1 * operando2
+            elif operador == '/':
+                resultado = operando1 / operando2
+            dirtemp = temp_memory_assignment(returntype)
+            add_temp_table(resultado, returntype, dirtemp)
+
+            add_cuadruplo(operador, dir_operando1, dir_operando2, dirtemp)
+            pilaOperandos.append(dirtemp)
+        else:
+            print ("Error in arithmetic expression")
+            sys.exit()
+    p[0]=p[1]
+
 
 def p_factor(p):
     '''factor : ABRIR_PRNT expression CERRAR_PRNT
@@ -245,20 +450,28 @@ def p_var_cte(p):
     | const_float
     | const_bool
     | ABRIR_CORCH list_elements CERRAR_CORCH
-    | ID var_func '''
+    | ID var_decision '''
+
+def p_var_decision(p):
+    '''var_decision : var_func
+    | push_operando'''
 
 def p_const_int(p):
-    '''const_int : CTE_I'''
+    '''const_int : CTE_I push_operando'''
     global memory
-    memory = const_memory_assignment('int')
-    add_const_table(p[1],'int',memory)
+    ci = find_const_table(p[1])
+    if not ci:
+        memory = const_memory_assignment('int')
+        add_const_table(p[1],'int',memory)
     p[0] = p[1]
 
 def p_const_float(p):
-    '''const_float : CTE_F'''
+    '''const_float : CTE_F push_operando'''
     global memory
-    memory = const_memory_assignment('float')
-    add_const_table(p[1],'float',memory)
+    cf = find_const_table(p[1])
+    if not cf:
+        memory = const_memory_assignment('float')
+        add_const_table(p[1],'float',memory)
     p[0] = p[1]
 
 def p_const_bool(p):
@@ -270,8 +483,7 @@ def p_const_bool(p):
     p[0] = p[1]
 
 def p_var_func(p):
-    '''var_func : ABRIR_PRNT params_call CERRAR_PRNT
-    | '''
+    '''var_func : ABRIR_PRNT params_call CERRAR_PRNT'''
 
 def p_list_elements(p):
     '''list_elements : expression list_elements_loop
@@ -329,6 +541,16 @@ def p_direction(p):
     | DOWN
     | LEFT
     | RIGHT '''
+
+def p_push_operando(p):
+    '''push_operando : '''
+    global pilaOperandos
+    pilaOperandos.append(p[-1])
+
+def p_push_operador(p):
+    '''push_operador : '''
+    global pilaOperadores
+    pilaOperadores.append(p[-1])
 
 # Funcion de error
 def p_error(p):
