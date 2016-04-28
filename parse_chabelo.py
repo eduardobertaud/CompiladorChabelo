@@ -13,6 +13,7 @@ scope = 'global'
 memory = 0
 pilaOperadores = []
 pilaOperandos = []
+pilaSaltos = []
 
 precedence = (
     ('nonassoc', 'IGUALDAD', 'DESIGUALDAD', 'MENOR_QUE', 'MAYOR_QUE', 'MENOR_IGUAL', 'MAYOR_IGUAL'),
@@ -184,7 +185,7 @@ def p_write_loop(p):
     | '''
 
 def p_condition(p):
-    '''condition : IF ABRIR_PRNT expression CERRAR_PRNT block else'''
+    '''condition : IF ABRIR_PRNT expression ifcuad1 CERRAR_PRNT block ifcuad2 else ifcuad3'''
 
 def p_else(p):
     '''else : ELSE block
@@ -195,10 +196,10 @@ def p_loop(p):
     | do_while '''
 
 def p_while(p):
-    '''while : WHILE ABRIR_PRNT expression CERRAR_PRNT block'''
+    '''while : WHILE ABRIR_PRNT whilecuad1 expression whilecuad2 CERRAR_PRNT block whilecuad3'''
 
 def p_do_while(p):
-    '''do_while : DO block WHILE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA'''
+    '''do_while : DO docuad1 block WHILE ABRIR_PRNT expression docuad2 CERRAR_PRNT PUNTO_COMA'''
 
 def p_call(p):
     '''call : ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA'''
@@ -266,6 +267,13 @@ def p_assignment(p):
             if v5:
                 dir_operando1 = get_dir_global_var_table(operando1)
                 type_operando1 = get_type_global_var_table(operando1)
+
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+        if dir_operando2 == -9000:
+            print("Variable '%s' " %operando2 + "not declared")
+            sys.exit()
 
         if type_operando1 != ' ' and type_operando2 != ' ' and type_operando1 == type_operando2:
             if type_operando2 == 'int':
@@ -365,6 +373,12 @@ def p_expression_choice_aux(p):
                 dir_operando2 = get_dir_const_table(operando2)
                 type_operando2 = get_type_const_table(operando2)
 
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+        if dir_operando2 == -9000:
+            print("Variable '%s' " %operando2 + "not declared")
+            sys.exit()
         returntype = cubosemantico[type_operando1][type_operando2][operador]
 
         if type_operando1 == 'int':
@@ -491,6 +505,12 @@ def p_exp_aux(p):
                 dir_operando2 = get_dir_const_table(operando2)
                 type_operando2 = get_type_const_table(operando2)
 
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+        if dir_operando2 == -9000:
+            print("Variable '%s' " %operando2 + "not declared")
+            sys.exit()
         returntype = cubosemantico[type_operando1][type_operando2][operador]
 
         if type_operando1 == 'int':
@@ -594,6 +614,12 @@ def p_term_aux(p):
                 dir_operando2 = get_dir_const_table(operando2)
                 type_operando2 = get_type_const_table(operando2)
 
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+        if dir_operando2 == -9000:
+            print("Variable '%s' " %operando2 + "not declared")
+            sys.exit()
         returntype = cubosemantico[type_operando1][type_operando2][operador]
 
         if type_operando1 == 'int':
@@ -619,7 +645,6 @@ def p_term_aux(p):
             print ("Error in arithmetic expression")
             sys.exit()
     p[0]=p[1]
-
 
 def p_factor(p):
     '''factor : ABRIR_PRNT expression CERRAR_PRNT
@@ -660,8 +685,8 @@ def p_const_float(p):
     p[0] = p[1]
 
 def p_const_bool(p):
-    '''const_bool : TRUE
-    | FALSE'''
+    '''const_bool : TRUE push_operando
+    | FALSE push_operando'''
     global memory
     memory = const_memory_assignment('bool')
     add_const_table(p[1],'bool',memory)
@@ -736,6 +761,173 @@ def p_push_operador(p):
     '''push_operador : '''
     global pilaOperadores
     pilaOperadores.append(p[-1])
+
+def p_ifcuad1(p):
+    '''ifcuad1 : '''
+    global pilaSaltos
+    global pilaOperandos
+    type_operando1 = ' '
+    dir_operando1 = -9000
+
+    if pilaOperandos:
+        operando1 = pilaOperandos.pop()
+        v1 = find_temp_table(operando1)
+        if v1:
+            dir_operando1 = get_dir_temp_table(operando1)
+            type_operando1 = get_type_temp_table(operando1)
+            operando1 = get_value_temp_table(operando1)
+        if dir_operando1 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v2 = find_var_table(vars_proc,operando1)
+                if v2:
+                    dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                    type_operando1 = get_type_var_table(vars_proc,operando1)
+                    operando1 = get_value_var_table(vars_proc,operando1)
+        if dir_operando1 == -9000:
+            v3 = find_global_var_table(operando1)
+            if v3:
+                dir_operando1 = get_dir_global_var_table(operando1)
+                type_operando1 = get_type_global_var_table(operando1)
+                operando1 = get_value_global_var_table(operando1)
+        if dir_operando1 == -9000:
+            v4 = find_const_table(operando1)
+            if v4:
+                dir_operando1 = get_dir_const_table(operando1)
+                type_operando1 = get_type_const_table(operando1)
+
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+        if type_operando1 == 'bool':
+            add_cuadruplo('GOTOF',dir_operando1 , None, None)
+            pilaSaltos.append(getCuadCont()-1)
+        else:
+            print ("Error in condition")
+
+def p_ifcuad2(p):
+    '''ifcuad2 : '''
+    global pilaSaltos
+    add_cuadruplo('GOTO', None, None, None)
+    cuadcont = getCuadCont()
+    print("············")
+    print(pilaSaltos)
+    print("············")
+    salto = pilaSaltos.pop()
+    print(pilaSaltos)
+    print("············")
+    set_resultado(salto,cuadcont)
+    pilaSaltos.append(cuadcont-1)
+
+def p_ifcuad3(p):
+    '''ifcuad3 : '''
+    global pilaSaltos
+    salto = pilaSaltos.pop()
+    set_resultado(salto,getCuadCont())
+
+def p_whilecuad1(p):
+    '''whilecuad1 : '''
+    global pilaSaltos
+    pilaSaltos.append(getCuadCont())
+
+def p_whilecuad2(p):
+    '''whilecuad2 : '''
+    global pilaSaltos
+    global pilaOperandos
+    type_operando1 = ' '
+    dir_operando1 = -9000
+
+    if pilaOperandos:
+        operando1 = pilaOperandos.pop()
+        v1 = find_temp_table(operando1)
+        if v1:
+            dir_operando1 = get_dir_temp_table(operando1)
+            type_operando1 = get_type_temp_table(operando1)
+            operando1 = get_value_temp_table(operando1)
+        if dir_operando1 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v2 = find_var_table(vars_proc,operando1)
+                if v2:
+                    dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                    type_operando1 = get_type_var_table(vars_proc,operando1)
+                    operando1 = get_value_var_table(vars_proc,operando1)
+        if dir_operando1 == -9000:
+            v3 = find_global_var_table(operando1)
+            if v3:
+                dir_operando1 = get_dir_global_var_table(operando1)
+                type_operando1 = get_type_global_var_table(operando1)
+                operando1 = get_value_global_var_table(operando1)
+        if dir_operando1 == -9000:
+            v4 = find_const_table(operando1)
+            if v4:
+                dir_operando1 = get_dir_const_table(operando1)
+                type_operando1 = get_type_const_table(operando1)
+
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+        if type_operando1 == 'bool':
+            add_cuadruplo('GOTOF',dir_operando1 , None, None)
+            pilaSaltos.append(getCuadCont()-1)
+        else:
+            print ("Error in condition")
+
+def p_whilecuad3(p):
+    '''whilecuad3 : '''
+    global pilaSaltos
+    salto = pilaSaltos.pop()
+    set_resultado(salto,getCuadCont()+1)
+    salto = pilaSaltos.pop()
+    add_cuadruplo('GOTO',None,None,salto)
+
+def p_docuad1(p):
+    '''docuad1 : '''
+    global pilaSaltos
+    pilaSaltos.append(getCuadCont())
+
+def p_docuad2(p):
+    '''docuad2 : '''
+    global pilaSaltos
+    global pilaOperandos
+    type_operando1 = ' '
+    dir_operando1 = -9000
+
+    if pilaOperandos:
+        operando1 = pilaOperandos.pop()
+        v1 = find_temp_table(operando1)
+        if v1:
+            dir_operando1 = get_dir_temp_table(operando1)
+            type_operando1 = get_type_temp_table(operando1)
+            operando1 = get_value_temp_table(operando1)
+        if dir_operando1 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v2 = find_var_table(vars_proc,operando1)
+                if v2:
+                    dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                    type_operando1 = get_type_var_table(vars_proc,operando1)
+                    operando1 = get_value_var_table(vars_proc,operando1)
+        if dir_operando1 == -9000:
+            v3 = find_global_var_table(operando1)
+            if v3:
+                dir_operando1 = get_dir_global_var_table(operando1)
+                type_operando1 = get_type_global_var_table(operando1)
+                operando1 = get_value_global_var_table(operando1)
+        if dir_operando1 == -9000:
+            v4 = find_const_table(operando1)
+            if v4:
+                dir_operando1 = get_dir_const_table(operando1)
+                type_operando1 = get_type_const_table(operando1)
+
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+        if type_operando1 == 'bool':
+            salto = pilaSaltos.pop()
+            add_cuadruplo('GOTOV',dir_operando1 , None, salto)
+        else:
+            print ("Error in condition")
 
 # Funcion de error
 def p_error(p):

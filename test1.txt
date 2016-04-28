@@ -13,21 +13,10 @@ var int vv;
 vv = 1;
 var bool f;
 f = true;
-while(vv == 3)
-{
-if(vv>2){
- vv = vv - 2;
 do
 {
 vv = vv - 1;
 }while(vv == 3);
-
-}
-else{
-  vv = vv - 1;
-}
-vv = vv + 1;
-}
 
 move(up ,2);
 }

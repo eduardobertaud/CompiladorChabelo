@@ -16,6 +16,10 @@ def add_cuadruplo(operador, operando1, operando2, resultado):
     cuadruplos.append(cuadruplo(cuadCont, operador, operando1, operando2, resultado))
     cuadCont += 1
 
+def getCuadCont():
+    global cuadCont
+    return cuadCont
+
 def find_cuadruplo(c_id):
     global cuadruplos
     for cuad in cuadruplos:
