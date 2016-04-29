@@ -59,6 +59,7 @@ def local_memory_assignment(v_type):
       bool_local += 1
     return memory
 
+
 def const_memory_assignment(v_type):
     global int_const
     global float_const

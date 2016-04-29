@@ -28,7 +28,5 @@ else{
 }
 vv = vv + 1;
 }
-
-move(up ,2);
 }
 end 

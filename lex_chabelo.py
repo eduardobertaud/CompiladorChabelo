@@ -24,37 +24,21 @@ reserved = {
     'main' : 'MAIN',
     'return' : 'RETURN',
     'print' : 'PRINT',
-    'append' : 'APPEND',
-    'remove' : 'REMOVE',
-    'first' : 'FIRST',
-    'last' : 'LAST',
-    'size' : 'SIZE',
-    'create' : 'CREATE',
-    'paint' : 'PAINT',
-    'move' : 'MOVE',
+    'penup' : 'PENUP',
+    'pendown' : 'PENDOWN',
+    'turnleft' : 'TURNLEFT',
+    'turnright' : 'TURNRIGHT',
     'erase' : 'ERASE',
     'move' : 'MOVE',
-    'list' : 'LIST',
-    'square' : 'SQUARE',
-    'circle' : 'CIRCLE',
-    'triangle' : 'TRIANGLE',
-    'up' : 'UP',
-    'down' : 'DOWN',
-    'left' : 'LEFT',
-    'right' : 'RIGHT',
-    'pen_up' : 'P_UP',
-    'p_down' : 'P_DOWN',
-    'line' : 'LINE',
-    'point' : 'POINT',
+    'forward' : 'FORWARD',
+    'backward' : 'BACKWARD',
     'true' : 'TRUE',
     'false' : 'FALSE',
     }
 
 tokens = list(reserved.values()) + [
-    'CONST',
     'COMA',
     'PUNTO_COMA',
-    'DOS_PUNTOS',
     'ABRIR_PRNT',
     'CERRAR_PRNT',
     'ABRIR_LLAVE',
@@ -81,7 +65,6 @@ tokens = list(reserved.values()) + [
 #Valores de los tokens
 t_COMA = r'\,'
 t_PUNTO_COMA = r';'
-t_DOS_PUNTOS = r':'
 t_ABRIR_PRNT = r'\('
 t_CERRAR_PRNT = r'\)'
 t_ABRIR_LLAVE = r'\{'

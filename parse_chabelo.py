@@ -31,7 +31,7 @@ def p_program(p):
     clear_var_table()
     clear_temp_table()
     clear_const_table()
-    clear_dir_proc
+    clear_dir_proc()
     sys.exit()
 
 def p_vars(p):
@@ -168,8 +168,43 @@ def p_fprint(p):
     '''fprint : PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA'''
 
 def p_write_choice(p):
-    '''write_choice : expression write_loop
-    | const_string write_loop '''
+    '''write_choice : expression
+    | const_string '''
+    global pilaOperandos
+    type_operando1 = ' '
+    dir_operando1 = -9000
+    if pilaOperandos:
+        operando1 = pilaOperandos.pop()
+        v7 = find_temp_table(operando1)
+        if v7:
+            dir_operando1 = get_dir_temp_table(operando1)
+            type_operando1 = get_type_temp_table(operando1)
+            operando1 = get_value_temp_table(operando1)
+        if dir_operando1 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v1 = find_var_table(vars_proc,operando1)
+                if v1:
+                    dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                    type_operando1 = get_type_var_table(vars_proc,operando1)
+                    operando1 = get_value_var_table(vars_proc,operando1)
+        if dir_operando1 == -9000:
+            v2 = find_global_var_table(operando1)
+            if v2:
+                dir_operando1 = get_dir_global_var_table(operando1)
+                type_operando1 = get_type_global_var_table(operando1)
+                operando1 = get_value_global_var_table(operando1)
+        if dir_operando1 == -9000:
+            v3 = find_const_table(operando1)
+            if v3:
+                dir_operando1 = get_dir_const_table(operando1)
+                type_operando1 = get_type_const_table(operando1)
+
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+        add_cuadruplo('PRINT',None,None,dir_operando1)
+
 
 def p_const_string(p):
     '''const_string : CTE_S'''
@@ -178,11 +213,8 @@ def p_const_string(p):
     if not cs:
         memory = const_memory_assignment('string')
         add_const_table(p[1],'string',memory)
+        pilaOperandos.append(p[1])
     p[0] = p[1]
-
-def p_write_loop(p):
-    '''write_loop : COMA write_choice
-    | '''
 
 def p_condition(p):
     '''condition : IF ABRIR_PRNT expression ifcuad1 CERRAR_PRNT block ifcuad2 else ifcuad3'''
@@ -201,21 +233,8 @@ def p_while(p):
 def p_do_while(p):
     '''do_while : DO docuad1 block WHILE ABRIR_PRNT expression docuad2 CERRAR_PRNT PUNTO_COMA'''
 
-def p_call(p):
-    '''call : ID ABRIR_PRNT params_call CERRAR_PRNT PUNTO_COMA'''
-
-def p_params_call(p):
-    '''params_call : expression params_call_loop
-    | '''
-
-def p_params_call_loop(p):
-    '''params_call_loop : COMA expression params_call_loop
-    | '''
-
 def p_assignment(p):
     '''assignment : ID push_operando IGUAL push_operador expression PUNTO_COMA'''
-    global cuadruplos
-    global temporales
     global scope
     global pilaOperandos
     global pilaOperadores
@@ -306,8 +325,6 @@ def p_expression_choice_aux(p):
     | MAYOR_IGUAL push_operador exp
     | MENOR_IGUAL push_operador exp '''
 
-    global cuadruplos
-    global temporales
     global scope
     global pilaOperandos
     global pilaOperadores
@@ -438,8 +455,6 @@ def p_exp_aux(p):
     '''exp_aux : SUMA push_operador exp
     | RESTA push_operador exp
     '''
-    global cuadruplos
-    global temporales
     global scope
     global pilaOperandos
     global pilaOperadores
@@ -547,8 +562,6 @@ def p_term_choice(p):
 def p_term_aux(p):
     '''term_aux : MULTIPLICACION push_operador term
     | DIVISION push_operador term'''
-    global cuadruplos
-    global temporales
     global scope
     global pilaOperandos
     global pilaOperadores
@@ -695,6 +708,17 @@ def p_const_bool(p):
 def p_var_func(p):
     '''var_func : ABRIR_PRNT params_call CERRAR_PRNT'''
 
+def p_call(p):
+    '''call : ID var_func PUNTO_COMA'''
+
+def p_params_call(p):
+    '''params_call : expression params_call_loop
+    | '''
+
+def p_params_call_loop(p):
+    '''params_call_loop : COMA expression params_call_loop
+    | '''
+
 def p_list_elements(p):
     '''list_elements : expression list_elements_loop
     | '''
@@ -704,53 +728,140 @@ def p_list_elements_loop(p):
     | '''
 
 def p_special_function(p):
-    '''special_function : fpaint
-    | fcreate
+    '''special_function : fpen_up
+    | fpen_down
     | ferase
-    | fp_up
-    | fp_down
-    | fappend
-    | fremove
-    | fsize
+    | fturn_left
+    | fturn_right
     | fmove'''
 
-def p_fpaint(p):
-    '''fpaint : PAINT ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA'''
+def p_fpen_up(p):
+    '''fpen_up : PENUP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA'''
+    add_cuadruplo('PENUP',None,None,None)
 
-def p_fcreate(p):
-    '''fcreate : CREATE ABRIR_PRNT figure COMA expression COMA expression CERRAR_PRNT PUNTO_COMA'''
-
-def p_figure(p):
-    '''figure : CIRCLE
-    | TRIANGLE
-    | SQUARE '''
+def p_fpen_down(p):
+    '''fpen_down : PENDOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA'''
+    add_cuadruplo('PENDOWN',None,None,None)
 
 def p_ferase(p):
-    '''ferase : ERASE ABRIR_PRNT expression COMA expression CERRAR_PRNT PUNTO_COMA'''
+    '''ferase : ERASE ABRIR_PRNT CERRAR_PRNT PUNTO_COMA'''
+    add_cuadruplo('ERASE',None,None,None)
 
-def p_fp_up(p):
-    '''fp_up : P_UP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA'''
+def p_fturn_left(p):
+    '''fturn_left : TURNLEFT ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA'''
+    global pilaOperandos
+    type_operando1 = ' '
+    dir_operando1 = -9000
+    if pilaOperandos:
+        operando1 = pilaOperandos.pop()
+        v7 = find_temp_table(operando1)
+        if v7:
+            dir_operando1 = get_dir_temp_table(operando1)
+            type_operando1 = get_type_temp_table(operando1)
+            operando1 = get_value_temp_table(operando1)
+        if dir_operando1 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v1 = find_var_table(vars_proc,operando1)
+                if v1:
+                    dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                    type_operando1 = get_type_var_table(vars_proc,operando1)
+                    operando1 = get_value_var_table(vars_proc,operando1)
+        if dir_operando1 == -9000:
+            v2 = find_global_var_table(operando1)
+            if v2:
+                dir_operando1 = get_dir_global_var_table(operando1)
+                type_operando1 = get_type_global_var_table(operando1)
+                operando1 = get_value_global_var_table(operando1)
+        if dir_operando1 == -9000:
+            v3 = find_const_table(operando1)
+            if v3:
+                dir_operando1 = get_dir_const_table(operando1)
+                type_operando1 = get_type_const_table(operando1)
 
-def p_fp_down(p):
-    '''fp_down : P_DOWN ABRIR_PRNT CERRAR_PRNT PUNTO_COMA'''
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+        add_cuadruplo('TURN_LEFT',None,None,dir_operando1)
 
-def p_fappend(p):
-    '''fappend : APPEND ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA'''
+def p_fturn_right(p):
+    '''fturn_right : TURNRIGHT ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA'''
+    global pilaOperandos
+    type_operando1 = ' '
+    dir_operando1 = -9000
+    if pilaOperandos:
+        operando1 = pilaOperandos.pop()
+        v7 = find_temp_table(operando1)
+        if v7:
+            dir_operando1 = get_dir_temp_table(operando1)
+            type_operando1 = get_type_temp_table(operando1)
+            operando1 = get_value_temp_table(operando1)
+        if dir_operando1 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v1 = find_var_table(vars_proc,operando1)
+                if v1:
+                    dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                    type_operando1 = get_type_var_table(vars_proc,operando1)
+                    operando1 = get_value_var_table(vars_proc,operando1)
+        if dir_operando1 == -9000:
+            v2 = find_global_var_table(operando1)
+            if v2:
+                dir_operando1 = get_dir_global_var_table(operando1)
+                type_operando1 = get_type_global_var_table(operando1)
+                operando1 = get_value_global_var_table(operando1)
+        if dir_operando1 == -9000:
+            v3 = find_const_table(operando1)
+            if v3:
+                dir_operando1 = get_dir_const_table(operando1)
+                type_operando1 = get_type_const_table(operando1)
 
-def p_fremove(p):
-    '''fremove : REMOVE ABRIR_PRNT ID COMA expression CERRAR_PRNT PUNTO_COMA'''
-
-def p_fsize(p):
-    '''fsize : SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA'''
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+        add_cuadruplo('TURN_RIGHT',None,None,dir_operando1)
 
 def p_fmove(p):
     '''fmove : MOVE ABRIR_PRNT direction COMA expression CERRAR_PRNT PUNTO_COMA'''
+    global pilaOperandos
+    type_operando1 = ' '
+    dir_operando1 = -9000
+    if pilaOperandos:
+        operando1 = pilaOperandos.pop()
+        v7 = find_temp_table(operando1)
+        if v7:
+            dir_operando1 = get_dir_temp_table(operando1)
+            type_operando1 = get_type_temp_table(operando1)
+            operando1 = get_value_temp_table(operando1)
+        if dir_operando1 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v1 = find_var_table(vars_proc,operando1)
+                if v1:
+                    dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                    type_operando1 = get_type_var_table(vars_proc,operando1)
+                    operando1 = get_value_var_table(vars_proc,operando1)
+        if dir_operando1 == -9000:
+            v2 = find_global_var_table(operando1)
+            if v2:
+                dir_operando1 = get_dir_global_var_table(operando1)
+                type_operando1 = get_type_global_var_table(operando1)
+                operando1 = get_value_global_var_table(operando1)
+        if dir_operando1 == -9000:
+            v3 = find_const_table(operando1)
+            if v3:
+                dir_operando1 = get_dir_const_table(operando1)
+                type_operando1 = get_type_const_table(operando1)
+
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+        add_cuadruplo('MOVE',p[3],None,dir_operando1)
 
 def p_direction(p):
-    '''direction : UP
-    | DOWN
-    | LEFT
-    | RIGHT '''
+    '''direction : FORWARD
+    | BACKWARD '''
+    p[0] = p[1]
 
 def p_push_operando(p):
     '''push_operando : '''
