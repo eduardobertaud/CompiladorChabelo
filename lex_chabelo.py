@@ -83,8 +83,8 @@ t_MENOR_IGUAL = r'\<\='
 t_MAYOR_IGUAL = r'\>\='
 t_DESIGUALDAD = r'\<\>'
 t_CTE_S = r'\".*\"'
-t_CTE_I = r'[0-9]+ '
-t_CTE_F = r'[0-9]+\.+[0-9]+'
+t_CTE_I = r'-?[0-9]+ '
+t_CTE_F = r'-?[0-9]+\.+[0-9]+'
 
 # track line numbers
 def t_ENDL(t):

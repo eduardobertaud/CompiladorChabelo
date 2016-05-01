@@ -1,32 +1,9 @@
 program UNO;
 
-var int ah[20];
-var float hola;
-var string an;
-
-func void aha(int ah,float f){
-
-}
-
 main(){
 var int vv;
-vv = 1;
-var bool f;
-f = true;
-while(vv == 3)
-{
-if(vv>2){
- vv = vv - 2;
-do
-{
-vv = vv - 1;
-}while(vv == 3);
+if( 2 + 3 - 2 - -1> 1 * 0){
 
-}
-else{
-  vv = vv - 1;
-}
-vv = vv + 1;
 }
 }
 end 

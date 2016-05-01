@@ -142,6 +142,16 @@ def get_dir_temp_table(temp_dir):
 	if te:
 		return te.temp_dir
 
+def print_temp_table():
+	global temp_table
+	print("Tabla de Constantes:")
+	if temp_table:
+		for temp in temp_table:
+			print (" VALUE: " + str(temp.temp_value) , " TYPE: " + str(temp.temp_type) , " DIR: " + str(temp.temp_dir))
+	else:
+		print ("No constants declared")
+	print("\n")
+
 def clear_temp_table():
 	global temp_table
 	temp_table[:] = []
@@ -197,16 +207,17 @@ def clear_const_table():
 
 #DirProc Functions
 class function:
-	def __init__(self, func_name, func_ret, func_dir):
+	def __init__(self, func_name, func_type, func_dir, func_ret):
 		self.func_name= func_name
-		self.func_ret = func_ret
+		self.func_type = func_type
 		self.func_dir = func_dir
 		self.func_vars = []
 		self.func_params = []
+		self.func_ret = func_ret
 
-def add_dir_proc(func_name, func_ret, func_dir):
+def add_dir_proc(func_name, func_type, func_dir):
 	global dir_proc
-	dir_proc.append(function(func_name, func_ret, func_dir))
+	dir_proc.append(function(func_name, func_type, func_dir,None))
 
 def add_param_dir_proc(func_name, var_name, var_value, var_type, var_dir):
 	global dir_proc
@@ -256,7 +267,19 @@ def get_type_dir_proc(func_name):
 	global dir_proc
 	d = find_dir_proc(func_name)
 	if d:
+		return d.func_type
+
+def get_return_dir_proc(func_name):
+	global dir_proc
+	d = find_dir_proc(func_name)
+	if d:
 		return d.func_ret
+
+def set_return_dir_proc(func_name,ret):
+	global dir_proc
+	d = find_dir_proc(func_name)
+	if d:
+		d.func_ret = ret
 
 def get_dir_dir_proc(func_name):
 	global dir_proc
@@ -264,8 +287,11 @@ def get_dir_dir_proc(func_name):
 	if d:
 		return d.func_dir
 
-def get_params_dir_proc(proc):
-	return proc.func_params
+def get_params_dir_proc(func_name):
+	global dir_proc
+	d = find_dir_proc(func_name)
+	if d:
+		return d.func_params
 
 def get_vars_dir_proc(func_name):
 	global dir_proc
@@ -278,7 +304,7 @@ def print_dir_proc():
 	print("Directorio de procedimientos:")
 	for d in dir_proc:
 		if d:
-			print(" NAME: " +  str(d.func_name) , " TYPE: " + str(d.func_ret) , " DIR: " + str(d.func_dir))
+			print(" NAME: " +  str(d.func_name) , " TYPE: " + str(d.func_type) , " DIR: " + str(d.func_dir))
 			#print("Parameters:")
 			#for param in d.func_params:
 			#	print(" NAME: ", param.var_name, " VALUE: ", param.var_value, " TYPE: ", param.var_type, " DIR: ", param.var_dir)

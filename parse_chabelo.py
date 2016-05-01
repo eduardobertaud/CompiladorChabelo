@@ -14,25 +14,30 @@ memory = 0
 pilaOperadores = []
 pilaOperandos = []
 pilaSaltos = []
-
-precedence = (
-    ('nonassoc', 'IGUALDAD', 'DESIGUALDAD', 'MENOR_QUE', 'MAYOR_QUE', 'MENOR_IGUAL', 'MAYOR_IGUAL'),
-    ('left','SUMA','RESTA'),
-    ('left','MULTIPLICACION','DIVISION'),
-    )
+pilaSuma = []
+pilaSignoSuma = []
+pilaMulti = []
+pilaSignoMulti =[]
+pilaParams = []
 
 def p_program(p):
-    '''program : PROGRAM ID PUNTO_COMA vars body END'''
+    '''program : PROGRAM ID PUNTO_COMA vars salto_principal body END'''
     print('Accepted \n')
     print_var_table()
     print_const_table()
+    print_temp_table()
     print_dir_proc()
     print_cuadruplos()
+
     clear_var_table()
     clear_temp_table()
     clear_const_table()
     clear_dir_proc()
     sys.exit()
+
+def p_salto_principal(p):
+    '''salto_principal : '''
+    add_cuadruplo('GOTO',None,None,None)
 
 def p_vars(p):
     '''vars : var_body
@@ -41,7 +46,7 @@ def p_vars(p):
     scope = "functions"
 
 def p_var_body(p):
-    '''var_body : VAR type ID  array PUNTO_COMA var_loop'''
+    '''var_body : VAR type ID array PUNTO_COMA var_loop'''
     global scope
     global memoria
     if p[1] != None:
@@ -50,7 +55,6 @@ def p_var_body(p):
             if v:
                 print("Variable: '%s' " % p[3]   +  "already declared")
                 sys.exit()
-            #aqui
             memory = global_memory_assignment(p[2])
             add_var_table(p[3], p[2],memory)
         else:
@@ -60,7 +64,6 @@ def p_var_body(p):
                 if pa:
                     print("Variable: '%s' " % p[3]   +  "already declared in function '%s' " % scope)
                     sys.exit()
-                #aqui
                 memory = local_memory_assignment(p[2])
                 add_var_dir_proc(scope,p[3],p[2],memory)
 
@@ -76,38 +79,109 @@ def p_type(p):
     '''type : INT
     | FLOAT
     | STRING
-    | BOOL
-    | VOID'''
+    | BOOL'''
     p[0] = p[1]
 
 def p_body(p):
     '''body : functions fmain'''
 
 def p_functions(p):
-    '''functions : functions_body functions_params block functions_loop
+    '''functions : FUNC functions2
     | '''
 
+def p_functions2(p):
+    '''functions2 : functions_body functions_params func_block functions_loop
+    | functions_body_void functions_params block ret_void functions_loop
+    | '''
+
+def p_ret_void(p):
+    '''ret_void : '''
+    add_cuadruplo('RET',None , None, None)
+
+def p_func_block(p):
+    '''func_block : ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE'''
+
 def p_functions_body(p):
-    '''functions_body :  FUNC type ID'''
+    '''functions_body :  type ID'''
     global scope
     if p[1] != None:
-        p[0] = p[3]
-        scope = p[3]
-        fn = find_dir_proc(p[3])
+        p[0] = p[2]
+        scope = p[2]
+        fn = find_dir_proc(p[2])
         if fn:
-            print("Function: '%s' " % p[3]   +  "already declared")
+            print("Function: '%s' " % p[2]   +  "already declared")
             sys.exit()
-        add_dir_proc(p[3],p[2],0)
+        add_dir_proc(p[2],p[1],0)
 
-def p_functions_params(p):
-    '''functions_params :  ABRIR_PRNT params_aux CERRAR_PRNT'''
+def p_functions_body_void(p):
+    '''functions_body_void : VOID ID'''
+    global scope
+    if p[1] != None:
+        p[0] = p[2]
+        scope = p[2]
+        fn = find_dir_proc(p[2])
+        if fn:
+            print("Function: '%s' " % p[2]   +  "already declared")
+            sys.exit()
+        add_dir_proc(p[2],p[1],0)
+
+def p_return(p):
+    '''return : RETURN expression PUNTO_COMA'''
+    global pilaOperandos
+    type_operando1 = ' '
+    dir_operando1 = -9000
+    if pilaOperandos:
+        operando1 = pilaOperandos.pop()
+        v7 = find_temp_table(operando1)
+        if v7:
+            dir_operando1 = get_dir_temp_table(operando1)
+            type_operando1 = get_type_temp_table(operando1)
+            value_operando1 = get_value_temp_table(operando1)
+        if dir_operando1 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v1 = find_var_table(vars_proc,operando1)
+                if v1:
+                    dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                    type_operando1 = get_type_var_table(vars_proc,operando1)
+                    value_operando1 = get_value_var_table(vars_proc,operando1)
+        if dir_operando1 == -9000:
+            v2 = find_global_var_table(operando1)
+            if v2:
+                dir_operando1 = get_dir_global_var_table(operando1)
+                type_operando1 = get_type_global_var_table(operando1)
+                value_operando1 = get_value_global_var_table(operando1)
+        if dir_operando1 == -9000:
+            v3 = find_const_table(operando1)
+            if v3:
+                dir_operando1 = get_dir_const_table(operando1)
+                type_operando1 = get_type_const_table(operando1)
+                value_operando1 = operando1
+
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+
+        if type_operando1 == get_type_dir_proc(scope):
+            memory = temp_memory_assignment(type_operando1)
+            add_temp_table(value_operando1,type_operando1,memory)
+            set_return_dir_proc(scope,memory)
+            add_cuadruplo('RETURN',memory , None, None)
+            add_cuadruplo('RET',None , None, None)
+        else:
+            print ("Error in return value in function " + scope)
+            sys.exit()
 
 def p_functions_loop(p):
-    '''functions_loop : functions_aux
+    '''functions_loop : FUNC functions_aux
     | '''
 
 def p_functions_aux(p):
-    '''functions_aux : functions_body functions_params block functions_loop'''
+    '''functions_aux : functions_body functions_params func_block functions_loop
+    | functions_body_void functions_params block functions_loop'''
+
+def p_functions_params(p):
+    '''functions_params :  ABRIR_PRNT params_aux CERRAR_PRNT'''
 
 def p_params_aux(p):
     '''params_aux : params params_loop
@@ -118,12 +192,12 @@ def p_params(p):
     if p[1] != None:
         pr = find_dir_proc(scope)
         if pr:
-            pa = find_var_table(get_vars_dir_proc(scope),p[2])
+            pa = find_var_table(get_params_dir_proc(scope),p[2])
             if pa:
                 print("Parameter: '%s' " % p[2]   +  "already declared in function '%s' " % scope)
                 sys.exit()
-            #aqui
             memory = local_memory_assignment(p[1])
+            add_param_dir_proc(scope,p[2],p[1],memory)
             add_var_dir_proc(scope,p[2],p[1],memory)
 
 def p_params_loop_aux(p):
@@ -134,11 +208,7 @@ def p_params_loop(p):
     | '''
 
 def p_block(p):
-    '''block : ABRIR_LLAVE estatuto_loop return CERRAR_LLAVE'''
-
-def p_return(p):
-    '''return : RETURN expression PUNTO_COMA
-    | '''
+    '''block : ABRIR_LLAVE estatuto_loop CERRAR_LLAVE'''
 
 def p_fmain(p):
     '''fmain : fmain_aux block'''
@@ -150,6 +220,7 @@ def p_fmain_aux(p):
         p[0] = p[1]
         scope = 'main'
         add_dir_proc('main','void',0)
+        set_resultado(1,getCuadCont())
 
 def p_estatuto_loop(p):
     '''estatuto_loop : estatuto estatuto_loop
@@ -158,11 +229,14 @@ def p_estatuto_loop(p):
 def p_estatuto(p):
     '''estatuto : condition
     | loop
-    | assignment
-    | call
+    | ID estatuto_aux
     | fprint
     | special_function
     | var_body '''
+
+def p_estatuto_aux(p):
+    '''estatuto_aux : call
+    | assignment'''
 
 def p_fprint(p):
     '''fprint : PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA'''
@@ -205,7 +279,6 @@ def p_write_choice(p):
             sys.exit()
         add_cuadruplo('PRINT',None,None,dir_operando1)
 
-
 def p_const_string(p):
     '''const_string : CTE_S'''
     global memory
@@ -234,7 +307,7 @@ def p_do_while(p):
     '''do_while : DO docuad1 block WHILE ABRIR_PRNT expression docuad2 CERRAR_PRNT PUNTO_COMA'''
 
 def p_assignment(p):
-    '''assignment : ID push_operando IGUAL push_operador expression PUNTO_COMA'''
+    '''assignment : push_operando IGUAL push_operador expression PUNTO_COMA'''
     global scope
     global pilaOperandos
     global pilaOperadores
@@ -299,19 +372,20 @@ def p_assignment(p):
                 operando2 = int(operando2)
             elif type_operando2 == 'float':
                 operando2 = float(operando2)
-            if scope == 'global':
-                set_value_global_var_table(operando2,operando1)
+
+            vt = get_vars_dir_proc(scope)
+            if vt:
+                set_value_var_table(vt,operando1,operando2)
             else:
-                vt = get_vars_dir_proc(scope)
-                if vt:
-                    set_value_var_table(vt,operando2,operando1)
+                set_value_global_var_table(operando1,operando2)
+
             add_cuadruplo(operador,dir_operando2,None,dir_operando1)
         else:
             print ("Error in arithmetic expression")
             sys.exit()
 
 def p_expression(p):
-    '''expression : exp expression_choice'''
+    '''expression : exp exp_aux_pila expression_choice'''
 
 def p_expression_choice(p):
     '''expression_choice : expression_choice_aux
@@ -319,11 +393,11 @@ def p_expression_choice(p):
 
 def p_expression_choice_aux(p):
     '''expression_choice_aux : IGUALDAD push_operador exp
-    | DESIGUALDAD push_operador exp
-    | MAYOR_QUE push_operador exp
-    | MENOR_QUE push_operador exp
-    | MAYOR_IGUAL push_operador exp
-    | MENOR_IGUAL push_operador exp '''
+    | DESIGUALDAD push_operador exp exp_aux_pila
+    | MAYOR_QUE push_operador exp exp_aux_pila
+    | MENOR_QUE push_operador exp exp_aux_pila
+    | MAYOR_IGUAL push_operador exp exp_aux_pila
+    | MENOR_IGUAL push_operador exp exp_aux_pila'''
 
     global scope
     global pilaOperandos
@@ -445,26 +519,25 @@ def p_expression_choice_aux(p):
     p[0]=p[1]
 
 def p_exp(p):
-    '''exp : term exp_choice'''
+    '''exp : term term_aux_pila exp_choice'''
 
 def p_exp_choice(p):
     '''exp_choice : exp_aux
     | '''
 
-def p_exp_aux(p):
-    '''exp_aux : SUMA push_operador exp
-    | RESTA push_operador exp
-    '''
+def p_exp_aux_pila(p):
+    '''exp_aux_pila : '''
     global scope
     global pilaOperandos
     global pilaOperadores
     global memoria
-
-    if pilaOperadores:
-        operador = pilaOperadores.pop()
-        operando2 = pilaOperandos.pop()
-        operando1 = pilaOperandos.pop()
-
+    global pilaSuma
+    global pilaSignoSuma
+    pilaSuma.append(pilaOperandos.pop())
+    while pilaSignoSuma:
+        operando1 = pilaSuma.pop()
+        operando2 = pilaSuma.pop()
+        operador = pilaSignoSuma.pop()
         type_operando1 = ' '
         type_operando2 = ' '
         dir_operando1 = -9000
@@ -544,12 +617,28 @@ def p_exp_aux(p):
                 resultado = operando1 - operando2
             dirtemp = temp_memory_assignment(returntype)
             add_temp_table(resultado, returntype, dirtemp)
-
             add_cuadruplo(operador, dir_operando1, dir_operando2, dirtemp)
-            pilaOperandos.append(dirtemp)
+            pilaSuma.append(dirtemp)
         else:
             print ("Error in arithmetic expression")
             sys.exit()
+    pilaOperandos.append(pilaSuma.pop())
+
+def p_exp_aux(p):
+    '''exp_aux : SUMA push_operador exp
+    | RESTA push_operador exp
+    '''
+    global scope
+    global pilaOperandos
+    global pilaOperadores
+    global pilaSuma
+    global pilaSignoSuma
+
+    if pilaOperandos:
+        operador = pilaOperadores.pop()
+        pilaSignoSuma.append(operador)
+        operando = pilaOperandos.pop()
+        pilaSuma.append(operando)
     p[0]=p[1]
 
 def p_term(p):
@@ -559,19 +648,19 @@ def p_term_choice(p):
     '''term_choice : term_aux
     | '''
 
-def p_term_aux(p):
-    '''term_aux : MULTIPLICACION push_operador term
-    | DIVISION push_operador term'''
+def p_term_aux_pila(p):
+    '''term_aux_pila : '''
     global scope
     global pilaOperandos
     global pilaOperadores
     global memoria
-
-    if pilaOperadores:
-        operador = pilaOperadores.pop()
-        operando2 = pilaOperandos.pop()
-        operando1 = pilaOperandos.pop()
-
+    global pilaMulti
+    global pilaSignoMulti
+    pilaMulti.append(pilaOperandos.pop())
+    while pilaSignoMulti:
+        operando1 = pilaMulti.pop()
+        operando2 = pilaMulti.pop()
+        operador = pilaSignoMulti.pop()
         type_operando1 = ' '
         type_operando2 = ' '
         dir_operando1 = -9000
@@ -651,28 +740,38 @@ def p_term_aux(p):
                 resultado = operando1 / operando2
             dirtemp = temp_memory_assignment(returntype)
             add_temp_table(resultado, returntype, dirtemp)
-
             add_cuadruplo(operador, dir_operando1, dir_operando2, dirtemp)
-            pilaOperandos.append(dirtemp)
+            pilaMulti.append(dirtemp)
         else:
             print ("Error in arithmetic expression")
             sys.exit()
+    pilaOperandos.append(pilaMulti.pop())
+
+def p_term_aux(p):
+    '''term_aux : MULTIPLICACION push_operador term
+    | DIVISION push_operador term'''
+    global scope
+    global pilaOperandos
+    global pilaOperadores
+    global pilaMulto
+    global pilaSignoMulti
+
+    if pilaOperandos:
+        operador = pilaOperadores.pop()
+        pilaSignoMulti.append(operador)
+        operando = pilaOperandos.pop()
+        pilaMulti.append(operando)
     p[0]=p[1]
 
 def p_factor(p):
     '''factor : ABRIR_PRNT expression CERRAR_PRNT
-    | factor_choice var_cte '''
-
-def p_factor_choice(p):
-    '''factor_choice : SUMA
-    | RESTA
-    | '''
+    | var_cte'''
 
 def p_var_cte(p):
     '''var_cte : const_int
     | const_float
     | const_bool
-    | ABRIR_CORCH list_elements CERRAR_CORCH
+    | ABRIR_CORCH CTE_I CERRAR_CORCH
     | ID var_decision '''
 
 def p_var_decision(p):
@@ -705,27 +804,95 @@ def p_const_bool(p):
     add_const_table(p[1],'bool',memory)
     p[0] = p[1]
 
-def p_var_func(p):
-    '''var_func : ABRIR_PRNT params_call CERRAR_PRNT'''
-
 def p_call(p):
-    '''call : ID var_func PUNTO_COMA'''
+    '''call : var_func PUNTO_COMA'''
+
+def p_var_func(p):
+    '''var_func : ABRIR_PRNT params_call_aux CERRAR_PRNT'''
+    global pilaParams
+    func = find_dir_proc(p[-1])
+    if func:
+        ret_val = get_return_dir_proc(p[-1])
+        add_cuadruplo('ERA', p[-1] , None, None)
+        parameters = get_params_dir_proc(p[-1])
+        cantParams = 0
+        cantParamsFunc = 0
+        for param in pilaParams:
+            cantParams = cantParams + 1
+        for param in parameters:
+            cantParamsFunc = cantParamsFunc + 1
+        print(p[-1])
+        print (cantParams)
+        print(cantParamsFunc)
+        if cantParams == cantParamsFunc:
+            for param in parameters:
+                type_operando1 = ' '
+                dir_operando1 = -9000
+                operando1 = pilaParams.pop()
+                v7 = find_temp_table(operando1)
+                if v7:
+                    dir_operando1 = get_dir_temp_table(operando1)
+                    type_operando1 = get_type_temp_table(operando1)
+                if dir_operando1 == -9000:
+                    vars_proc = get_vars_dir_proc(scope);
+                    if vars_proc:
+                        v1 = find_var_table(vars_proc,operando1)
+                        if v1:
+                            dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                            type_operando1 = get_type_var_table(vars_proc,operando1)
+                if dir_operando1 == -9000:
+                    v2 = find_global_var_table(operando1)
+                    if v2:
+                        dir_operando1 = get_dir_global_var_table(operando1)
+                        type_operando1 = get_type_global_var_table(operando1)
+                if dir_operando1 == -9000:
+                    v3 = find_const_table(operando1)
+                    if v3:
+                        dir_operando1 = get_dir_const_table(operando1)
+                        type_operando1 = get_type_const_table(operando1)
+                if dir_operando1 == -9000:
+                    print("Variable '%s' " %operando1 + "not declared")
+                    sys.exit()
+                if type_operando1 == param.var_type:
+                    add_cuadruplo('PARAM', dir_operando1 , None, None)
+                else:
+                    print("Error in parameter in call of function '%s'" % p[-1])
+                    sys.exit()
+        else:
+            print("Error in parameter in call of function '%s'" % p[-1])
+            print('aqui no hay')
+            sys.exit()
+
+        add_cuadruplo('GOSUB', p[-1] , None, None)
+        ret_val = get_return_dir_proc(p[-1])
+        if ret_val:
+            pilaOperandos.append(ret_val)
+        else:
+            memory = temp_memory_assignment('int')
+            add_temp_table('error','error',memory)
+            pilaOperandos.append(memory)
+    else:
+        print("Function '%s'" % p[-1] +  " not declared")
+        sys.exit()
+
+def p_params_call_aux(p):
+    '''params_call_aux : params_call params_call_loop
+    | '''
 
 def p_params_call(p):
-    '''params_call : expression params_call_loop
-    | '''
+    '''params_call : expression'''
+    global pilaParams
+    global pilaOperandos
+    if pilaOperandos:
+        param = pilaOperandos.pop()
+        pilaParams.append(param)
 
 def p_params_call_loop(p):
-    '''params_call_loop : COMA expression params_call_loop
+    '''params_call_loop : COMA params_call_loop_aux
     | '''
 
-def p_list_elements(p):
-    '''list_elements : expression list_elements_loop
-    | '''
-
-def p_list_elements_loop(p):
-    '''list_elements_loop : COMA expression list_elements_loop
-    | '''
+def p_params_call_loop_aux(p):
+    '''params_call_loop_aux : params_call params_call_loop'''
 
 def p_special_function(p):
     '''special_function : fpen_up
@@ -782,6 +949,9 @@ def p_fturn_left(p):
         if dir_operando1 == -9000:
             print("Variable '%s' " %operando1 + "not declared")
             sys.exit()
+        if type_operando1 != 'int':
+            print("Error in parameter '%s' " %operando1 + "in call to function turn left, expecting int")
+            sys.exit()
         add_cuadruplo('TURN_LEFT',None,None,dir_operando1)
 
 def p_fturn_right(p):
@@ -819,6 +989,9 @@ def p_fturn_right(p):
         if dir_operando1 == -9000:
             print("Variable '%s' " %operando1 + "not declared")
             sys.exit()
+        if type_operando1 != 'int':
+            print("Error in parameter '%s' " %operando1 + "in call to function turn right, expecting int")
+            sys.exit()
         add_cuadruplo('TURN_RIGHT',None,None,dir_operando1)
 
 def p_fmove(p):
@@ -855,6 +1028,9 @@ def p_fmove(p):
 
         if dir_operando1 == -9000:
             print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+        if type_operando1 != 'int':
+            print("Error in parameter '%s' " %operando1 + "in call to function move, expecting int")
             sys.exit()
         add_cuadruplo('MOVE',p[3],None,dir_operando1)
 
@@ -921,12 +1097,7 @@ def p_ifcuad2(p):
     global pilaSaltos
     add_cuadruplo('GOTO', None, None, None)
     cuadcont = getCuadCont()
-    print("············")
-    print(pilaSaltos)
-    print("············")
     salto = pilaSaltos.pop()
-    print(pilaSaltos)
-    print("············")
     set_resultado(salto,cuadcont)
     pilaSaltos.append(cuadcont-1)
 
@@ -1046,6 +1217,7 @@ def p_error(p):
         print('Syntax error')
     else:
          print("Syntax error: '%s' " % p.value + p.type  +  ", in line: %s" %p.lineno)
+    sys.exit()
 
 # Build the parser
 parser = yacc.yacc()
