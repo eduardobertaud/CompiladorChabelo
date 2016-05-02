@@ -121,7 +121,8 @@ def p_functions_body(p):
         if fn:
             print("Function: '%s' " % p[2]   +  "already declared")
             sys.exit()
-        add_dir_proc(p[2],p[1],0)
+        memory = global_memory_assignment(p[1])
+        add_dir_proc(p[2],p[1],memory)
 
 def p_functions_body_void(p):
     '''functions_body_void : VOID ID'''
@@ -133,7 +134,9 @@ def p_functions_body_void(p):
         if fn:
             print("Function: '%s' " % p[2]   +  "already declared")
             sys.exit()
-        add_dir_proc(p[2],p[1],0)
+
+        memory = void_func_memory_assignment()
+        add_dir_proc(p[2],p[1],memory)
 
 def p_return(p):
     '''return : RETURN expression PUNTO_COMA'''
@@ -229,7 +232,8 @@ def p_fmain_aux(p):
     if p[1] != None:
         p[0] = p[1]
         scope = 'main'
-        add_dir_proc('main','void',0)
+        memory = void_func_memory_assignment()
+        add_dir_proc('main','void',memory)
         set_resultado(1,getCuadCont())
 
 def p_estatuto_loop(p):

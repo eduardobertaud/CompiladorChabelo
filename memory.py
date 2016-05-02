@@ -17,6 +17,7 @@ int_temp=12000
 float_temp=13000
 string_temp=14000
 bool_temp=15000
+void_func=16000
 
 
 def global_memory_assignment(v_type, offset = 0):
@@ -98,4 +99,12 @@ def temp_memory_assignment(v_type):
     elif v_type == 'bool':
       memory = bool_temp
       bool_temp += 1
+    return memory
+
+def void_func_memory_assignment():
+    global void_func
+    global memory
+
+    memory = void_func
+    void_func += 1
     return memory
