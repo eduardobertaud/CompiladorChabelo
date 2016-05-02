@@ -19,7 +19,7 @@ string_temp=14000
 bool_temp=15000
 
 
-def global_memory_assignment(v_type):
+def global_memory_assignment(v_type, offset = 0):
     global int_global
     global float_global
     global string_global
@@ -27,19 +27,19 @@ def global_memory_assignment(v_type):
     global memory
     if v_type == 'int':
         memory = int_global
-        int_global += 1
+        int_global += 1 + offset
     elif v_type == 'float':
         memory = float_global
-        float_global += 1
+        float_global += 1 + offset
     elif v_type == 'string':
         memory = string_global
-        string_global += 1
+        string_global += 1 + offset
     elif v_type == 'bool':
         memory = bool_global
-        bool_global += 1
+        bool_global += 1 + offset
     return memory
 
-def local_memory_assignment(v_type):
+def local_memory_assignment(v_type, offset = 0):
     global int_local
     global float_local
     global string_local
@@ -47,16 +47,16 @@ def local_memory_assignment(v_type):
     global memory
     if v_type == 'int':
       memory = int_local
-      int_local += 1
+      int_local += 1 + offset
     elif v_type == 'float':
       memory = float_local
-      float_local += 1
+      float_local += 1 + offset
     elif v_type == 'string':
       memory = string_local
-      string_local += 1
+      string_local += 1 + offset
     elif v_type == 'bool':
       memory = bool_local
-      bool_local += 1
+      bool_local += 1 + offset
     return memory
 
 

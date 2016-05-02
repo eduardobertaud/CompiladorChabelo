@@ -7,24 +7,25 @@ temp_table = []
 
 # Variable Table Functions
 class variable:
-	def __init__(self, var_name, var_value, var_type, var_dir):
+	def __init__(self, var_name, var_value, var_type, var_dir,var_size):
 		self.var_name= var_name
 		self.var_value= var_value
 		self.var_type = var_type
 		self.var_dir = var_dir
+		self.var_size = var_size
 
-def add_var_table(var_name, var_value, var_type, var_dir):
+def add_var_table(var_name, var_value, var_type, var_dir, var_size = 0):
 	global var_table
-	var_table.append(variable(var_name, var_value, var_type, var_dir))
+	var_table.append(variable(var_name, var_value, var_type, var_dir, var_size))
 
-def add_var_table(var_name, var_type, var_dir):
+def add_var_table(var_name, var_type, var_dir, var_size = 0):
 	global var_table
 	if var_type == 'int':
-		var_table.append(variable(var_name, 0 , var_type, var_dir))
+		var_table.append(variable(var_name, 0 , var_type, var_dir, var_size))
 	elif var_type == 'float':
-		var_table.append(variable(var_name, 0.0 , var_type, var_dir))
+		var_table.append(variable(var_name, 0.0 , var_type, var_dir, var_size))
 	elif var_type == 'string':
-		var_table.append(variable(var_name, ' ' , var_type, var_dir))
+		var_table.append(variable(var_name, ' ' , var_type, var_dir, var_size))
 	elif var_type == 'bool':
 		var_table.append(variable(var_name, 'false' , var_type, var_dir))
 
@@ -58,6 +59,12 @@ def get_dir_global_var_table(var_name):
 	if v:
 		return v.var_dir
 
+def get_size_global_var_table(var_name):
+	global var_table
+	v = find_global_var_table(var_name)
+	if v:
+		return v.var_size
+
 def find_var_table(v_table, var_name):
     for v in v_table:
         if v.var_name == var_name:
@@ -87,12 +94,18 @@ def get_dir_var_table(vtable, var_name):
 	if v:
 		return v.var_dir
 
+def get_size_var_table(vtable, var_name):
+	global var_table
+	v = find_var_table(vtable, var_name)
+	if v:
+		return v.var_size
+
 def print_var_table():
 	global var_table
 	print("Tabla de Variables Globales:")
 	if var_table:
 		for var in var_table:
-			print (" NAME: " + str(var.var_name) , " VALUE: " + str(var.var_value) , " TYPE: " + str(var.var_type) , " DIR: " + str(var.var_dir))
+			print (" NAME: " + str(var.var_name) , " VALUE: " + str(var.var_value) , " TYPE: " + str(var.var_type) , " DIR: " + str(var.var_dir), " SIZE: " + str (var.var_size))
 	else:
 		print ("No variables declared")
 	print("\n")
@@ -144,7 +157,7 @@ def get_dir_temp_table(temp_dir):
 
 def print_temp_table():
 	global temp_table
-	print("Tabla de Constantes:")
+	print("Tabla de Temporales:")
 	if temp_table:
 		for temp in temp_table:
 			print (" VALUE: " + str(temp.temp_value) , " TYPE: " + str(temp.temp_type) , " DIR: " + str(temp.temp_dir))
@@ -219,43 +232,43 @@ def add_dir_proc(func_name, func_type, func_dir):
 	global dir_proc
 	dir_proc.append(function(func_name, func_type, func_dir,None))
 
-def add_param_dir_proc(func_name, var_name, var_value, var_type, var_dir):
+def add_param_dir_proc(func_name, var_name, var_value, var_type, var_dir, var_size = 0):
 	global dir_proc
 	d = find_dir_proc(func_name)
 	if d :
-		d.func_params.append(variable(var_name, var_value, var_type, var_dir))
+		d.func_params.append(variable(var_name, var_value, var_type, var_dir, var_size))
 
-def add_param_dir_proc(func_name, var_name, var_type, var_dir):
+def add_param_dir_proc(func_name, var_name, var_type, var_dir, var_size = 0):
 	global dir_proc
 	d = find_dir_proc(func_name)
 	if d :
 		if var_type == 'int':
-			d.func_params.append(variable(var_name, 0 , var_type, var_dir))
+			d.func_params.append(variable(var_name, 0 , var_type, var_dir, var_size))
 		elif var_type == 'float':
-			d.func_params.append(variable(var_name, 0.0 , var_type, var_dir))
+			d.func_params.append(variable(var_name, 0.0 , var_type, var_dir, var_size))
 		elif var_type == 'string':
-			d.func_params.append(variable(var_name, ' ' , var_type, var_dir))
+			d.func_params.append(variable(var_name, ' ' , var_type, var_dir, var_size))
 		elif var_type == 'bool':
-			d.func_params.append(variable(var_name, 'false' , var_type, var_dir))
+			d.func_params.append(variable(var_name, 'false' , var_type, var_dir, var_size))
 
-def add_var_dir_proc(func_name, var_name, var_value, var_type, var_dir):
+def add_var_dir_proc(func_name, var_name, var_value, var_type, var_dir, var_size = 0):
 	global dir_proc
 	d = find_dir_proc(func_name)
 	if d :
-		d.func_vars.append(variable(var_name, var_value, var_type, var_dir))
+		d.func_vars.append(variable(var_name, var_value, var_type, var_dir, var_size))
 
-def add_var_dir_proc(func_name, var_name, var_type, var_dir):
+def add_var_dir_proc(func_name, var_name, var_type, var_dir, var_size = 0):
 	global dir_proc
 	d = find_dir_proc(func_name)
 	if d :
 		if var_type == 'int':
-			d.func_vars.append(variable(var_name, 0 , var_type, var_dir))
+			d.func_vars.append(variable(var_name, 0 , var_type, var_dir, var_size))
 		elif var_type == 'float':
-			d.func_vars.append(variable(var_name, 0.0 , var_type, var_dir))
+			d.func_vars.append(variable(var_name, 0.0 , var_type, var_dir, var_size))
 		elif var_type == 'string':
-			d.func_vars.append(variable(var_name, ' ' , var_type, var_dir))
+			d.func_vars.append(variable(var_name, ' ' , var_type, var_dir, var_size))
 		elif var_type == 'bool':
-			d.func_vars.append(variable(var_name, 'false' , var_type, var_dir))
+			d.func_vars.append(variable(var_name, 'false' , var_type, var_dir, var_size))
 
 def find_dir_proc(func_name):
     global dir_proc
@@ -310,7 +323,7 @@ def print_dir_proc():
 			#	print(" NAME: ", param.var_name, " VALUE: ", param.var_value, " TYPE: ", param.var_type, " DIR: ", param.var_dir)
 			print("Variables:")
 			for var in d.func_vars:
-				print(" NAME: " + str(var.var_name) , " VALUE: " + str(var.var_value) , " TYPE: " + str(var.var_type) , " DIR: " + str (var.var_dir))
+				print(" NAME: " + str(var.var_name) , " VALUE: " + str(var.var_value) , " TYPE: " + str(var.var_type) , " DIR: " + str (var.var_dir), " SIZE: " + str (var.var_size))
 			print ("\n")
 		else:
 			print ("No functions declared")

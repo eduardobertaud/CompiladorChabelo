@@ -46,7 +46,7 @@ def p_vars(p):
     scope = "functions"
 
 def p_var_body(p):
-    '''var_body : VAR type ID array PUNTO_COMA var_loop'''
+    '''var_body : VAR type ID array var_loop'''
     global scope
     global memoria
     if p[1] != None:
@@ -55,8 +55,12 @@ def p_var_body(p):
             if v:
                 print("Variable: '%s' " % p[3]   +  "already declared")
                 sys.exit()
-            memory = global_memory_assignment(p[2])
-            add_var_table(p[3], p[2],memory)
+            if not p[4]:
+                memory = global_memory_assignment(p[2])
+                add_var_table(p[3], p[2],memory)
+            else:
+                memory = global_memory_assignment(p[2],int(p[4]))
+                add_var_table(p[3],p[2],memory,int(p[4]))
         else:
             pr = find_dir_proc(scope)
             if pr:
@@ -64,12 +68,18 @@ def p_var_body(p):
                 if pa:
                     print("Variable: '%s' " % p[3]   +  "already declared in function '%s' " % scope)
                     sys.exit()
-                memory = local_memory_assignment(p[2])
-                add_var_dir_proc(scope,p[3],p[2],memory)
+                if not p[4]:
+                    memory = local_memory_assignment(p[2])
+                    add_var_dir_proc(scope,p[3],p[2],memory)
+                else:
+                    memory = local_memory_assignment(p[2],int(p[4]))
+                    add_var_dir_proc(scope,p[3],p[2],memory,int(p[4]))
 
 def p_array(p):
-    '''array : ABRIR_CORCH CTE_I CERRAR_CORCH
-    | '''
+    '''array : ABRIR_CORCH CTE_I CERRAR_CORCH PUNTO_COMA
+    | PUNTO_COMA'''
+    if p[1] != ';':
+        p[0] = p[2]
 
 def p_var_loop(p):
     '''var_loop : var_body
@@ -229,14 +239,12 @@ def p_estatuto_loop(p):
 def p_estatuto(p):
     '''estatuto : condition
     | loop
-    | ID estatuto_aux
+    | call
+    | assignment
     | fprint
     | special_function
     | var_body '''
 
-def p_estatuto_aux(p):
-    '''estatuto_aux : call
-    | assignment'''
 
 def p_fprint(p):
     '''fprint : PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA'''
@@ -306,23 +314,43 @@ def p_while(p):
 def p_do_while(p):
     '''do_while : DO docuad1 block WHILE ABRIR_PRNT expression docuad2 CERRAR_PRNT PUNTO_COMA'''
 
+def p_assignment_aux(p):
+    '''assignment_aux : ABRIR_CORCH exp CERRAR_CORCH IGUAL
+    | IGUAL'''
+    if p[1] != '=':
+        p[0] = p[1]
+
 def p_assignment(p):
-    '''assignment : push_operando IGUAL push_operador expression PUNTO_COMA'''
+    '''assignment : ID assignment_aux expression PUNTO_COMA'''
     global scope
     global pilaOperandos
     global pilaOperadores
     global memoria
-
-    if pilaOperadores:
-        operador = pilaOperadores.pop()
-        operando2 = pilaOperandos.pop()
-        operando1 = pilaOperandos.pop()
-
-        type_operando1 = ' '
-        type_operando2 = ' '
+    if p[1]:
         dir_operando1 = -9000
-        dir_operando2 = -9000
+        type_operando1 = ' '
+        size_operando1 = 0
+        operando1 = p[1]
+        vars_proc = get_vars_dir_proc(scope);
+        if vars_proc:
+            v4 = find_var_table(vars_proc,operando1)
+            if v4:
+                dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                type_operando1 = get_type_var_table(vars_proc,operando1)
+                size_operando1 = get_size_var_table(vars_proc,operando1)
+        if dir_operando1 == -9000:
+            v5 = find_global_var_table(operando1)
+            if v5:
+                dir_operando1 = get_dir_global_var_table(operando1)
+                type_operando1 = get_type_global_var_table(operando1)
+                size_operando1 = get_size_global_var_table(operando1)
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
 
+        operando2 = pilaOperandos.pop()
+        dir_operando2 = -9000
+        type_operando2 = ' '
         v7 = find_temp_table(operando2)
         if v7:
             dir_operando2 = get_dir_temp_table(operando2)
@@ -347,42 +375,68 @@ def p_assignment(p):
             if v3:
                 dir_operando2 = get_dir_const_table(operando2)
                 type_operando2 = get_type_const_table(operando2)
-
-        vars_proc = get_vars_dir_proc(scope);
-        if vars_proc:
-            v4 = find_var_table(vars_proc,operando1)
-            if v4:
-                dir_operando1 = get_dir_var_table(vars_proc,operando1)
-                type_operando1 = get_type_var_table(vars_proc,operando1)
-        if dir_operando1 == -9000:
-            v5 = find_global_var_table(operando1)
-            if v5:
-                dir_operando1 = get_dir_global_var_table(operando1)
-                type_operando1 = get_type_global_var_table(operando1)
-
-        if dir_operando1 == -9000:
-            print("Variable '%s' " %operando1 + "not declared")
-            sys.exit()
         if dir_operando2 == -9000:
             print("Variable '%s' " %operando2 + "not declared")
             sys.exit()
-
         if type_operando1 != ' ' and type_operando2 != ' ' and type_operando1 == type_operando2:
             if type_operando2 == 'int':
                 operando2 = int(operando2)
             elif type_operando2 == 'float':
                 operando2 = float(operando2)
 
-            vt = get_vars_dir_proc(scope)
-            if vt:
-                set_value_var_table(vt,operando1,operando2)
+            if p[2] == None:
+                vt = get_vars_dir_proc(scope)
+                if vt:
+                    set_value_var_table(vt,operando1,operando2)
+                else:
+                    set_value_global_var_table(operando1,operando2)
+                add_cuadruplo('=',dir_operando2,None,dir_operando1)
             else:
-                set_value_global_var_table(operando1,operando2)
-
-            add_cuadruplo(operador,dir_operando2,None,dir_operando1)
+                if pilaOperandos:
+                    index = pilaOperandos.pop()
+                    dir_index = -9000
+                    type_index = ' '
+                    v7 = find_temp_table(index)
+                    if v7:
+                        dir_index = get_dir_temp_table(index)
+                        type_index = get_type_temp_table(index)
+                        index = get_value_temp_table(index)
+                    if dir_index == -9000:
+                        vars_proc = get_vars_dir_proc(scope);
+                        if vars_proc:
+                            v1 = find_var_table(vars_proc,index)
+                            if v1:
+                                dir_index = get_dir_var_table(vars_proc,index)
+                                type_index = get_type_var_table(vars_proc,index)
+                                index = get_value_var_table(vars_proc,index)
+                    if dir_index == -9000:
+                        v2 = find_global_var_table(index)
+                        if v2:
+                            dir_index = get_dir_global_var_table(index)
+                            type_index= get_type_global_var_table(index)
+                            index = get_value_global_var_table(index)
+                    if dir_index == -9000:
+                        v3 = find_const_table(index)
+                        if v3:
+                            dir_index= get_dir_const_table(index)
+                            type_index = get_type_const_table(index)
+                    if dir_index == -9000:
+                        print("Variable '%s' " %index + "not declared")
+                        sys.exit()
+                    if type_index != 'int':
+                        print("Index is not an integer")
+                        sys.exit()
+                    add_cuadruplo('VER',dir_index,0, size_operando1 -1)
+                    memory = temp_memory_assignment(type_operando1)
+                    add_temp_table(-9000,type_operando1,memory)
+                    add_cuadruplo('OFST',dir_index,dir_operando1,memory)
+                    add_cuadruplo('ARYAS',dir_operando2, dir_index ,memory)
         else:
             print ("Error in arithmetic expression")
             sys.exit()
+
+
+
 
 def p_expression(p):
     '''expression : exp exp_aux_pila expression_choice'''
@@ -771,12 +825,69 @@ def p_var_cte(p):
     '''var_cte : const_int
     | const_float
     | const_bool
-    | ABRIR_CORCH CTE_I CERRAR_CORCH
     | ID var_decision '''
 
 def p_var_decision(p):
     '''var_decision : var_func
-    | push_operando'''
+    | push_operando
+    | array_call'''
+
+def p_array_call(p):
+    'array_call : ABRIR_CORCH exp CERRAR_CORCH'
+    global pilaOperandos
+
+    if find_global_var_table(p[-1]):
+      operando_aux = find_global_var_table(p[-1])
+    else:
+      var_t = get_vars_dir_proc(scope)
+      if find_var_table(var_t,t[-1]):
+        operando_aux = find_var_table(var_t,t[-1])
+      else:
+        print ("Variable " + p[-1], " not found" )
+        sys.exit()
+
+    if pilaOperandos:
+        dir_operando1 = -9000
+        type_operando1 = ' '
+        operando1 = pilaOperandos.pop()
+
+        v7 = find_temp_table(operando1)
+        if v7:
+            dir_operando1 = get_dir_temp_table(operando1)
+            type_operando1 = get_type_temp_table(operando1)
+            operando1 = get_value_temp_table(operando1)
+        if dir_operando1 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v1 = find_var_table(vars_proc,operando1)
+                if v1:
+                    dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                    type_operando1 = get_type_var_table(vars_proc,operando1)
+                    operando1 = get_value_var_table(vars_proc,operando1)
+        if dir_operando1 == -9000:
+            v2 = find_global_var_table(operando1)
+            if v2:
+                dir_operando1 = get_dir_global_var_table(operando1)
+                type_operando1 = get_type_global_var_table(operando1)
+                operando1 = get_value_global_var_table(operando1)
+        if dir_operando1 == -9000:
+            v3 = find_const_table(operando1)
+            if v3:
+                dir_operando1 = get_dir_const_table(operando1)
+                type_operando1 = get_type_const_table(operando1)
+
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+        if type_operando1 != 'int':
+            print("Index is not an integer")
+            sys.exit()
+        add_cuadruplo('VER',dir_operando1,0, operando_aux.var_size -1)
+        memoria = temp_memory_assignment('int')
+        add_temp_table( -9000,'int',memoria)
+        add_cuadruplo('ARYCA',dir_operando1,operando_aux.var_dir,memoria)
+        pilaOperandos.append(memoria)
+        p[0]=p[1]
 
 def p_const_int(p):
     '''const_int : CTE_I push_operando'''
@@ -805,7 +916,7 @@ def p_const_bool(p):
     p[0] = p[1]
 
 def p_call(p):
-    '''call : var_func PUNTO_COMA'''
+    '''call : ID var_func PUNTO_COMA'''
 
 def p_var_func(p):
     '''var_func : ABRIR_PRNT params_call_aux CERRAR_PRNT'''
@@ -821,9 +932,6 @@ def p_var_func(p):
             cantParams = cantParams + 1
         for param in parameters:
             cantParamsFunc = cantParamsFunc + 1
-        print(p[-1])
-        print (cantParams)
-        print(cantParamsFunc)
         if cantParams == cantParamsFunc:
             for param in parameters:
                 type_operando1 = ' '
@@ -860,7 +968,6 @@ def p_var_func(p):
                     sys.exit()
         else:
             print("Error in parameter in call of function '%s'" % p[-1])
-            print('aqui no hay')
             sys.exit()
 
         add_cuadruplo('GOSUB', p[-1] , None, None)

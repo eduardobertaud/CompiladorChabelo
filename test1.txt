@@ -4,35 +4,16 @@ var int ah[20];
 var float hola;
 var string an;
 
-func void aha(int ah){
-
-do{
-if( 2 + 3 - 2 - -1> 1 * 0){
-print("Parameter");
-}
-else{
-while(1.2 > hola){
-hola = hola * 2.1;
-}
-penup();
-}
-
-}while(2+1 > ah);
-
-}
 
 func int takeonme(int a){
-        a = 2;
 	var int jj;
-	jj = 3;
-	aha(10 - 1 - -2);
+	jj = 2;
 	return jj;
 }
 
 main(){
 var int j;
-j = takeonme(10 - 1 - -2);
-j = takeonme(10 - 1 - -2);
-aha(10 - 1 - -2);
+j = 2;
+ah[2] = takeonme(10 - 1 - ah[2]);
 }
 end 

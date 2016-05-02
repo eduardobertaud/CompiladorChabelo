@@ -1,8 +1,13 @@
 program UNO;
 
+var int ah[20];
+
 main(){
-var int vv;
+
+var int va[2];
+var int v;
 if( 2 + 3 - 2 - -1> 1 * 0){
+v = 2;
 
 }
 }
