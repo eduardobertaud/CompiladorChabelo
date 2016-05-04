@@ -1,0 +1,15 @@
+program UNO;
+
+main(){
+	var float fact;
+	var float resultado;
+	fact = 7.0;
+	resultado = 1.0;
+	while(fact > 0.0){
+		resultado = resultado * fact;
+		fact = fact - 1.0;
+	}
+	print(resultado);
+
+}
+end

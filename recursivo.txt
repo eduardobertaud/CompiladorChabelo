@@ -1,0 +1,19 @@
+program UNO;
+
+func void trianguloRecursivo(int lado,int veces){
+var int x;
+if(veces == 0){
+}
+else{
+	move(forward, 200);
+	turnright(120);
+	veces = veces - 1;
+	print(veces);
+	trianguloRecursivo(lado,veces);
+}
+}
+
+main (){
+	trianguloRecursivo(100,3);
+}
+end
