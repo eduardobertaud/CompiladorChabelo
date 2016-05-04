@@ -1,13 +1,15 @@
 from tables import *
 from memory import *
 from cuadruplo import *
+import copy
+import sys
 
 #Declaracion de variables y de pilas
 memoryInt = 0
 memoryFloat = 0
 memoryString = 0
 memoryBool = 0
-pilaSaltosVm = []
+pilaSaltosVM = []
 pilaVarTable = []
 pilaVarTableName = []
 
@@ -17,17 +19,17 @@ def start_memory ():
     global memoryString
     global memoryBool
 
-    for const in const_table
-        if const.const_type == 'int':
+    for const in const_table:
+        if const.type == 'int':
             if const.const_dir > memoryInt:
                 memoryInt = const.const_dir
-        elif const.const_type == 'float':
+        elif const.type == 'float':
             if const.const_dir > memoryFloat:
                 memoryFloat = const.const_dir
-        elif const.const_type == 'string':
+        elif const.type == 'string':
             if const.const_dir > memoryString:
                 memoryString = const.const_dir
-        elif const.const_type == 'bool':
+        elif const.type == 'bool':
             if const.const_dir > memoryBool:
                 memoryBool = const.const_dir
 
@@ -42,132 +44,70 @@ def start_memory ():
 
     add_const_table(None,None,-9000)
 
-def get_operand (cuadruplo,num):
+def get_value_operando (cuadruplo,num):
     if num == 1:
         operandDir = cuadruplo.operando1
     if num == 2:
         operandDir = cuadruplo.operando2
-    if operandDir = None
+    if num == 3:
+        operandDir = cuadruplo.resultado
+    if operandDir == None:
         return
-
     valid_dir = True
-
     while valid_dir:
-        if operandDir >= 0  and operandDir < 4000
+        if operandDir >= 0  and operandDir < 4000:
             for var in var_table:
                 if var.var_dir == operandDir:
                     operandVar = var
-                    operandDir = var.var_value
-
+                    operandDir = var.value
 
         elif operandDir >= 4000 and operandDir < 8000:
             for dirProc in dir_proc:
                 for var in dirProc.func_vars:
                     if var.var_dir == operandDir:
                         operandVar = var
-                        operandDir = var.var_value
-
-
-        elif operandDir >= 8000 and operandDir < 12000:
-            valid_dir = False
-
-
-        elif operandDir >= 12000 and operandDir < 16000:
-            for var in temp.table:
-                if var.var_dir == operandDir:
-                        operandVar = var
-                        operandDir = var.var_value
-
-    for const in const_table:
-        if const.const_dir == operandDir:
-            return const.const_value
-
-def get_dir_cons_var(var):
-    operandDir = var.var_dir
-
-    valid_dir = True
-
-    while valid_dir:
-        if operandDir >= 0  and operandDir < 4000
-            for var in var_table:
-                if var.var_dir == operandDir:
-                    operandVar = var
-                    operandDir = var.var_value
-
-        elif operandDir >= 4000 and operandDir < 8000:
-            for dirProc in dir_proc:
-                for var in dirProc.func_vars:
-                    if var.var_dir == operandDir:
-                        operandVar = var
-                        operandDir = var.var_value
+                        operandDir = var.value
 
         elif operandDir >= 8000 and operandDir < 12000:
             valid_dir = False
 
         elif operandDir >= 12000 and operandDir < 16000:
-            for var in temp.table:
-                if var.var_dir == operandDir:
-                        operandVar = var
-                        operandDir = var.var_value
+            for temp in temp_table:
+                if temp.temp_dir == operandDir:
+                        operandVar = temp
+                        operandDir = temp.value
 
     for const in const_table:
         if const.const_dir == operandDir:
-            return const
+            return const.value
 
-def get_res (cuadruplo):
+def get_result_var_dir (cuadruplo):
     operandDir = cuadruplo.resultado
     if operandDir == None:
         return
     elif operandDir >= 0 and operandDir < 4000:
         for var in var_table:
             if var.var_dir == operandDir:
-                return var
-    elif operandDir >= 4000 and operandDir < 8000:
-        for proc in dir_proc:
-            for var in proc.vars_proc:
-                if var.var_dir == operandDir:
-                    return var
-    elif operandDir >= 12000 and operandDir < 16000:
-        for var from temp_table:
-            if var.var_dir == operandDir:
-                return var
-    return None
-
-def get_var_dir(operandDir):
-    if operandDir == None:
-        return
-    elif operandDir >= 0 and operandDir < 4000:
-        for var in var_table:
-             if var.var_dir == operandDir:
-                 return var
+                return var.var_dir
     elif operandDir >= 4000 and operandDir < 8000:
         for proc in dir_proc:
             for var in proc.func_vars:
-                if var.func_dir == operandDir:
-                    return var
-    elif operandDir >= 8000 and operandDir < 12000:
-        for const in const_table:
-            if const.const_dir == operandDir:
-                return cons
+                if var.var_dir == operandDir:
+                    return var.var_dir
     elif operandDir >= 12000 and operandDir < 16000:
-        for var in dir_proc:
-            if var.func_dir == operandDir:
-                return var
+        for temp in temp_table:
+            if temp.temp_dir == operandDir:
+                return temp.temp_dir
     return None
 
-
-#PrepRes
-def evaluate(value,tipo):
+def assign_dir_result(value,tipo):
     global memoryInt
     global memoryFloat
     global memoryString
     global memoryBool
-
     constDir = get_dir_const_table(value)
-
     #validacion para saber si existe el valor
     if constDir == None:
-
         if tipo == 'int':
             memoryInt = memoryInt + 1
             auxMem = memoryInt
@@ -177,13 +117,22 @@ def evaluate(value,tipo):
         elif tipo == 'bool':
             memoryBool = memoryBool + 1
             auxMem = memoryBool
-        elif tipo == 'string'
+        elif tipo == 'string':
             memoryBool = memoryBool + 1
             auxMem = memoryBool
         add_const_table(value, tipo, auxMem)
         return auxMem
     else:
         return constDir
+
+def set_param (constDir,procName,paramNum):
+    funcParam = None
+    procVars = None
+    proc = find_dir_proc(procName)
+    funcParam = proc.func_params.copy()
+    procVars = proc.func_vars
+    set_value_var_table(procVars,funcParam[paramNum].var_name,constDir)
+
 
 def get_const_param (cuadruplo):
     operandDir = cuadruplo.operando1
@@ -192,11 +141,11 @@ def get_const_param (cuadruplo):
     while valid_dir:
         if operandDir == None:
             return
-        elif operandDir >= 0  and operandDir < 4000
+        elif operandDir >= 0  and operandDir < 4000:
             for var in var_table:
                 if var.var_dir == operandDir:
                     operandVar = var
-                    operandDir = var.var_value
+                    operandDir = var.value
 
         elif operandDir >= 4000 and operandDir < 8000:
 
@@ -204,49 +153,303 @@ def get_const_param (cuadruplo):
             for var in ultimoEspacio:
                 if var.var_dir == operandDir:
                     operandVar = var
-                    operandDir = var.var_value
-
+                    operandDir = var.value
 
         elif operandDir >= 8000 and operandDir < 12000:
             valid_dir = False
 
         elif operandDir >= 12000 and operandDir < 16000:
-            for var in temp.table:
-                if var.var_dir == operandDir:
-                        operandVar = var
-                        operandDir = var.var_value
-
+            for temp in temp_table:
+                if temp.temp_dir == operandDir:
+                        operandVar = temp
+                        operandDir = temp.value
     return operandDir
 
-def set_param (constDir,procName,paramNum):
-    funcParam = None
-    procVars = None
-    proc = find_dir_proc(procName)
-    funcParam = proc.func_params.copy()
-    procVars = proc.func_vars
-    funcParam[paramNum].var_value = constDir
-    procVars.append(funcParam[paramNum])
+def search_var_by_dir(operandDir):
+    if operandDir == None:
+        return
+    elif operandDir >= 0 and operandDir < 4000:
+        for var in var_table:
+             if var.var_dir == operandDir:
+                 return var
+    elif operandDir >= 4000 and operandDir < 8000:
+        for proc in dir_proc:
+            for var in proc.func_vars:
+                if var.var_dir == operandDir:
+                    return var
+    elif operandDir >= 8000 and operandDir < 12000:
+        for const in const_table:
+            if const.const_dir == operandDir:
+                return const
+    elif operandDir >= 12000 and operandDir < 16000:
+        for temp in temp_table:
+            if temp.temp_dir == operandDir:
+                return temp
+    return None
 
-def get_cuadruplo ():
-    for proc in dir_proc:
-        if proc.func_name == 'main':
-            return proc.func_dir
+def get_cons_dir_from_var_dir(operandDir):
+    valid_dir = True
+    while valid_dir:
+        if operandDir >= 0  and operandDir < 4000:
+            for var in var_table:
+                if var.var_dir == operandDir:
+                    operandVar = var
+                    operandDir = var.value
 
-def get_func_by_id (dirSalto):
-    for proc in dir_proc:
-        if proc.func_dir == dirSalto:
-            return proc
+        elif operandDir >= 4000 and operandDir < 8000:
+            for dirProc in dir_proc:
+                for var in dirProc.func_vars:
+                    if var.var_dir == operandDir:
+                        operandVar = var
+                        operandDir = var.value
+
+        elif operandDir >= 8000 and operandDir < 12000:
+            valid_dir = False
+
+        elif operandDir >= 12000 and operandDir < 16000:
+            for temp in temp_table:
+                if temp.temp_dir == operandDir:
+                        operandVar = temp
+                        operandDir = temp.value
+    for const in const_table:
+        if const.const_dir == operandDir:
+            return const.const_dir
 
 def readCuadruplos():
-    #Se guarda el cuadruplo obtenido por la funcion get_cuadruplo
-    c = get_cuadruplo()
+    c = 1
     #Se inicialica espacio de memoria
-    iniciar_memoria()
-
+    start_memory()
     #Ciclo que se realiza hasta la duracion de los cuadruplos
-    while c < len(cuadruplos):
-        #Se obtiene el primer operador
+    while c <= len(cuadruplos):
+        #Se obtiene el primer operador de el cuadruplo
         operador = get_operador(c)
         #Condicion que establece que accion realizar dependiendo del operador
         #que se ha obtenido del cuadroplo
+        #print("operador: " + operador)
+        #print("voy en cuad: " + str(c))
         if operador == 'GOTO':
+            #borrar
+            c = get_resultado(c)
+
+        elif operador == 'GOTOF':
+            val = get_value_operando(find_cuadruplo(c),1)
+            if val == 0:
+                c = get_resultado(c)
+            else:
+                 c += 1
+
+        elif operador == 'GOTOV':
+            val = get_value_operando(find_cuadruplo(c),1)
+            if val != 0:
+                c = get_resultado(c)
+            else:
+                 c += 1
+
+        elif operador == 'PRINT':
+            toprint = get_value_operando(find_cuadruplo(c),3)
+            print (toprint)
+            c += 1
+
+        elif operador == 'ERA':
+            if len(pilaVarTableName) == 0:
+                pilaVarTableName.append('main')
+
+            procActualName = pilaVarTableName[-1]
+            procActual = find_dir_proc(procActualName)
+
+            copied_var_table = copy.deepcopy(procActual.func_vars)
+            pilaVarTable.append(copied_var_table)
+
+            procNuevoName = get_operando1(c)
+            procNuevo = find_dir_proc(procNuevoName)
+
+            procCleaned = get_copy_dir_proc(procNuevoName)
+            procNuevo.func_vars = procCleaned.func_vars
+
+            pilaVarTableName.append(procNuevoName)
+            c += 1
+
+        elif operador == 'GOSUB':
+            #Se obtiene el nombre del procedimiento indicado en el cuadruplo
+            procName = get_operando1(c)
+            #Se obtiene el procedimiento en base al nombre
+            proc = find_dir_proc(procName)
+            #Se inicializa el parametro procesado en 0
+            paramNum = 0
+            #Se obsera el cuadruplo siguiente
+            next_c = c + 1
+            operador = get_operador(next_c)
+            #Si el cuaruplo siguiente es un parametro entonces se inserta en el procedimiento
+            #destino
+            while operador == 'PARAM':
+                operando = get_const_param(find_cuadruplo(next_c))
+                set_param(operando,procName,paramNum)
+                paramNum += 1
+                next_c += 1
+                operador = get_operador(next_c)
+            #Se guarda en una pila el cuadruplo de ejecucion en el cual se quedo la interpretacion
+            #antes de la llamada a funcion
+            pilaSaltosVM.append(next_c)
+            #Se realiza el salto a la funcion
+            c = proc.func_dir
+
+        elif operador == 'RET':
+            c = pilaSaltosVM.pop()
+            procAnteriorName = pilaVarTableName.pop()
+            procAnterior = find_dir_proc(procAnteriorName)
+            procName = pilaVarTableName[-1]
+            proc = find_dir_proc(procName)
+            auxVarTable = pilaVarTable.pop()
+            returnVar = procAnterior.func_ret
+            #aqui
+            proc.func_vars = auxVarTable
+
+        elif operador == 'RETURN':
+            dirtoReturn = get_resultado(c)
+            vartoReturn =search_var_by_dir(dirtoReturn)
+            operando1 = get_operando1(c)
+            vartoReturn.value = operando1
+            c += 1
+
+        elif operador == 'VER':
+            index = int(get_value_operando(find_cuadruplo(c),1))
+            max_index = int(get_resultado(c))
+            if(index > max_index or index < 0):
+                print("Array out of boundaries")
+                sys.exit()
+            c += 1
+
+        elif operador == 'OFST':
+            index = get_value_operando(find_cuadruplo(c),1)
+            dirBase = get_operando2(c)
+            resDir = get_result_var_dir(find_cuadruplo(c))
+            resVar = search_var_by_dir(resDir)
+            arrDir = int(index) + int(dirBase)
+
+            assigned_dir = assign_dir_result(arrDir,resVar.type)
+            resVar.value = assigned_dir
+            c += 1
+
+        elif operador == 'ARYAS':
+            opdDir = get_operando1(c)
+            opdDir = get_cons_dir_from_var_dir(opdDir)
+
+            index = int(get_value_operando(find_cuadruplo(c),2))
+
+            newArrayDir = search_var_by_dir(get_resultado(c)).value
+            newArrayVal = int(search_var_by_dir(newArrayDir).value)
+            baseArray = search_var_by_dir(newArrayVal - index)
+
+            if baseArray.var_dir >= 0 and baseArray.var_dir < 4000:
+                if index == 0:
+                    varName = str(baseArray.var_name)
+                    set_value_global_var_table(varName,opdDir)
+                else:
+                    varName = str(baseArray.var_name)+'['+str(index)+']'
+                    add_var_table(varName,opdDir,baseArray.type,newArrayVal,None)
+
+            elif baseArray.var_dir >= 4000 and baseArray.var_dir < 8000:
+                for proc in dir_proc:
+                    for var in proc.func_vars:
+                        if var.var_dir == baseArray.var_dir:
+                            arrProc = proc.func_name
+                if index == 0:
+                    varName = str(baseArray.var_name)
+                    set_value_var_table(arrProc,varName,opdDir)
+                else:
+                    varName = str(baseArray.var_name)+'['+str(index)+']'
+                    add_var_dir_proc(arrProc,varName,opdDir,baseArray.type,newArrayVal,None)
+            c += 1
+
+        elif operador == 'ARYCA':
+            index = int(get_value_operando(find_cuadruplo(c), 1))
+            dirBase = int(get_operando2(c))
+            resDir = get_result_var_dir(find_cuadruplo(c))
+            resVar = search_var_by_dir(resDir)
+            arrDir = index + dirBase
+            arr = search_var_by_dir(arrDir)
+            if arr:
+                resVar.value = arr.value
+            else:
+                resVar.value = -9000
+            c += 1
+
+        elif operador == 'END':
+            print('todavia no esta implementado')
+            c += 1
+        elif operador == 'PENUP':
+            print('todavia no esta implementado')
+            c += 1
+        elif operador == 'PENDOWN':
+            print('todavia no esta implementado')
+            c += 1
+        elif operador == 'ERASE':
+            print('todavia no esta implementado')
+            c += 1
+        elif operador == 'TURNLEFT':
+            print('todavia no esta implementado')
+            c += 1
+        elif operador == 'TURNRIGHT':
+            print('todavia no esta implementado')
+            c += 1
+        elif operador == 'MOVE':
+            print('todavia no esta implementado')
+            c += 1
+        elif operador == '=':
+            opdDir = get_operando1(c)
+            var = search_var_by_dir(opdDir)
+            opdDir = get_cons_dir_from_var_dir(opdDir)
+            resDir = get_resultado(c)
+            resVar = search_var_by_dir(resDir)
+            resVar.value = opdDir
+            c += 1
+        else:
+            operando1 = get_value_operando(find_cuadruplo(c),1)
+            operando2 = get_value_operando(find_cuadruplo(c),2)
+            resultado = get_result_var_dir(find_cuadruplo(c))
+            resultadoVar = search_var_by_dir(resultado)
+
+            dir_operando1 = get_operando1(c)
+            type_operando1 = search_var_by_dir(dir_operando1).type
+            dir_operando2 = get_operando2(c)
+            type_operando2 = search_var_by_dir(dir_operando1).type
+
+            if type_operando1 == 'int':
+                operando1 = int(operando1)
+            elif type_operando1 == 'float':
+                operando1 = float(operando1)
+            if type_operando2 == 'int':
+                operando2 = int(operando2)
+            elif type_operando2 == 'float':
+                operando2 = float(operando2)
+
+            if operador == '+':
+                res = operando1 + operando2
+            elif operador == '-':
+                res = operando1 - operando2
+            elif operador == '*':
+                res = operando1 * operando2
+            elif operador == '/':
+                if operando2 == 0:
+                    print("Error: Divide by 0")
+                    sys.exit()
+                elif resultadoVar.type == 'int':
+                    res = operando1 // operando2
+                else:
+                    res = operando1 / operando2
+            elif operador == '>':
+                res = operando1 > operando2
+            elif operador == '<':
+                res = operando1 < operando2
+            elif operador == '>=':
+                res = operando1 >= operando2
+            elif operador == '<=':
+                res = operando1 <= operando2
+            elif operador == '==':
+                res = operando1 == operando2
+            elif operador == '<>':
+                res = operando1 != operando2
+
+            resultadoDir = assign_dir_result(res,resultadoVar.type)
+            resultadoVar.value = resultadoDir
+            c += 1

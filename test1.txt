@@ -1,19 +1,26 @@
 program UNO;
 
-var int ah[20];
-var float hola;
-var string an;
 
-
-func int takeonme(int a){
-	var int jj;
-	jj = 2;
-	return jj;
+func void aha(){
+	print("TAKE ON ME");
 }
 
+func void takeonme(int j){
+	j = 3;
+	aha();
+	print(j);
+}
+
+func int a(int e){
+	var int p;
+	p = 2;
+	return e - p - 2;
+}
+
+
 main(){
-var int j;
-j = 2;
-ah[2] = takeonme(10 - 1 - ah[2]);
+var int x1;
+x1 = a(10);
+print(x1);
 }
 end 

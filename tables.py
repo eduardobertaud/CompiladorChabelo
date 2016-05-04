@@ -1,33 +1,24 @@
 import sys
+import copy
 
 const_table = []
 var_table = []
 dir_proc = []
+backup_proc = []
 temp_table = []
 
 # Variable Table Functions
 class variable:
-	def __init__(self, var_name, var_value, var_type, var_dir,var_size):
+	def __init__(self, var_name, value, type, var_dir,var_size):
 		self.var_name= var_name
-		self.var_value= var_value
-		self.var_type = var_type
+		self.value= value
+		self.type = type
 		self.var_dir = var_dir
 		self.var_size = var_size
 
-def add_var_table(var_name, var_value, var_type, var_dir, var_size = 0):
+def add_var_table(var_name, value, type, var_dir, var_size = 0):
 	global var_table
-	var_table.append(variable(var_name, var_value, var_type, var_dir, var_size))
-
-def add_var_table(var_name, var_type, var_dir, var_size = 0):
-	global var_table
-	if var_type == 'int':
-		var_table.append(variable(var_name, 0 , var_type, var_dir, var_size))
-	elif var_type == 'float':
-		var_table.append(variable(var_name, 0.0 , var_type, var_dir, var_size))
-	elif var_type == 'string':
-		var_table.append(variable(var_name, ' ' , var_type, var_dir, var_size))
-	elif var_type == 'bool':
-		var_table.append(variable(var_name, 'false' , var_type, var_dir))
+	var_table.append(variable(var_name, value, type, var_dir, var_size))
 
 def find_global_var_table(var_name):
     global var_table
@@ -39,7 +30,7 @@ def get_value_global_var_table(var_name):
 	global var_table
 	v = find_global_var_table(var_name)
 	if v:
-		return v.var_value
+		return v.value
 
 def set_value_global_var_table(var_name, value):
 	global var_table
@@ -51,7 +42,7 @@ def get_type_global_var_table(var_name):
 	global var_table
 	v = find_global_var_table(var_name)
 	if v:
-		return v.var_type
+		return v.type
 
 def get_dir_global_var_table(var_name):
 	global var_table
@@ -74,19 +65,19 @@ def get_value_var_table(vtable, var_name):
 	global var_table
 	v = find_var_table(vtable, var_name)
 	if v:
-		return v.var_value
+		return v.value
 
 def set_value_var_table(vtable, var_name, value):
 	global var_table
 	v = find_var_table(vtable, var_name)
 	if v:
-		v.var_value = value
+		v.value = value
 
 def get_type_var_table(vtable, var_name):
 	global var_table
 	v = find_var_table(vtable, var_name)
 	if v:
-		return v.var_type
+		return v.type
 
 def get_dir_var_table(vtable, var_name):
 	global var_table
@@ -105,7 +96,7 @@ def print_var_table():
 	print("Tabla de Variables Globales:")
 	if var_table:
 		for var in var_table:
-			print (" NAME: " + str(var.var_name) , " VALUE: " + str(var.var_value) , " TYPE: " + str(var.var_type) , " DIR: " + str(var.var_dir), " SIZE: " + str (var.var_size))
+			print (" NAME: " + str(var.var_name) , " VALUE: " + str(var.value) , " TYPE: " + str(var.type) , " DIR: " + str(var.var_dir), " SIZE: " + str (var.var_size))
 	else:
 		print ("No variables declared")
 	print("\n")
@@ -116,14 +107,14 @@ def clear_var_table():
 
 # Temporal Table Functions
 class temporal:
-	def __init__(self, temp_value, temp_type, temp_dir):
-		self.temp_value= temp_value
-		self.temp_type = temp_type
+	def __init__(self, value, type, temp_dir):
+		self.value= value
+		self.type = type
 		self.temp_dir = temp_dir
 
-def add_temp_table(temp_value, temp_type, temp_dir):
+def add_temp_table(value, type, temp_dir):
 	global temp_table
-	temp_table.append(temporal(temp_value, temp_type, temp_dir))
+	temp_table.append(temporal(value, type, temp_dir))
 
 def find_temp_table(temp_dir):
     global temp_table
@@ -135,19 +126,19 @@ def get_value_temp_table(temp_dir):
 	global temp_table
 	te = find_temp_table(temp_dir)
 	if te:
-		return te.temp_value
+		return te.value
 
 def set_value_temp_table(temp_dir, value):
 	global temp_table
 	te = find_temp_table(temp_dir)
 	if te:
-		te.temp_value = value
+		te.value = value
 
 def get_type_temp_table(temp_dir):
 	global temp_table
 	te = find_temp_table(temp_dir)
 	if te:
-		return te.temp_type
+		return te.type
 
 def get_dir_temp_table(temp_dir):
 	global temp_table
@@ -160,7 +151,7 @@ def print_temp_table():
 	print("Tabla de Temporales:")
 	if temp_table:
 		for temp in temp_table:
-			print (" VALUE: " + str(temp.temp_value) , " TYPE: " + str(temp.temp_type) , " DIR: " + str(temp.temp_dir))
+			print (" VALUE: " + str(temp.value) , " TYPE: " + str(temp.type) , " DIR: " + str(temp.temp_dir))
 	else:
 		print ("No constants declared")
 	print("\n")
@@ -171,48 +162,48 @@ def clear_temp_table():
 
 #Constant Table Functions
 class constant:
-	def __init__(self, const_value, const_type, const_dir):
-		self.const_value= const_value
-		self.const_type = const_type
+	def __init__(self, value, type, const_dir):
+		self.value= value
+		self.type = type
 		self.const_dir = const_dir
 
-def add_const_table(const_value, const_type, const_dir):
+def add_const_table(value, type, const_dir):
 	global const_table
-	const_table.append(constant(const_value, const_type, const_dir))
+	const_table.append(constant(value, type, const_dir))
 
 def print_const_table():
 	global const_table
 	print("Tabla de Constantes:")
 	if const_table:
 		for const in const_table:
-			print (" VALUE: " + str(const.const_value) , " TYPE: " + str(const.const_type) , " DIR: " + str(const.const_dir))
+			print (" VALUE: " + str(const.value) , " TYPE: " + str(const.type) , " DIR: " + str(const.const_dir))
 	else:
 		print ("No constants declared")
 	print("\n")
 
-def find_const_table(const_value):
+def find_const_table(value):
 	global const_table
 	for const in const_table:
-		if const.const_value == const_value:
+		if const.value == value:
 			return const
 
-def get_dir_const_table(const_value):
+def get_dir_const_table(value):
 	global const_table
 	for const in const_table:
-		if const.const_value == const_value:
+		if const.value == value:
 			return const.const_dir
 
 def get_value_const_table(const_dir):
 	global const_table
 	for const in const_table:
 		if const.const_dir == const_dir:
-			return const.const_value
+			return const.value
 
-def get_type_const_table(const_value):
+def get_type_const_table(value):
 	global const_table
 	for const in const_table:
-		if const.const_value == const_value:
-			return const.const_type
+		if const.value == value:
+			return const.type
 
 def clear_const_table():
 	global const_table
@@ -228,47 +219,21 @@ class function:
 		self.func_params = []
 		self.func_ret = func_ret
 
-def add_dir_proc(func_name, func_type, func_dir):
+def add_dir_proc(func_name, func_type, func_dir,func_ret = None):
 	global dir_proc
-	dir_proc.append(function(func_name, func_type, func_dir,None))
+	dir_proc.append(function(func_name, func_type, func_dir,func_ret))
 
-def add_param_dir_proc(func_name, var_name, var_value, var_type, var_dir, var_size = 0):
+def add_param_dir_proc(func_name, var_name, value, type, var_dir, var_size = 0):
 	global dir_proc
 	d = find_dir_proc(func_name)
 	if d :
-		d.func_params.append(variable(var_name, var_value, var_type, var_dir, var_size))
+		d.func_params.append(variable(var_name, value, type, var_dir, var_size))
 
-def add_param_dir_proc(func_name, var_name, var_type, var_dir, var_size = 0):
+def add_var_dir_proc(func_name, var_name, value, type, var_dir, var_size = 0):
 	global dir_proc
 	d = find_dir_proc(func_name)
 	if d :
-		if var_type == 'int':
-			d.func_params.append(variable(var_name, 0 , var_type, var_dir, var_size))
-		elif var_type == 'float':
-			d.func_params.append(variable(var_name, 0.0 , var_type, var_dir, var_size))
-		elif var_type == 'string':
-			d.func_params.append(variable(var_name, ' ' , var_type, var_dir, var_size))
-		elif var_type == 'bool':
-			d.func_params.append(variable(var_name, 'false' , var_type, var_dir, var_size))
-
-def add_var_dir_proc(func_name, var_name, var_value, var_type, var_dir, var_size = 0):
-	global dir_proc
-	d = find_dir_proc(func_name)
-	if d :
-		d.func_vars.append(variable(var_name, var_value, var_type, var_dir, var_size))
-
-def add_var_dir_proc(func_name, var_name, var_type, var_dir, var_size = 0):
-	global dir_proc
-	d = find_dir_proc(func_name)
-	if d :
-		if var_type == 'int':
-			d.func_vars.append(variable(var_name, 0 , var_type, var_dir, var_size))
-		elif var_type == 'float':
-			d.func_vars.append(variable(var_name, 0.0 , var_type, var_dir, var_size))
-		elif var_type == 'string':
-			d.func_vars.append(variable(var_name, ' ' , var_type, var_dir, var_size))
-		elif var_type == 'bool':
-			d.func_vars.append(variable(var_name, 'false' , var_type, var_dir, var_size))
+		d.func_vars.append(variable(var_name, value, type, var_dir, var_size))
 
 def find_dir_proc(func_name):
     global dir_proc
@@ -312,18 +277,29 @@ def get_vars_dir_proc(func_name):
 	if d:
 		return d.func_vars
 
+def generate_copy_dir_proc():
+	global dir_proc
+	global backup_proc
+	backup_proc.append(copy.deepcopy(dir_proc))
+
+def get_copy_dir_proc(name):
+	global backup_proc
+	for proc in backup_proc[0]:
+		if proc.func_name == name:
+			return copy.deepcopy(proc)
+
 def print_dir_proc():
 	global dir_proc
 	print("Directorio de procedimientos:")
 	for d in dir_proc:
 		if d:
 			print(" NAME: " +  str(d.func_name) , " TYPE: " + str(d.func_type) , " DIR: " + str(d.func_dir))
-			#print("Parameters:")
-			#for param in d.func_params:
-			#	print(" NAME: ", param.var_name, " VALUE: ", param.var_value, " TYPE: ", param.var_type, " DIR: ", param.var_dir)
+			print("Parameters:")
+			for param in d.func_params:
+				print(" NAME: ", param.var_name, " VALUE: ", param.value, " TYPE: ", param.type, " DIR: ", param.var_dir)
 			print("Variables:")
 			for var in d.func_vars:
-				print(" NAME: " + str(var.var_name) , " VALUE: " + str(var.var_value) , " TYPE: " + str(var.var_type) , " DIR: " + str (var.var_dir), " SIZE: " + str (var.var_size))
+				print(" NAME: " + str(var.var_name) , " VALUE: " + str(var.value) , " TYPE: " + str(var.type) , " DIR: " + str (var.var_dir), " SIZE: " + str (var.var_size))
 			print ("\n")
 		else:
 			print ("No functions declared")

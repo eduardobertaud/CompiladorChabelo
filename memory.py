@@ -4,7 +4,7 @@ string_global = 2000
 bool_global = 3000
 
 int_local=4000
-float_local=50000
+float_local=5000
 string_local=6000
 bool_local=7000
 

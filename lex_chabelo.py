@@ -102,7 +102,7 @@ def t_ID(t):
 
 # Error handling rule
 def t_error(t):
-  print 'SYNTAX error: ', t
+  print ('SYNTAX error: ', t)
   exit(-1)
   t.lexer.skip(1)
 

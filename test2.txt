@@ -1,14 +1,27 @@
 program UNO;
-
-var int ah[20];
-
+var int ah[3];
+var float bh[3];
 main(){
-
-var int va[2];
-var int v;
-if( 2 + 3 - 2 - -1> 1 * 0){
-v = 2;
-
-}
+	ah[0] = 2+1;
+	ah[1] = 100;
+	if(ah[0]>ah[1]){
+		print("Mayor i");
+	}
+	else {
+		if(ah[0]<ah[1]){
+		print("Menor i");
+		}
+	}
+	bh[0] = 2.2+1.0;
+	bh[1] = 100.2;
+	if(bh[0]>bh[1]){
+		print("Mayor f");
+	}
+	else {
+		if(bh[0]<bh[1]){
+		print("Menor f");
+		}
+	}
+		
 }
 end 
