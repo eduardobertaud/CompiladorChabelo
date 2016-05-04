@@ -1,0 +1,37 @@
+program UNO;
+
+var int arr1[10];
+
+
+main(){
+	var int contador;
+	contador = 0;
+	while(contador < 10){
+		arr1[contador] = contador*2;
+		contador = contador + 1;
+	}
+	var int contador2;
+	var int valorBuscar;
+	var int pocisionEncontrado;
+	var bool encontrado;
+	valorBuscar = 14;
+	pocisionEncontrado = -1;
+	contador2 = 0;
+	encontrado = false;
+	while(contador2 < 10){
+		if(arr1[contador2] == valorBuscar){
+			pocisionEncontrado = contador2;
+			encontrado = true;
+			contador2 = 20;
+		}
+		contador2 = contador2 + 1;
+	}
+	if(encontrado == true){
+		print("Encontrado en:");
+		print(pocisionEncontrado);
+	}
+	else{
+		print("No se encontro el valor");
+	} 
+}
+end
