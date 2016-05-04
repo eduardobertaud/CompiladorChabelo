@@ -1,0 +1,22 @@
+program UNO;
+
+func void estrella (int lado){
+var int x;
+x=18;
+penup();
+turnleft (180);
+move(forward,20);
+pendown();
+
+while (x>0){
+	move(forward,200);
+	turnright(100);
+	x = x - 1;
+}
+
+}
+
+main(){
+	estrella(100);
+}
+end

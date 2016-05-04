@@ -1,0 +1,19 @@
+program UNO;
+
+func void triangulo(int lado){
+pendown();
+var int x;
+x= 3;
+while(x>0){
+	move (forward, lado);
+	turnright (120);
+	x = x - 1;
+}
+penup();
+}
+
+main(){
+	triangulo(100);
+
+}
+end
