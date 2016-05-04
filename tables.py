@@ -62,31 +62,26 @@ def find_var_table(v_table, var_name):
             return v
 
 def get_value_var_table(vtable, var_name):
-	global var_table
 	v = find_var_table(vtable, var_name)
 	if v:
 		return v.value
 
 def set_value_var_table(vtable, var_name, value):
-	global var_table
 	v = find_var_table(vtable, var_name)
 	if v:
 		v.value = value
 
 def get_type_var_table(vtable, var_name):
-	global var_table
 	v = find_var_table(vtable, var_name)
 	if v:
 		return v.type
 
 def get_dir_var_table(vtable, var_name):
-	global var_table
 	v = find_var_table(vtable, var_name)
 	if v:
 		return v.var_dir
 
 def get_size_var_table(vtable, var_name):
-	global var_table
 	v = find_var_table(vtable, var_name)
 	if v:
 		return v.var_size

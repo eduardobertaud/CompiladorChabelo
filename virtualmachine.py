@@ -1,6 +1,7 @@
 from tables import *
 from memory import *
 from cuadruplo import *
+import turtle
 import copy
 import sys
 
@@ -12,6 +13,13 @@ memoryBool = 0
 pilaSaltosVM = []
 pilaVarTable = []
 pilaVarTableName = []
+
+turtle.setup(500, 500)
+turtle.setheading(90.0)
+turtle.speed('normal')
+turtle.color('red')
+wn = turtle.Screen()
+wn.title("CHABELO Grafico")
 
 def start_memory ():
     global memoryInt
@@ -80,25 +88,6 @@ def get_value_operando (cuadruplo,num):
     for const in const_table:
         if const.const_dir == operandDir:
             return const.value
-
-def get_result_var_dir (cuadruplo):
-    operandDir = cuadruplo.resultado
-    if operandDir == None:
-        return
-    elif operandDir >= 0 and operandDir < 4000:
-        for var in var_table:
-            if var.var_dir == operandDir:
-                return var.var_dir
-    elif operandDir >= 4000 and operandDir < 8000:
-        for proc in dir_proc:
-            for var in proc.func_vars:
-                if var.var_dir == operandDir:
-                    return var.var_dir
-    elif operandDir >= 12000 and operandDir < 16000:
-        for temp in temp_table:
-            if temp.temp_dir == operandDir:
-                return temp.temp_dir
-    return None
 
 def assign_dir_result(value,tipo):
     global memoryInt
@@ -270,27 +259,18 @@ def readCuadruplos():
             c += 1
 
         elif operador == 'GOSUB':
-            #Se obtiene el nombre del procedimiento indicado en el cuadruplo
             procName = get_operando1(c)
-            #Se obtiene el procedimiento en base al nombre
             proc = find_dir_proc(procName)
-            #Se inicializa el parametro procesado en 0
             paramNum = 0
-            #Se obsera el cuadruplo siguiente
             next_c = c + 1
             operador = get_operador(next_c)
-            #Si el cuaruplo siguiente es un parametro entonces se inserta en el procedimiento
-            #destino
             while operador == 'PARAM':
                 operando = get_const_param(find_cuadruplo(next_c))
                 set_param(operando,procName,paramNum)
                 paramNum += 1
                 next_c += 1
                 operador = get_operador(next_c)
-            #Se guarda en una pila el cuadruplo de ejecucion en el cual se quedo la interpretacion
-            #antes de la llamada a funcion
             pilaSaltosVM.append(next_c)
-            #Se realiza el salto a la funcion
             c = proc.func_dir
 
         elif operador == 'RET':
@@ -322,7 +302,7 @@ def readCuadruplos():
         elif operador == 'OFST':
             index = get_value_operando(find_cuadruplo(c),1)
             dirBase = get_operando2(c)
-            resDir = get_result_var_dir(find_cuadruplo(c))
+            resDir = get_resultado(c)
             resVar = search_var_by_dir(resDir)
             arrDir = int(index) + int(dirBase)
 
@@ -352,19 +332,20 @@ def readCuadruplos():
                 for proc in dir_proc:
                     for var in proc.func_vars:
                         if var.var_dir == baseArray.var_dir:
-                            arrProc = proc.func_name
+                            arrProc = proc.func_vars
+                            procName = proc.func_name
                 if index == 0:
                     varName = str(baseArray.var_name)
                     set_value_var_table(arrProc,varName,opdDir)
                 else:
                     varName = str(baseArray.var_name)+'['+str(index)+']'
-                    add_var_dir_proc(arrProc,varName,opdDir,baseArray.type,newArrayVal,None)
+                    add_var_dir_proc(procName,varName,opdDir,baseArray.type,newArrayVal,None)
             c += 1
 
         elif operador == 'ARYCA':
             index = int(get_value_operando(find_cuadruplo(c), 1))
             dirBase = int(get_operando2(c))
-            resDir = get_result_var_dir(find_cuadruplo(c))
+            resDir = get_resultado(c)
             resVar = search_var_by_dir(resDir)
             arrDir = index + dirBase
             arr = search_var_by_dir(arrDir)
@@ -375,25 +356,29 @@ def readCuadruplos():
             c += 1
 
         elif operador == 'END':
-            print('todavia no esta implementado')
+            turtle.exitonclick()
             c += 1
         elif operador == 'PENUP':
-            print('todavia no esta implementado')
+            turtle.penup()
             c += 1
         elif operador == 'PENDOWN':
-            print('todavia no esta implementado')
+            turtle.pendown()
             c += 1
         elif operador == 'ERASE':
-            print('todavia no esta implementado')
+            turtle.reset()
             c += 1
         elif operador == 'TURNLEFT':
-            print('todavia no esta implementado')
+            turtle.left(int(get_value_operando(find_cuadruplo(c), 3)))
             c += 1
         elif operador == 'TURNRIGHT':
-            print('todavia no esta implementado')
+            turtle.right(int(get_value_operando(find_cuadruplo(c), 3)))
             c += 1
         elif operador == 'MOVE':
-            print('todavia no esta implementado')
+            direction = get_operando1(c)
+            if direction == 'forward':
+                turtle.forward(int(get_value_operando(find_cuadruplo(c), 3)))
+            else:
+                turtle.backward(int(get_value_operando(find_cuadruplo(c), 3)))
             c += 1
         elif operador == '=':
             opdDir = get_operando1(c)
@@ -406,7 +391,7 @@ def readCuadruplos():
         else:
             operando1 = get_value_operando(find_cuadruplo(c),1)
             operando2 = get_value_operando(find_cuadruplo(c),2)
-            resultado = get_result_var_dir(find_cuadruplo(c))
+            resultado = get_resultado(c)
             resultadoVar = search_var_by_dir(resultado)
 
             dir_operando1 = get_operando1(c)

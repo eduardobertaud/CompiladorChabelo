@@ -1,0 +1,13 @@
+program UNO;
+
+main(){
+pendown();
+turnright(10);
+move(forward,1000);
+move(backward,1000);
+
+turnleft(20);
+move(forward,1000);
+penup();
+}
+end 

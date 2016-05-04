@@ -1,6 +1,6 @@
 program UNO;
 
-
+var int hola[4];
 func void aha(){
 	print("TAKE ON ME");
 }
@@ -19,8 +19,16 @@ func int a(int e){
 
 
 main(){
-var int x1;
-x1 = a(10);
-print(x1);
+hola[0] = a(10);
+hola[1] = a(11);
+hola[2] = a(12);
+hola[3] = hola[1]*hola[2]*hola[0];
+print(hola[0]);
+print(hola[1]);
+print(hola[2]);
+print(hola[3]);
+var int prueba;
+prueba = 1 + 2;
+print(prueba);
 }
 end 

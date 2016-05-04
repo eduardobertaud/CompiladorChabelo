@@ -38,7 +38,7 @@ def p_program(p):
     clear_temp_table()
     clear_const_table()
     clear_dir_proc()
-    sys.exit()
+    #sys.exit()
 
 def p_salto_principal(p):
     '''salto_principal : '''
