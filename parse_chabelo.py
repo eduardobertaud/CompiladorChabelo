@@ -428,7 +428,7 @@ def p_assignment(p):
                     memory = temp_memory_assignment(type_operando1)
                     add_temp_table(-9000,type_operando1,memory)
                     add_cuadruplo('OFST',dir_index,dir_operando1,memory)
-                    add_cuadruplo('ARYAS',dir_operando2, dir_index ,memory)
+                    add_cuadruplo('ARYAS',dir_operando2, dir_index ,dir_operando1)
         else:
             print ("Error in arithmetic expression =")
             sys.exit()
@@ -808,6 +808,7 @@ def p_array_call(p):
         memoria = temp_memory_assignment(type_aux)
         add_temp_table( -9000,type_aux,memoria)
         add_cuadruplo('ARYCA',dir_operando1,operando_aux.var_dir,memoria)
+
         pilaOperandos.append(memoria)
         p[0]=p[1]
 
@@ -884,7 +885,7 @@ def p_var_func(p):
                 if dir_operando1 == -9000:
                     print("Variable '%s' " %operando1 + "not declared")
                     sys.exit()
-                if type_operando1 == param.type:
+                if type_operando1 == param.tipo:
                     add_cuadruplo('PARAM', dir_operando1 , None, None)
                 else:
                     print("Error in parameter in call of function '%s'" % p[-1])

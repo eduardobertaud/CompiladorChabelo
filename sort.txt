@@ -1,0 +1,61 @@
+program UNO;
+
+main(){
+	var int arr[5];
+	var int contador;
+	arr[0] = 5;
+	arr[1] = 4;
+	arr[2] = 3;
+	arr[3] = 2;
+	arr[4] = 1;
+
+
+	var bool bandera;
+	bandera = true;
+	var int i;
+	var int j;
+	var int aux;
+	var int aux2;
+	var int temp;
+	var int cint;
+	i = 0;
+
+
+	contador = 0;
+	print("OLD");
+	while(contador < 5){
+		print(arr[contador]);
+		contador = contador + 1;
+	}
+
+	while(i < 5){
+
+		temp = i;
+		j = i + 1;
+		while (j < 5){
+
+			if(arr[j] < arr[temp]){
+				temp = j;
+			}
+			j = j + 1;
+		}
+		
+		aux = arr[i];
+		aux2 = arr[temp];
+		arr[i] = aux2;
+		arr[temp] = aux;
+		i = i + 1;
+		
+	}
+
+
+
+	contador = 0;
+	print("NEW");
+	while(contador < 5){
+		print(arr[contador]);
+		contador = contador + 1;
+	}
+	
+}
+end 

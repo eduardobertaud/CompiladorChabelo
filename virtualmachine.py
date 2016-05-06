@@ -28,16 +28,16 @@ def start_memory ():
     global memoryBool
 
     for const in const_table:
-        if const.type == 'int':
+        if const.tipo == 'int':
             if const.const_dir > memoryInt:
                 memoryInt = const.const_dir
-        elif const.type == 'float':
+        elif const.tipo == 'float':
             if const.const_dir > memoryFloat:
                 memoryFloat = const.const_dir
-        elif const.type == 'string':
+        elif const.tipo == 'string':
             if const.const_dir > memoryString:
                 memoryString = const.const_dir
-        elif const.type == 'bool':
+        elif const.tipo == 'bool':
             if const.const_dir > memoryBool:
                 memoryBool = const.const_dir
 
@@ -216,6 +216,7 @@ def readCuadruplos():
         #que se ha obtenido del cuadroplo
         #print("operador: " + operador)
         #print("voy en cuad: " + str(c))
+        #print("  ")
         if operador == 'GOTO':
             #borrar
             c = get_resultado(c)
@@ -306,19 +307,33 @@ def readCuadruplos():
             resVar = search_var_by_dir(resDir)
             arrDir = int(index) + int(dirBase)
 
-            assigned_dir = assign_dir_result(arrDir,resVar.type)
+            assigned_dir = assign_dir_result(arrDir,resVar.tipo)
             resVar.value = assigned_dir
             c += 1
 
         elif operador == 'ARYAS':
             opdDir = get_operando1(c)
+            var = search_var_by_dir(opdDir)
+            #print("cuadruplo")
+            #print(c)
+            #print("operando aryas:::::::")
+            #print("dir original")
+            #print(opdDir)
+            #print("valor que contiene")
+            #print(var.value)
             opdDir = get_cons_dir_from_var_dir(opdDir)
-
+            #print("dir a donde apunta")
+            #print(opdDir)
+            var = search_var_by_dir(opdDir)
+            #print("valor de dir a donde apunta")
+            #print(var.value)
             index = int(get_value_operando(find_cuadruplo(c),2))
 
-            newArrayDir = search_var_by_dir(get_resultado(c)).value
-            newArrayVal = int(search_var_by_dir(newArrayDir).value)
-            baseArray = search_var_by_dir(newArrayVal - index)
+
+
+            arraydir = int(get_resultado(c))
+            baseArray = search_var_by_dir(arraydir)
+            indexarraydir = index + arraydir
 
             if baseArray.var_dir >= 0 and baseArray.var_dir < 4000:
                 if index == 0:
@@ -326,7 +341,7 @@ def readCuadruplos():
                     set_value_global_var_table(varName,opdDir)
                 else:
                     varName = str(baseArray.var_name)+'['+str(index)+']'
-                    add_var_table(varName,opdDir,baseArray.type,newArrayVal,None)
+                    add_var_table(varName,opdDir,baseArray.tipo,indexarraydir,None)
 
             elif baseArray.var_dir >= 4000 and baseArray.var_dir < 8000:
                 for proc in dir_proc:
@@ -339,16 +354,22 @@ def readCuadruplos():
                     set_value_var_table(arrProc,varName,opdDir)
                 else:
                     varName = str(baseArray.var_name)+'['+str(index)+']'
-                    add_var_dir_proc(procName,varName,opdDir,baseArray.type,newArrayVal,None)
+                    add_var_dir_proc(procName,varName,opdDir,baseArray.tipo,indexarraydir,None)
+            #print("INDEX")
+            #print(index)
+            #print(get_resultado(c))
+            #print(" ")
             c += 1
 
         elif operador == 'ARYCA':
             index = int(get_value_operando(find_cuadruplo(c), 1))
             dirBase = int(get_operando2(c))
-            resDir = get_resultado(c)
-            resVar = search_var_by_dir(resDir)
-            arrDir = index + dirBase
-            arr = search_var_by_dir(arrDir)
+            baseArray = search_var_by_dir(dirBase)
+            indexarraydir = index + dirBase
+            resVar = (search_var_by_dir(get_resultado(c)))
+
+            arr = search_var_by_dir(indexarraydir)
+
             if arr:
                 resVar.value = arr.value
             else:
@@ -381,12 +402,40 @@ def readCuadruplos():
                 turtle.backward(int(get_value_operando(find_cuadruplo(c), 3)))
             c += 1
         elif operador == '=':
+
             opdDir = get_operando1(c)
             var = search_var_by_dir(opdDir)
+            #print("cuadruplo")
+            #print(c)
+            #print("operando::::")
+            #print("dir original")
+            #print(opdDir)
+            #print("valor que contiene")
+            #print(var.value)
             opdDir = get_cons_dir_from_var_dir(opdDir)
+            #print("dir a donde apunta")
+            #print(opdDir)
+            var = search_var_by_dir(opdDir)
+            #print("valor a dir a donde apunta")
+            #print(var.value)
+
+
+            #opdDir = get_cons_dir_from_var_dir(opdDir)
+
+            #print("resultado::::")
             resDir = get_resultado(c)
+            #print("dir original a recibir")
+            #print(resDir)
             resVar = search_var_by_dir(resDir)
             resVar.value = opdDir
+            #print("name recibir")
+            #print(resVar.var_name)
+            #print("value recibir")
+            #print(resVar.value)
+            #print("value  real")
+            tt = search_var_by_dir(resVar.value)
+            #print(tt.value)
+            #print(" ")
             c += 1
         else:
             operando1 = get_value_operando(find_cuadruplo(c),1)
@@ -395,9 +444,9 @@ def readCuadruplos():
             resultadoVar = search_var_by_dir(resultado)
 
             dir_operando1 = get_operando1(c)
-            type_operando1 = search_var_by_dir(dir_operando1).type
+            type_operando1 = search_var_by_dir(dir_operando1).tipo
             dir_operando2 = get_operando2(c)
-            type_operando2 = search_var_by_dir(dir_operando1).type
+            type_operando2 = search_var_by_dir(dir_operando1).tipo
 
             if type_operando1 == 'int':
                 operando1 = int(operando1)
@@ -418,7 +467,7 @@ def readCuadruplos():
                 if operando2 == 0:
                     print("Error: Divide by 0")
                     sys.exit()
-                elif resultadoVar.type == 'int':
+                elif resultadoVar.tipo == 'int':
                     res = operando1 // operando2
                 else:
                     res = operando1 / operando2
@@ -435,6 +484,6 @@ def readCuadruplos():
             elif operador == '<>':
                 res = operando1 != operando2
 
-            resultadoDir = assign_dir_result(res,resultadoVar.type)
+            resultadoDir = assign_dir_result(res,resultadoVar.tipo)
             resultadoVar.value = resultadoDir
             c += 1
