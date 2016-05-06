@@ -1,0 +1,20 @@
+program UNO;
+
+func float factorial(float n){
+	var float x;
+	if(n==0.0){
+		x = 1.0;
+	}
+	else{
+		x = n * factorial(n - 1.0);
+	}
+	return x;
+}
+
+main(){
+	var float res;	
+
+	res = factorial(6.0);
+	print(res);
+}
+end

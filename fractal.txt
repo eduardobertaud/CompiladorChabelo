@@ -1,0 +1,23 @@
+program UNO;
+
+func void fractal(int longitud, int profundidad){
+	if(profundidad<0){
+		move(backward,longitud);
+	}
+	else{
+		fractal(longitud/3,profundidad - 1);
+		turnright(60);
+		fractal(longitud/3,profundidad - 1);
+		turnleft(120);
+		fractal(longitud/3,profundidad - 1);
+		turnright(60);
+		fractal(longitud/3,profundidad - 1);
+	}
+
+}
+
+main() {
+	fractal(200,25);
+
+}
+end
