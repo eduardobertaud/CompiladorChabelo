@@ -1,0 +1,52 @@
+program UNO;
+
+func int fibo(int n){
+	var int fibo;
+	fibo = 0;
+	if(n < 1){
+		fibo = 0;
+		
+	}
+	else{
+	print(fibo);
+	fibo = 1;
+	if(n == 1){
+		fibo = n;
+		print(fibo);
+	}
+	else{
+	print(fibo);
+	
+	if(n==2){
+		fibo = 1;
+	}
+	print(fibo);	
+	
+	var int fiboprev;
+	fiboprev = 1;
+	var int i;
+	i = 2;
+
+	var int temp;
+	while(i < n){
+
+	temp = fibo;
+	fibo = fibo + fiboprev;
+	fiboprev = temp;
+	i = i + 1;
+	print(fibo);
+	}
+	}
+}
+	return fibo;
+}
+
+main(){
+
+var int a;
+a = fibo(14);
+print("resultado final: ");
+print (a);
+
+}
+end

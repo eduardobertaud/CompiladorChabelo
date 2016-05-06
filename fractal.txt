@@ -2,7 +2,7 @@ program UNO;
 
 func void fractal(int longitud, int profundidad){
 	if(profundidad<0){
-		move(backward,longitud);
+		move(forward,longitud);
 	}
 	else{
 		fractal(longitud/3,profundidad - 1);
@@ -17,7 +17,7 @@ func void fractal(int longitud, int profundidad){
 }
 
 main() {
-	fractal(200,25);
+	fractal(200,30);
 
 }
 end
