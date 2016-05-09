@@ -14,7 +14,7 @@ func float factorial(float n){
 main(){
 	var float res;	
 
-	res = factorial(6.0);
+	res = factorial(8.0);
 	print(res);
 }
 end

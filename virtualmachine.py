@@ -288,8 +288,8 @@ def readCuadruplos():
         elif operador == 'RETURN':
             dirtoReturn = get_resultado(c)
             vartoReturn =search_var_by_dir(dirtoReturn)
-            operando1 = get_operando1(c)
-            vartoReturn.value = operando1
+            operando1 = search_var_by_dir(get_operando1(c))
+            vartoReturn.value = operando1.value
             c += 1
 
         elif operador == 'VER':
@@ -314,23 +314,9 @@ def readCuadruplos():
         elif operador == 'ARYAS':
             opdDir = get_operando1(c)
             var = search_var_by_dir(opdDir)
-            #print("cuadruplo")
-            #print(c)
-            #print("operando aryas:::::::")
-            #print("dir original")
-            #print(opdDir)
-            #print("valor que contiene")
-            #print(var.value)
             opdDir = get_cons_dir_from_var_dir(opdDir)
-            #print("dir a donde apunta")
-            #print(opdDir)
             var = search_var_by_dir(opdDir)
-            #print("valor de dir a donde apunta")
-            #print(var.value)
             index = int(get_value_operando(find_cuadruplo(c),2))
-
-
-
             arraydir = int(get_resultado(c))
             baseArray = search_var_by_dir(arraydir)
             indexarraydir = index + arraydir
@@ -355,10 +341,6 @@ def readCuadruplos():
                 else:
                     varName = str(baseArray.var_name)+'['+str(index)+']'
                     add_var_dir_proc(procName,varName,opdDir,baseArray.tipo,indexarraydir,None)
-            #print("INDEX")
-            #print(index)
-            #print(get_resultado(c))
-            #print(" ")
             c += 1
 
         elif operador == 'ARYCA':
@@ -405,37 +387,16 @@ def readCuadruplos():
 
             opdDir = get_operando1(c)
             var = search_var_by_dir(opdDir)
-            #print("cuadruplo")
-            #print(c)
-            #print("operando::::")
-            #print("dir original")
-            #print(opdDir)
-            #print("valor que contiene")
-            #print(var.value)
             opdDir = get_cons_dir_from_var_dir(opdDir)
-            #print("dir a donde apunta")
-            #print(opdDir)
             var = search_var_by_dir(opdDir)
-            #print("valor a dir a donde apunta")
-            #print(var.value)
 
-
-            #opdDir = get_cons_dir_from_var_dir(opdDir)
-
-            #print("resultado::::")
             resDir = get_resultado(c)
-            #print("dir original a recibir")
-            #print(resDir)
+
             resVar = search_var_by_dir(resDir)
             resVar.value = opdDir
-            #print("name recibir")
-            #print(resVar.var_name)
-            #print("value recibir")
-            #print(resVar.value)
-            #print("value  real")
+
             tt = search_var_by_dir(resVar.value)
-            #print(tt.value)
-            #print(" ")
+
             c += 1
         else:
             operando1 = get_value_operando(find_cuadruplo(c),1)

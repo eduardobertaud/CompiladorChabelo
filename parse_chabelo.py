@@ -126,10 +126,9 @@ def p_functions_body(p):
         if fn:
             print("Function: '%s' " % p[2]   +  "already declared")
             sys.exit()
-        memory = temp_memory_assignment(p[1])
-        add_temp_table(-9000,p[1],memory)
-        temp_return = temporal(-9000,p[1], memory)
-        add_dir_proc(p[2],p[1],getCuadCont(),temp_return)
+        memory = global_memory_assignment(p[1])
+        add_dir_proc(p[2],p[1],getCuadCont())
+        add_var_table(p[2],-9000,p[1],memory)
 
 def p_functions_body_void(p):
     '''functions_body_void : VOID ID'''
@@ -176,11 +175,11 @@ def p_return(p):
             print("Variable '%s' " %operando1 + "not declared")
             sys.exit()
 
+        print(scope)
         if type_operando1 == get_type_dir_proc(scope):
-            memory = temp_memory_assignment(type_operando1)
-            add_temp_table(-9000,type_operando1,memory)
-            set_return_dir_proc(scope,memory)
-            add_cuadruplo('RETURN',dir_operando1 , None, memory)
+            var = find_global_var_table(scope)
+            print(var.value)
+            add_cuadruplo('RETURN',dir_operando1 , None, var.var_dir)
             add_cuadruplo('RET',None , None, None)
         else:
             print ("Error in return value in function " + scope)
@@ -249,7 +248,6 @@ def p_estatuto(p):
     | fprint
     | special_function
     | var_body '''
-
 
 def p_fprint(p):
     '''fprint : PRINT ABRIR_PRNT write_choice CERRAR_PRNT PUNTO_COMA'''
@@ -432,9 +430,6 @@ def p_assignment(p):
         else:
             print ("Error in arithmetic expression =")
             sys.exit()
-
-
-
 
 def p_expression(p):
     '''expression : exp exp_aux_pila expression_choice'''
@@ -846,7 +841,6 @@ def p_var_func(p):
     global pilaParams
     func = find_dir_proc(p[-1])
     if func:
-        ret_val = get_return_dir_proc(p[-1])
         add_cuadruplo('ERA', p[-1] , None, None)
         add_cuadruplo('GOSUB', p[-1] , None, None)
         parameters = get_params_dir_proc(p[-1])
@@ -893,9 +887,9 @@ def p_var_func(p):
         else:
             print("Error in parameter in call of function '%s'" % p[-1])
             sys.exit()
-        ret_val = get_return_dir_proc(p[-1])
+        ret_val = find_global_var_table(p[-1])
         if ret_val:
-            pilaOperandos.append(ret_val)
+            pilaOperandos.append(p[-1])
         else:
             memory = temp_memory_assignment('int')
             add_temp_table(-9000,'error',memory)

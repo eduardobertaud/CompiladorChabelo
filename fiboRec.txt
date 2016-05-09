@@ -1,0 +1,32 @@
+program UNO;
+
+func int fibo(int n){
+	var int res;
+	var int llamada1;
+	var int llamada2;
+	if(n < 1){
+		res = 0;
+		
+	}
+	else {
+		if (n<=2){
+			res = 1;
+		}
+		else {
+			llamada1 = fibo(n - 1);
+			llamada2 = fibo(n - 2);
+			res = llamada1 + llamada2;
+		}
+	}
+return res;
+	
+}
+
+
+main(){
+
+var int result;
+result = fibo(3);
+print(result);
+}
+end 

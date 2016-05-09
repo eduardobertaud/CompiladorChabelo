@@ -1,15 +1,7 @@
 program UNO;
 
 var int hola[4];
-func void aha(){
-	print("TAKE ON ME");
-}
 
-func void takeonme(int j){
-	j = 3;
-	aha();
-	print(j);
-}
 
 func int a(int e){
 	var int p;
@@ -17,18 +9,20 @@ func int a(int e){
 	return e - p - 2;
 }
 
+func int arbl(int e){
+	var int p;
+	p = 2;
+	return e - p - 2;
+}
+
 
 main(){
-hola[0] = a(10);
-hola[1] = a(11);
-hola[2] = a(12);
-hola[3] = hola[1]*hola[2]*hola[0];
-print(hola[0]);
-print(hola[1]);
-print(hola[2]);
-print(hola[3]);
+
+
 var int prueba;
-prueba = 1 + 2;
+prueba = a(10);
+print(prueba);
+prueba = a(8);
 print(prueba);
 }
 end 
