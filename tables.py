@@ -206,17 +206,16 @@ def clear_const_table():
 
 #DirProc Functions
 class function:
-	def __init__(self, func_name, func_type, func_dir, func_ret):
+	def __init__(self, func_name, func_type, func_dir):
 		self.func_name= func_name
 		self.func_type = func_type
 		self.func_dir = func_dir
 		self.func_vars = []
 		self.func_params = []
-		self.func_ret = func_ret
 
-def add_dir_proc(func_name, func_type, func_dir,func_ret = None):
+def add_dir_proc(func_name, func_type, func_dir):
 	global dir_proc
-	dir_proc.append(function(func_name, func_type, func_dir,func_ret))
+	dir_proc.append(function(func_name, func_type, func_dir))
 
 def add_param_dir_proc(func_name, var_name, value, tipo, var_dir, var_size = 0):
 	global dir_proc
@@ -241,18 +240,6 @@ def get_type_dir_proc(func_name):
 	d = find_dir_proc(func_name)
 	if d:
 		return d.func_type
-
-def get_return_dir_proc(func_name):
-	global dir_proc
-	d = find_dir_proc(func_name)
-	if d:
-		return d.func_ret
-
-def set_return_dir_proc(func_name,ret):
-	global dir_proc
-	d = find_dir_proc(func_name)
-	if d:
-		d.func_ret = ret
 
 def get_dir_dir_proc(func_name):
 	global dir_proc

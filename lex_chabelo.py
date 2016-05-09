@@ -34,6 +34,18 @@ reserved = {
     'backward' : 'BACKWARD',
     'true' : 'TRUE',
     'false' : 'FALSE',
+    'color' : 'COLOR',
+    'red' : 'RED',
+    'blue' : 'BLUE',
+    'green' : 'GREEN',
+    'black' : 'BLACK',
+    'shape' : 'SHAPE',
+    'classic' : 'CLASSIC',
+    'arrow' : 'ARROW',
+    'square' : 'SQUARE',
+    'turtle' : 'TURTLE',
+    'pensize' : 'PENSIZE',
+    'size' : 'SIZE',
     }
 
 tokens = list(reserved.values()) + [

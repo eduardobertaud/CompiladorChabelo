@@ -2,6 +2,10 @@ program UNO;
 
 main(){
 pendown();
+color(blue);
+shape(arrow);
+pensize(100);
+size(10);
 turnright(10);
 move(forward,1000);
 move(backward,1000);

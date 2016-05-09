@@ -17,7 +17,8 @@ pilaVarTableName = []
 turtle.setup(500, 500)
 turtle.setheading(90.0)
 turtle.speed('normal')
-turtle.color('red')
+turtle.shape('classic')
+turtle.color('black')
 wn = turtle.Screen()
 wn.title("CHABELO Grafico")
 
@@ -121,7 +122,6 @@ def set_param (constDir,procName,paramNum):
     funcParam = proc.func_params.copy()
     procVars = proc.func_vars
     set_value_var_table(procVars,funcParam[paramNum].var_name,constDir)
-
 
 def get_const_param (cuadruplo):
     operandDir = cuadruplo.operando1
@@ -281,8 +281,6 @@ def readCuadruplos():
             procName = pilaVarTableName[-1]
             proc = find_dir_proc(procName)
             auxVarTable = pilaVarTable.pop()
-            returnVar = procAnterior.func_ret
-            #aqui
             proc.func_vars = auxVarTable
 
         elif operador == 'RETURN':
@@ -383,8 +381,19 @@ def readCuadruplos():
             else:
                 turtle.backward(int(get_value_operando(find_cuadruplo(c), 3)))
             c += 1
+        elif operador == 'COLOR':
+            turtle.color(get_operando1(c))
+            c += 1
+        elif operador == 'SHAPE':
+            turtle.shape(get_operando1(c))
+            c += 1
+        elif operador == 'PENSIZE':
+            turtle.pensize(int(get_value_operando(find_cuadruplo(c), 3)))
+            c += 1
+        elif operador == 'SIZE':
+            turtle.turtlesize(int(get_value_operando(find_cuadruplo(c), 3)))
+            c += 1
         elif operador == '=':
-
             opdDir = get_operando1(c)
             var = search_var_by_dir(opdDir)
             opdDir = get_cons_dir_from_var_dir(opdDir)

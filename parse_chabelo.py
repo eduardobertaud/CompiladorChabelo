@@ -175,10 +175,8 @@ def p_return(p):
             print("Variable '%s' " %operando1 + "not declared")
             sys.exit()
 
-        print(scope)
         if type_operando1 == get_type_dir_proc(scope):
             var = find_global_var_table(scope)
-            print(var.value)
             add_cuadruplo('RETURN',dir_operando1 , None, var.var_dir)
             add_cuadruplo('RET',None , None, None)
         else:
@@ -923,7 +921,11 @@ def p_special_function(p):
     | ferase
     | fturn_left
     | fturn_right
-    | fmove'''
+    | fmove
+    | fcolor
+    | fshape
+    | fpen_size
+    | fsize'''
 
 def p_fpen_up(p):
     '''fpen_up : PENUP ABRIR_PRNT CERRAR_PRNT PUNTO_COMA'''
@@ -1061,6 +1063,108 @@ def p_direction(p):
     '''direction : FORWARD
     | BACKWARD '''
     p[0] = p[1]
+
+def p_fcolor(p):
+    '''fcolor : COLOR ABRIR_PRNT color_selection CERRAR_PRNT PUNTO_COMA'''
+    add_cuadruplo('COLOR',p[3],None,None)
+
+def p_color_selection(p):
+    '''color_selection : RED
+    | BLUE
+    | GREEN
+    | BLACK '''
+    p[0] = p[1]
+
+def p_fshape(p):
+    '''fshape : SHAPE ABRIR_PRNT shape_selection CERRAR_PRNT PUNTO_COMA'''
+    add_cuadruplo('SHAPE',p[3],None,None)
+
+def p_shape_selection(p):
+    '''shape_selection : CLASSIC
+    | ARROW
+    | SQUARE
+    | TURTLE '''
+    p[0] = p[1]
+
+def p_fpen_size(p):
+    '''fpen_size : PENSIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA'''
+    global pilaOperandos
+    type_operando1 = ' '
+    dir_operando1 = -9000
+    if pilaOperandos:
+        operando1 = pilaOperandos.pop()
+        v7 = find_temp_table(operando1)
+        if v7:
+            dir_operando1 = get_dir_temp_table(operando1)
+            type_operando1 = get_type_temp_table(operando1)
+            operando1 = get_value_temp_table(operando1)
+        if dir_operando1 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v1 = find_var_table(vars_proc,operando1)
+                if v1:
+                    dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                    type_operando1 = get_type_var_table(vars_proc,operando1)
+                    operando1 = get_value_var_table(vars_proc,operando1)
+        if dir_operando1 == -9000:
+            v2 = find_global_var_table(operando1)
+            if v2:
+                dir_operando1 = get_dir_global_var_table(operando1)
+                type_operando1 = get_type_global_var_table(operando1)
+                operando1 = get_value_global_var_table(operando1)
+        if dir_operando1 == -9000:
+            v3 = find_const_table(operando1)
+            if v3:
+                dir_operando1 = get_dir_const_table(operando1)
+                type_operando1 = get_type_const_table(operando1)
+
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+        if type_operando1 != 'int':
+            print("Error in parameter '%s' " %operando1 + "in call to function move, expecting int")
+            sys.exit()
+        add_cuadruplo('PENSIZE',None,None,dir_operando1)
+
+def p_fsize(p):
+    '''fsize : SIZE ABRIR_PRNT expression CERRAR_PRNT PUNTO_COMA'''
+    global pilaOperandos
+    type_operando1 = ' '
+    dir_operando1 = -9000
+    if pilaOperandos:
+        operando1 = pilaOperandos.pop()
+        v7 = find_temp_table(operando1)
+        if v7:
+            dir_operando1 = get_dir_temp_table(operando1)
+            type_operando1 = get_type_temp_table(operando1)
+            operando1 = get_value_temp_table(operando1)
+        if dir_operando1 == -9000:
+            vars_proc = get_vars_dir_proc(scope);
+            if vars_proc:
+                v1 = find_var_table(vars_proc,operando1)
+                if v1:
+                    dir_operando1 = get_dir_var_table(vars_proc,operando1)
+                    type_operando1 = get_type_var_table(vars_proc,operando1)
+                    operando1 = get_value_var_table(vars_proc,operando1)
+        if dir_operando1 == -9000:
+            v2 = find_global_var_table(operando1)
+            if v2:
+                dir_operando1 = get_dir_global_var_table(operando1)
+                type_operando1 = get_type_global_var_table(operando1)
+                operando1 = get_value_global_var_table(operando1)
+        if dir_operando1 == -9000:
+            v3 = find_const_table(operando1)
+            if v3:
+                dir_operando1 = get_dir_const_table(operando1)
+                type_operando1 = get_type_const_table(operando1)
+
+        if dir_operando1 == -9000:
+            print("Variable '%s' " %operando1 + "not declared")
+            sys.exit()
+        if type_operando1 != 'int':
+            print("Error in parameter '%s' " %operando1 + "in call to function move, expecting int")
+            sys.exit()
+        add_cuadruplo('SIZE',None,None,dir_operando1)
 
 def p_push_operando(p):
     '''push_operando : '''
